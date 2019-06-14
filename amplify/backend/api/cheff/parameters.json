@@ -1,0 +1,10 @@
+{
+    "AppSyncApiName": "cheff",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcheff2fec0ed8",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

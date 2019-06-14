@@ -1,0 +1,6 @@
+type InventoryItem @model {
+  item: String!
+  category: String!
+  location: String!
+  quantity: String
+}

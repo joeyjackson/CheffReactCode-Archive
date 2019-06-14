@@ -1,0 +1,19 @@
+{
+    "cheff": {
+        "awscloudformation": {
+            "AuthRoleName": "cheff-cheff-20190611210030-authRole",
+            "UnauthRoleArn": "arn:aws:iam::229832989224:role/cheff-cheff-20190611210030-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::229832989224:role/cheff-cheff-20190611210030-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "cheff-cheff-20190611210030-deployment",
+            "UnauthRoleName": "cheff-cheff-20190611210030-unauthRole",
+            "StackName": "cheff-cheff-20190611210030",
+            "StackId": "arn:aws:cloudformation:us-east-2:229832989224:stack/cheff-cheff-20190611210030/3d3cf230-8cbe-11e9-93ff-06a8021e9aec"
+        },
+        "categories": {
+            "auth": {
+                "cheff2fec0ed8": {}
+            }
+        }
+    }
+}
