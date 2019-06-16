@@ -27,7 +27,6 @@ import * as mutations from './graphql/mutations';
 import useIsMounted from 'ismounted';
 
 Amplify.configure(awsconfig);
-let tacobellAddresses = {};
 
 new AWSAppSyncClient({
   url: awsconfig.aws_appsync_graphqlEndpoint,
@@ -39,8 +38,10 @@ new AWSAppSyncClient({
   }
 });
 
+let tacobellAddresses = {};
+
 const App = () => {
-  const [zoneInfo, setZoneInfo] = useState([]);
+  const [zoneInfo, setZoneInfo] = useState('');
   const isMounted = useIsMounted();
 
   // useEffect(() => {
@@ -52,8 +53,7 @@ const App = () => {
   //       .then(async data => {
   //         if (isMounted.current) {
   //           console.log('setting zone');
-  //           await setZoneInfo(data.attributes.zoneinfo.split(','));
-  //           console.log(zoneInfo);
+  //           await setZoneInfo(data.attributes.zoneinfo);
   //         }
   //       })
   //       .catch(err => console.log(err));
@@ -61,9 +61,7 @@ const App = () => {
 
   //   getUserInfo();
 
-  //   // Handle cleanup
-  //   // return abortController.abort();
-  //   return console.log('unmounted');
+  //   return abortController.abort();
   // }, []);
 
   const signOut = () => {
@@ -87,10 +85,9 @@ const App = () => {
 
   return (
     <MDBContainer>
-      <CardList zoneInfoObject={tacobellAddresses} />
+      <CardList zoneInfoObject={tacobellAddresses} />;
     </MDBContainer>
   );
-  // return <EmbededMaps />;
 };
 
 export default withAuthenticator(App, {

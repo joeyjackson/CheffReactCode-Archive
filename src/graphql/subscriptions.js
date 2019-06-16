@@ -3,28 +3,43 @@
 
 export const onCreateInventoryItem = `subscription OnCreateInventoryItem {
   onCreateInventoryItem {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
 export const onUpdateInventoryItem = `subscription OnUpdateInventoryItem {
   onUpdateInventoryItem {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
 export const onDeleteInventoryItem = `subscription OnDeleteInventoryItem {
   onDeleteInventoryItem {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;

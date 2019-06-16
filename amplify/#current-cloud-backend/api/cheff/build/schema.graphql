@@ -1,8 +1,13 @@
 type InventoryItem {
-  item: String!
-  category: String!
-  location: String!
+  franchise: String
+  location: String
+  item: String
+  storage: String
+  category: String
   quantity: String
+  parValue: String
+  updatedAt: AWSDateTime
+  id: String
 }
 
 enum ModelSortDirection {
@@ -71,10 +76,15 @@ input ModelBooleanFilterInput {
 }
 
 input ModelInventoryItemFilterInput {
-  item: ModelStringFilterInput
-  category: ModelStringFilterInput
+  franchise: ModelStringFilterInput
   location: ModelStringFilterInput
+  item: ModelStringFilterInput
+  storage: ModelStringFilterInput
+  category: ModelStringFilterInput
   quantity: ModelStringFilterInput
+  parValue: ModelStringFilterInput
+  updatedAt: ModelStringFilterInput
+  id: ModelStringFilterInput
   and: [ModelInventoryItemFilterInput]
   or: [ModelInventoryItemFilterInput]
   not: ModelInventoryItemFilterInput
@@ -86,17 +96,27 @@ type Query {
 }
 
 input CreateInventoryItemInput {
-  item: String!
-  category: String!
-  location: String!
+  franchise: String
+  location: String
+  item: String
+  storage: String
+  category: String
   quantity: String
+  parValue: String
+  updatedAt: AWSDateTime
+  id: ID
 }
 
 input UpdateInventoryItemInput {
-  item: String
-  category: String
+  franchise: String
   location: String
+  item: String
+  storage: String
+  category: String
   quantity: String
+  parValue: String
+  updatedAt: AWSDateTime
+  id: String!
 }
 
 input DeleteInventoryItemInput {

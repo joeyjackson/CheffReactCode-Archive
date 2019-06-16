@@ -3,10 +3,15 @@
 
 export const getInventoryItem = `query GetInventoryItem($id: ID!) {
   getInventoryItem(id: $id) {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
@@ -17,10 +22,15 @@ export const listInventoryItems = `query ListInventoryItems(
 ) {
   listInventoryItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
-      item
-      category
+      franchise
       location
+      item
+      storage
+      category
       quantity
+      parValue
+      updatedAt
+      id
     }
     nextToken
   }

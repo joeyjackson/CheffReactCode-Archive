@@ -16,6 +16,7 @@ const TableModal = props => {
     <MDBContainer style={{ paddingBottom: '20px' }}>
       <div className="d-flex justify-content-center">
         <MDBBtn
+          color="primary"
           onClick={() => {
             setModal(!modal);
           }}
@@ -27,7 +28,7 @@ const TableModal = props => {
           toggle={() => {
             setModal(!modal);
           }}
-          size="lg"
+          size="fluid"
         >
           <MDBModalHeader
             toggle={() => {
@@ -37,16 +38,16 @@ const TableModal = props => {
             <h5 className="text-center">{props.location}</h5>
           </MDBModalHeader>
           <MDBModalBody>
-            <EditableTable />
+            <EditableTable location={props.location} />
           </MDBModalBody>
           <MDBModalFooter>
             <MDBBtn
-              color="secondary"
+              color="primary"
               onClick={() => {
                 setModal(!modal);
               }}
             >
-              Close
+              Done
             </MDBBtn>
           </MDBModalFooter>
         </MDBModal>

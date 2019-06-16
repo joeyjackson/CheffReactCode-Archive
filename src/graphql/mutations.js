@@ -3,28 +3,43 @@
 
 export const createInventoryItem = `mutation CreateInventoryItem($input: CreateInventoryItemInput!) {
   createInventoryItem(input: $input) {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
 export const updateInventoryItem = `mutation UpdateInventoryItem($input: UpdateInventoryItemInput!) {
   updateInventoryItem(input: $input) {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
 export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteInventoryItemInput!) {
   deleteInventoryItem(input: $input) {
-    item
-    category
+    franchise
     location
+    item
+    storage
+    category
     quantity
+    parValue
+    updatedAt
+    id
   }
 }
 `;
