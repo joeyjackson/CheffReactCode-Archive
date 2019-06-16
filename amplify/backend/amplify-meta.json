@@ -1,0 +1,52 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "cheff-cheff-20190611210030-authRole",
+			"UnauthRoleArn": "arn:aws:iam::229832989224:role/cheff-cheff-20190611210030-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::229832989224:role/cheff-cheff-20190611210030-authRole",
+			"Region": "us-east-2",
+			"DeploymentBucketName": "cheff-cheff-20190611210030-deployment",
+			"UnauthRoleName": "cheff-cheff-20190611210030-unauthRole",
+			"StackName": "cheff-cheff-20190611210030",
+			"StackId": "arn:aws:cloudformation:us-east-2:229832989224:stack/cheff-cheff-20190611210030/3d3cf230-8cbe-11e9-93ff-06a8021e9aec"
+		}
+	},
+	"auth": {
+		"cheff2fec0ed8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/auth/cheff2fec0ed8-cloudformation-template.yml",
+				"logicalId": "authcheff2fec0ed8"
+			},
+			"lastPushTimeStamp": "2019-06-14T00:13:49.329Z",
+			"output": {
+				"AppClientSecret": "9300ho35rn2u1bu74atekgeff5n9p38fja6j4ouh5ilp2gct6u7",
+				"UserPoolId": "us-east-2_9AlobejmS",
+				"AppClientIDWeb": "2bmf1sp9pf622o5r8egl23qgki",
+				"AppClientID": "7q9vnt8f58b9l77qha91spbpdr",
+				"IdentityPoolId": "us-east-2:8c1fe34b-e786-4999-b6b8-02b7ce6ffbdf",
+				"IdentityPoolName": "cheff2fec0ed8_identitypool_2fec0ed8__cheff",
+				"UserPoolName": "cheff2fec0ed8_userpool_2fec0ed8"
+			},
+			"lastPushDirHash": "0AifRzexpYoJvGP5wP8voaHN9UE="
+		}
+	},
+	"api": {
+		"cheff": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS",
+				"GraphQLAPIIdOutput": "why6bqrj4fb3hmlqupil3kc5qm",
+				"GraphQLAPIEndpointOutput": "https://46yagyum2nabbnl4qfbvw7qulm.appsync-api.us-east-2.amazonaws.com/graphql"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apicheff"
+			},
+			"lastPushTimeStamp": "2019-06-14T00:13:51.208Z",
+			"lastPushDirHash": "husZP+soIxZt1cX6H6xu2TrApSw="
+		}
+	}
+}

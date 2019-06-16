@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   MDBBtn,
   MDBCard,
@@ -8,26 +8,19 @@ import {
   MDBCardText,
   MDBCol
 } from 'mdbreact';
+import StoreLocater from './StoreLocator';
+import TableModal from './TableModal';
 
 const CardExample = props => {
   return (
-    <MDBCol>
-      <MDBCard style={{ width: '22rem' }}>
-        <MDBCardImage
-          className="img-fluid"
-          src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
-          waves
-        />
-        <MDBCardBody>
-          <MDBCardTitle>{props.name}</MDBCardTitle>
-          <MDBCardText>
-            Some quick example text to build on the card title and make up the
-            bulk of the card&apos;s content.
-          </MDBCardText>
-          <MDBBtn href="#">MDBBtn</MDBBtn>
-        </MDBCardBody>
-      </MDBCard>
-    </MDBCol>
+    <MDBCard style={{ width: '22rem' }}>
+      <StoreLocater location={props.location} />
+      <MDBCardBody>
+        <MDBCardTitle>{props.name}</MDBCardTitle>
+        <MDBCardText>{props.location}</MDBCardText>
+      </MDBCardBody>
+      <TableModal location={props.location} />
+    </MDBCard>
   );
 };
 

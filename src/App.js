@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import { StateProvider, useStateValue } from './StateManagement.js';
+import { reducer } from './reducer';
 import awsconfig from './aws-exports';
 import gql from 'graphql-tag';
-import Card from './Card';
+import EmbededMaps from './EmbededMaps';
+
 import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import {
@@ -16,22 +19,17 @@ import {
   RequireNewPassword,
   VerifyContact
 } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
-// import { listInventorys } from './graphql/queries';
+
+import CardList from './CardList';
 import Table from './components/tables/editable';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
+import useIsMounted from 'ismounted';
 
 Amplify.configure(awsconfig);
+let tacobellAddresses = {};
 
-// Configure a custom GraphQL endpoint
-// Amplify.configure({
-//   API: {
-//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     graphql_endpoint_iam_region: 'us-east-2'
-//   }
-// });
-
-const client = new AWSAppSyncClient({
+new AWSAppSyncClient({
   url: awsconfig.aws_appsync_graphqlEndpoint,
   region: awsconfig.aws_appsync_region,
   auth: {
@@ -41,16 +39,32 @@ const client = new AWSAppSyncClient({
   }
 });
 
-const NumberList = zoneInfoArray => {
-  const cardList = zoneInfoArray.map(location => (
-    <MDBCol key={location}>{<Card name={location} />}</MDBCol>
-  ));
-  return <MDBRow>{cardList}</MDBRow>;
-};
+const App = () => {
+  const [zoneInfo, setZoneInfo] = useState([]);
+  const isMounted = useIsMounted();
 
-const App = props => {
-  const initialState = props;
-  const [zoneInfo, setZoneInfo] = useState('');
+  // useEffect(() => {
+  //   const abortController = new AbortController();
+  //   // Get current user info
+  //   console.log('mounted');
+  //   const getUserInfo = () => {
+  //     Auth.currentUserInfo()
+  //       .then(async data => {
+  //         if (isMounted.current) {
+  //           console.log('setting zone');
+  //           await setZoneInfo(data.attributes.zoneinfo.split(','));
+  //           console.log(zoneInfo);
+  //         }
+  //       })
+  //       .catch(err => console.log(err));
+  //   };
+
+  //   getUserInfo();
+
+  //   // Handle cleanup
+  //   // return abortController.abort();
+  //   return console.log('unmounted');
+  // }, []);
 
   const signOut = () => {
     Auth.signOut()
@@ -64,29 +78,19 @@ const App = props => {
       .then(data => console.log(data))
       .catch(err => console.log(err));
   };
-
-  const itemDetails = {
-    item: 'apples',
-    location: 'tacobell2',
-    category: 'freezer'
+  tacobellAddresses = {
+    'Tacobell 1':
+      'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
+    'Tacobell 2': '3595 Biscayne Blvd, Miami, FL 33137',
+    'McDonalds 3': '1105 Northside Dr NW, Atlanta, GA 30318'
   };
 
-  // const addItem = () =>
-  //   API.graphql(
-  //     graphqlOperation(mutations.createInventoryItem, { input: itemDetails })
-  //   )
-  //     .then(data => console.log(data))
-  //     .catch(err => console.log(err));
-
-  // addItem();
-  Auth.currentUserInfo()
-    .then(data => setZoneInfo(data.attributes.zoneinfo))
-    .catch(err => console.log(err));
-
-  const zoneInfoArray = zoneInfo.split(',');
-  console.log(zoneInfoArray);
-
-  return <MDBContainer>{NumberList(zoneInfoArray)}</MDBContainer>;
+  return (
+    <MDBContainer>
+      <CardList zoneInfoObject={tacobellAddresses} />
+    </MDBContainer>
+  );
+  // return <EmbededMaps />;
 };
 
 export default withAuthenticator(App, {
@@ -102,3 +106,35 @@ export default withAuthenticator(App, {
     <SignIn />
   ]
 });
+
+{
+  /* {zoneInfo.length > 0 ? (
+        <Loader type="Puff" color="#00BFFF" height="100" width="100" />
+      ) : (
+        <CardList zoneInfoArray={zoneInfo} />
+      )} */
+}
+// const addItem = () =>
+//   API.graphql(
+//     graphqlOperation(mutations.createInventoryItem, { input: itemDetails })
+//   )
+//     .then(data => console.log(data))
+//     .catch(err => console.log(err));
+
+// addItem();
+
+// const [locations, setLocations] = useState({
+//   id: 1,
+//   lat: 50,
+//   lng: 25.3,
+//   show: true,
+//   name: 'Loading Location...'
+// });
+
+// Configure a custom GraphQL endpoint
+// Amplify.configure({
+//   API: {
+//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     graphql_endpoint_iam_region: 'us-east-2'
+//   }
+// });

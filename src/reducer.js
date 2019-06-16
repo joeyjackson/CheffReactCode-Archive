@@ -1,15 +1,15 @@
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'INCREMENT':
+    case 'LAT':
       return {
         ...state,
-        count: state.count + 1
+        lat: state.lat
       };
 
-    case 'DECREMENT':
+    case 'LNG':
       return {
         ...state,
-        count: state.count - 1
+        lng: state.lng
       };
 
     default:
