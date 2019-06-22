@@ -9,3 +9,10 @@ type InventoryItem @model {
   updatedAt: AWSDateTime
   id: String
 }
+
+type UserLocations @model {
+  user: String!
+  franchise: String
+  location: AWSJSON
+  id: String
+}

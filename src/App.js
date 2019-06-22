@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import { StateProvider, useStateValue } from './StateManagement.js';
+import { StateProvider } from './StateManagement.js';
 import { reducer } from './reducer';
 import awsconfig from './aws-exports';
 import gql from 'graphql-tag';
 import EmbededMaps from './EmbededMaps';
-
+import IdleTimer from 'react-idle-timer';
 import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import {
@@ -25,6 +25,9 @@ import Table from './components/tables/editable';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
 import useIsMounted from 'ismounted';
+import TestTable from './TestTable';
+import SearchBar from './components/SearchBar';
+import './App.css';
 
 Amplify.configure(awsconfig);
 
@@ -41,28 +44,43 @@ new AWSAppSyncClient({
 let tacobellAddresses = {};
 
 const App = () => {
-  const [zoneInfo, setZoneInfo] = useState('');
-  const isMounted = useIsMounted();
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'dryStorage':
+        return {
+          ...state,
+          dryStorage: action.state
+        };
 
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-  //   // Get current user info
-  //   console.log('mounted');
-  //   const getUserInfo = () => {
-  //     Auth.currentUserInfo()
-  //       .then(async data => {
-  //         if (isMounted.current) {
-  //           console.log('setting zone');
-  //           await setZoneInfo(data.attributes.zoneinfo);
-  //         }
-  //       })
-  //       .catch(err => console.log(err));
-  //   };
+      case 'coldStorage':
+        return {
+          ...state,
+          coldStorage: action.state
+        };
 
-  //   getUserInfo();
+      case 'freezer':
+        return {
+          ...state,
+          freezer: action.state
+        };
 
-  //   return abortController.abort();
-  // }, []);
+      case 'lowVelocity':
+        return {
+          ...state,
+          lowVelocity: action.state
+        };
+
+      default:
+        return state;
+    }
+  };
+
+  const initialFilterState = {
+    dryStorage: false,
+    coldStorage: false,
+    freezer: false,
+    lowVelocity: false
+  };
 
   const signOut = () => {
     Auth.signOut()
@@ -77,16 +95,32 @@ const App = () => {
       .catch(err => console.log(err));
   };
   tacobellAddresses = {
-    'Tacobell 1':
-      'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
-    'Tacobell 2': '3595 Biscayne Blvd, Miami, FL 33137',
-    'McDonalds 3': '1105 Northside Dr NW, Atlanta, GA 30318'
+    Tacobell: 'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
+    Tacobell2: '3595 Biscayne Blvd, Miami, FL 33137',
+    McDonalds: '1105 Northside Dr NW, Atlanta, GA 30318'
   };
 
+  Auth.currentUserInfo().then(data => console.log(data));
   return (
-    <MDBContainer>
-      <CardList zoneInfoObject={tacobellAddresses} />;
-    </MDBContainer>
+    <StateProvider initialState={initialFilterState} reducer={reducer}>
+      <MDBContainer>
+        <IdleTimer
+          element={document}
+          onActive={() => {
+            console.log('user is active');
+          }}
+          onIdle={() => {
+            signOut();
+          }}
+          debounce={250}
+          timeout={30 * 1000 * 60}
+        />
+        <MDBContainer>
+          <CardList zoneInfoObject={tacobellAddresses} />;{/* <TestTable /> */}
+        </MDBContainer>
+        <SearchBar />
+      </MDBContainer>
+    </StateProvider>
   );
 };
 
@@ -104,13 +138,6 @@ export default withAuthenticator(App, {
   ]
 });
 
-{
-  /* {zoneInfo.length > 0 ? (
-        <Loader type="Puff" color="#00BFFF" height="100" width="100" />
-      ) : (
-        <CardList zoneInfoArray={zoneInfo} />
-      )} */
-}
 // const addItem = () =>
 //   API.graphql(
 //     graphqlOperation(mutations.createInventoryItem, { input: itemDetails })

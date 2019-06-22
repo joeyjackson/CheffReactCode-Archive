@@ -10,6 +10,13 @@ type InventoryItem {
   id: String
 }
 
+type UserLocations {
+  user: String!
+  franchise: String
+  location: AWSJSON
+  id: String
+}
+
 enum ModelSortDirection {
   ASC
   DESC
@@ -93,6 +100,8 @@ input ModelInventoryItemFilterInput {
 type Query {
   getInventoryItem(id: ID!): InventoryItem
   listInventoryItems(filter: ModelInventoryItemFilterInput, limit: Int, nextToken: String): ModelInventoryItemConnection
+  getUserLocations(id: ID!): UserLocations
+  listUserLocationss(filter: ModelUserLocationsFilterInput, limit: Int, nextToken: String): ModelUserLocationsConnection
 }
 
 input CreateInventoryItemInput {
@@ -127,10 +136,49 @@ type Mutation {
   createInventoryItem(input: CreateInventoryItemInput!): InventoryItem
   updateInventoryItem(input: UpdateInventoryItemInput!): InventoryItem
   deleteInventoryItem(input: DeleteInventoryItemInput!): InventoryItem
+  createUserLocations(input: CreateUserLocationsInput!): UserLocations
+  updateUserLocations(input: UpdateUserLocationsInput!): UserLocations
+  deleteUserLocations(input: DeleteUserLocationsInput!): UserLocations
 }
 
 type Subscription {
   onCreateInventoryItem: InventoryItem @aws_subscribe(mutations: ["createInventoryItem"])
   onUpdateInventoryItem: InventoryItem @aws_subscribe(mutations: ["updateInventoryItem"])
   onDeleteInventoryItem: InventoryItem @aws_subscribe(mutations: ["deleteInventoryItem"])
+  onCreateUserLocations: UserLocations @aws_subscribe(mutations: ["createUserLocations"])
+  onUpdateUserLocations: UserLocations @aws_subscribe(mutations: ["updateUserLocations"])
+  onDeleteUserLocations: UserLocations @aws_subscribe(mutations: ["deleteUserLocations"])
+}
+
+type ModelUserLocationsConnection {
+  items: [UserLocations]
+  nextToken: String
+}
+
+input ModelUserLocationsFilterInput {
+  user: ModelStringFilterInput
+  franchise: ModelStringFilterInput
+  location: ModelStringFilterInput
+  id: ModelStringFilterInput
+  and: [ModelUserLocationsFilterInput]
+  or: [ModelUserLocationsFilterInput]
+  not: ModelUserLocationsFilterInput
+}
+
+input CreateUserLocationsInput {
+  user: String!
+  franchise: String
+  location: AWSJSON
+  id: ID
+}
+
+input UpdateUserLocationsInput {
+  user: String
+  franchise: String
+  location: AWSJSON
+  id: String!
+}
+
+input DeleteUserLocationsInput {
+  id: ID
 }

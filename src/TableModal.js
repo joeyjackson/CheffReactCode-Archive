@@ -9,14 +9,24 @@ import {
 } from 'mdbreact';
 
 import EditableTable from './EditableTable';
+import StorageFilterStepper from './StorageFilterStepper';
+import CategoryFilterStepper from './CategoryFilterStepper';
+import { useStateValue } from './StateManagement';
+import { useAlert } from 'react-alert';
 
 const TableModal = props => {
+  const alert = useAlert();
   const [modal, setModal] = useState(false);
+  const [viewing, setViewing] = useState('storage');
+
+  const [currentFilterState, dispatch] = useStateValue();
+
   return (
     <MDBContainer style={{ paddingBottom: '20px' }}>
-      <div className="d-flex justify-content-center">
+      <view className="d-flex justify-content-center">
         <MDBBtn
           color="primary"
+          rounded
           onClick={() => {
             setModal(!modal);
           }}
@@ -28,7 +38,7 @@ const TableModal = props => {
           toggle={() => {
             setModal(!modal);
           }}
-          size="fluid"
+          size="lg"
         >
           <MDBModalHeader
             toggle={() => {
@@ -38,20 +48,75 @@ const TableModal = props => {
             <h5 className="text-center">{props.location}</h5>
           </MDBModalHeader>
           <MDBModalBody>
-            <EditableTable location={props.location} />
+            {/* <EditableTable location={props.location} franchise="Tacobell" /> */}
+            {viewing === 'storage' && <StorageFilterStepper />}
+            {viewing === 'table' && (
+              <EditableTable location={props.location} franchise="Tacobell" />
+            )}
           </MDBModalBody>
           <MDBModalFooter>
-            <MDBBtn
-              color="primary"
-              onClick={() => {
-                setModal(!modal);
-              }}
-            >
-              Done
-            </MDBBtn>
+            {viewing !== 'storage' && (
+              <view
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'left',
+                  alignItems: 'left'
+                }}
+              >
+                <MDBBtn
+                  className="align-self-start"
+                  color="blue-grey"
+                  rounded
+                  onClick={() => {
+                    setViewing('storage');
+                  }}
+                >
+                  Back
+                </MDBBtn>
+              </view>
+            )}
+            {viewing === 'storage' && (
+              <MDBBtn
+                color="primary"
+                rounded
+                onClick={() => {
+                  let count = 0;
+                  let filterStateKeys = Object.keys(currentFilterState);
+                  filterStateKeys.map(eachStorageType => {
+                    console.log(currentFilterState);
+                    console.log(currentFilterState[eachStorageType]);
+                    if (!currentFilterState[eachStorageType]) {
+                      count += 1;
+                    }
+                  });
+                  if (count === 4) {
+                    alert.show('Oh look, an alert!');
+                    console.log('DID NOT SELECT ENOUGH');
+                  } else {
+                    setViewing('table');
+                  }
+                }}
+              >
+                Next
+              </MDBBtn>
+            )}
+
+            {viewing === 'table' && (
+              <MDBBtn
+                color="primary"
+                rounded
+                onClick={() => {
+                  setViewing('storage');
+                  setModal(!modal);
+                }}
+              >
+                Done
+              </MDBBtn>
+            )}
           </MDBModalFooter>
         </MDBModal>
-      </div>
+      </view>
     </MDBContainer>
   );
 };

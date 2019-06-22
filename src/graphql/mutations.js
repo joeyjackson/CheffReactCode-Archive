@@ -43,3 +43,30 @@ export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteI
   }
 }
 `;
+export const createUserLocations = `mutation CreateUserLocations($input: CreateUserLocationsInput!) {
+  createUserLocations(input: $input) {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
+export const updateUserLocations = `mutation UpdateUserLocations($input: UpdateUserLocationsInput!) {
+  updateUserLocations(input: $input) {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
+export const deleteUserLocations = `mutation DeleteUserLocations($input: DeleteUserLocationsInput!) {
+  deleteUserLocations(input: $input) {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;

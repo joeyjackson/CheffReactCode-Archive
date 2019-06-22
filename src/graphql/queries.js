@@ -36,3 +36,28 @@ export const listInventoryItems = `query ListInventoryItems(
   }
 }
 `;
+export const getUserLocations = `query GetUserLocations($id: ID!) {
+  getUserLocations(id: $id) {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
+export const listUserLocationss = `query ListUserLocationss(
+  $filter: ModelUserLocationsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUserLocationss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      user
+      franchise
+      location
+      id
+    }
+    nextToken
+  }
+}
+`;

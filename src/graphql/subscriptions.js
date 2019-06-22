@@ -43,3 +43,30 @@ export const onDeleteInventoryItem = `subscription OnDeleteInventoryItem {
   }
 }
 `;
+export const onCreateUserLocations = `subscription OnCreateUserLocations {
+  onCreateUserLocations {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
+export const onUpdateUserLocations = `subscription OnUpdateUserLocations {
+  onUpdateUserLocations {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
+export const onDeleteUserLocations = `subscription OnDeleteUserLocations {
+  onDeleteUserLocations {
+    user
+    franchise
+    location
+    id
+  }
+}
+`;
