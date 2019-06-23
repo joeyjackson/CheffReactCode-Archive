@@ -1,13 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import { StateProvider } from './StateManagement.js';
-import { reducer } from './reducer';
 import awsconfig from './aws-exports';
-import gql from 'graphql-tag';
-import EmbededMaps from './EmbededMaps';
 import IdleTimer from 'react-idle-timer';
 import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import { useStateValue } from './StateManagement';
 import {
   withAuthenticator,
   SignIn,
@@ -21,12 +18,9 @@ import {
 } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
 
 import CardList from './CardList';
-import Table from './components/tables/editable';
-import * as queries from './graphql/queries';
-import * as mutations from './graphql/mutations';
-import useIsMounted from 'ismounted';
-import TestTable from './TestTable';
 import SearchBar from './components/SearchBar';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import InventoryTable from './InventoryTable';
 import './App.css';
 
 Amplify.configure(awsconfig);
@@ -43,45 +37,9 @@ new AWSAppSyncClient({
 
 let tacobellAddresses = {};
 
+var scrollIntoView = require('scroll-into-view');
+
 const App = () => {
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case 'dryStorage':
-        return {
-          ...state,
-          dryStorage: action.state
-        };
-
-      case 'coldStorage':
-        return {
-          ...state,
-          coldStorage: action.state
-        };
-
-      case 'freezer':
-        return {
-          ...state,
-          freezer: action.state
-        };
-
-      case 'lowVelocity':
-        return {
-          ...state,
-          lowVelocity: action.state
-        };
-
-      default:
-        return state;
-    }
-  };
-
-  const initialFilterState = {
-    dryStorage: false,
-    coldStorage: false,
-    freezer: false,
-    lowVelocity: false
-  };
-
   const signOut = () => {
     Auth.signOut()
       .then(data => console.log(data))
@@ -101,8 +59,9 @@ const App = () => {
   };
 
   Auth.currentUserInfo().then(data => console.log(data));
+
   return (
-    <StateProvider initialState={initialFilterState} reducer={reducer}>
+    <Router>
       <MDBContainer>
         <IdleTimer
           element={document}
@@ -115,12 +74,29 @@ const App = () => {
           debounce={250}
           timeout={30 * 1000 * 60}
         />
-        <MDBContainer>
-          <CardList zoneInfoObject={tacobellAddresses} />;{/* <TestTable /> */}
-        </MDBContainer>
-        <SearchBar />
+
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={routeProps => {
+              return (
+                <CardList {...routeProps} zoneInfoObject={tacobellAddresses} />
+              );
+            }}
+          />
+          <Route
+            path="/location/:location"
+            render={linkProps => {
+              return (
+                <InventoryTable location={linkProps.location.state.location} />
+              );
+            }}
+          />
+        </Switch>
+        {/* <SearchBar /> */}
       </MDBContainer>
-    </StateProvider>
+    </Router>
   );
 };
 

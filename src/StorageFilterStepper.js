@@ -3,12 +3,6 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBAnimation } from 'mdbreact';
 import { useStateValue } from './StateManagement';
 
 const StorageFilterStepper = () => {
-  const [dryStorageBtn, setDryStorageBtn] = useState(false);
-  const [coldStorageBtn, setColdStorageBtn] = useState(false);
-  const [freezerBtn, setFreezerBtn] = useState(false);
-  const [lowVelocityBtn, setlowVelocityBtn] = useState(false);
-  const [viewing, setViewing] = useState('storage');
-
   const [storage, dispatch] = useStateValue();
 
   return (

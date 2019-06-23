@@ -13,8 +13,6 @@ import {
   MDBModalBody,
   MDBModalHeader,
   MDBModalFooter,
-  toast,
-  ToastContainer,
   MDBSelect,
   MDBSelectInput,
   MDBSelectOptions,
@@ -24,6 +22,8 @@ import {
   MDBCol
 } from 'mdbreact';
 import { useStateValue } from './StateManagement';
+import { useAlert } from 'react-alert';
+
 import './Custom.css';
 
 var jsPDF = require('jspdf');
@@ -99,7 +99,7 @@ const didUpdate = (oldData, newData) => {
 export default function MaterialTableDemo(props) {
   const [storageFilter, dispatch] = useStateValue();
   const [currentFilters, setCurrentFilters] = useState({ options: [] });
-
+  const alert = useAlert();
   const columns = [
     // {
     //   title: 'Category',
@@ -217,8 +217,9 @@ export default function MaterialTableDemo(props) {
       })
     )
       .then(result => {
-        toast.success('Create Success', {
-          closeButton: false
+        alert.show('Create Success!', {
+          timeout: 2000, // custom timeout just for this one alert
+          type: 'success'
         });
       })
       .catch(err => console.log(err));
@@ -231,8 +232,9 @@ export default function MaterialTableDemo(props) {
       })
     )
       .then(result => {
-        toast.success('Update Success', {
-          closeButton: false
+        alert.show('Update Success!', {
+          timeout: 2000, // custom timeout just for this one alert
+          type: 'success'
         });
       })
       .catch(err => console.log(err));
@@ -245,15 +247,12 @@ export default function MaterialTableDemo(props) {
       })
     )
       .then(result => {
-        toast.success('Delete Success', {
-          closeButton: false
+        alert.show('Delete Success!', {
+          timeout: 2000, // custom timeout just for this one alert
+          type: 'success'
         });
       })
-      .catch(err =>
-        toast.failed('Delete failed', {
-          closeButton: false
-        })
-      );
+      .catch(err => console.log(err));
   };
 
   const listItems = () => {
@@ -336,8 +335,9 @@ export default function MaterialTableDemo(props) {
         console.log(initialData);
         console.log(tempCurrentFilters);
         if (initialData.length > 0) {
-          toast.success('Latest Data Received', {
-            closeButton: false
+          alert.show('Data Received', {
+            timeout: 2000, // custom timeout just for this one alert
+            type: 'success'
           });
 
           setData(initialData);
@@ -421,11 +421,6 @@ export default function MaterialTableDemo(props) {
         className="d-flex justify-content-center"
         style={{ paddingTop: '30px' }}
       >
-        <ToastContainer
-          hideProgressBar={true}
-          newestOnTop={true}
-          autoClose={2000}
-        />
         <MDBBtn
           color="primary"
           onClick={() => {

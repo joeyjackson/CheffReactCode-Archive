@@ -91,8 +91,6 @@ const TableModal = props => {
                     }
                   });
                   if (count === 4) {
-                    alert.show('Oh look, an alert!');
-                    console.log('DID NOT SELECT ENOUGH');
                   } else {
                     setViewing('table');
                   }

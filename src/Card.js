@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   MDBBtn,
   MDBCard,
@@ -11,17 +11,18 @@ import {
 import StoreLocater from './StoreLocator';
 import TableModal from './TableModal';
 
-const CardExample = props => {
+const Card = props => {
   return (
     <MDBCard style={{ width: '22rem' }}>
+      {/* just the map */}
       <StoreLocater location={props.location} />
       <MDBCardBody>
         <MDBCardTitle>{props.name}</MDBCardTitle>
         <MDBCardText>{props.location}</MDBCardText>
       </MDBCardBody>
-      <TableModal location={props.location} />
+      {/* <TableModal location={props.location} /> */}
     </MDBCard>
   );
 };
 
-export default CardExample;
+export default Card;
