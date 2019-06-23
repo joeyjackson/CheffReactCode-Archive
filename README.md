@@ -66,3 +66,13 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+# TODO
+
+1. Create a User Profile Completition page; this is where users will enter their franchise and locations the first time they login. This data
+   will be pushed to a DynamoDB table called "UserLocations"; which stores their emails, franchise name, and all associated locations (with geolocation data for the Google Maps).
+   By storing the geolocation, we won't have to make API calls to Google to get the Latitude and Longitude everytime we render the Map, so we will save money.
+2. Make our own Login page (using the AWS Cognito HOC - the "withAuthenticator" wrapper or similar).
+3. Make our own Navbar (or Sidebar, whatever we think looks best) that allows the User to modify their locations, manage their account, and logout.
+4. When our clients have many locations, it may be more convenient to have a feature that enables them to view their locations as a list instead of cards (so they don't have to scroll so much).
+5. Optimize the code and comment stuff that is not clear
