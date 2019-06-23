@@ -75,4 +75,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 2. Make our own Login page (using the AWS Cognito HOC - the "withAuthenticator" wrapper or similar).
 3. Make our own Navbar (or Sidebar, whatever we think looks best) that allows the User to modify their locations, manage their account, and logout.
 4. When our clients have many locations, it may be more convenient to have a feature that enables them to view their locations as a list instead of cards (so they don't have to scroll so much).
-5. Optimize the code and comment stuff that is not clear
+5. We may want to look into website cookies that would help with bringing up data quicker; there may be better ways to view data for each location than just querying it everytime we render the table component; maybe we can render the data for all storage types when they click the location, and then it stores it for that session - maybe the cookies are stored up to a certain time or until the user logouts/closes the application.
+6. Optimize the code and comment stuff that is not clear
