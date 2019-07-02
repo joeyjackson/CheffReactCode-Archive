@@ -21,7 +21,9 @@ import {
   MDBRow,
   MDBCol
 } from 'mdbreact';
+
 import { useStateValue } from './StateManagement';
+
 import { useAlert } from 'react-alert';
 
 import './Custom.css';

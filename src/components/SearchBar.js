@@ -9,25 +9,53 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: '',
       errorMessage: '',
       latitude: null,
       longitude: null,
-      isGeocoding: false
+      isGeocoding: false,
+      selectedFranchise: '',
+      selectedAddress: ''
     };
   }
 
   handleChange = address => {
     this.setState({
-      address,
       latitude: null,
       longitude: null,
       errorMessage: ''
     });
+    this.props.dispatch({
+      type: 'tempSearchAddress',
+      state: address
+    });
+  };
+
+  extractFranchiseAndAddress = selected => {
+    let franchise = '';
+    let address = '';
+    if (selected.indexOf('-') === -1) {
+      franchise = selected.slice(0, selected.indexOf(','));
+      address = selected.slice(selected.indexOf(',') + 2);
+    } else {
+      franchise = selected.slice(0, selected.indexOf('-'));
+      address = selected.slice(selected.indexOf('-') + 2);
+    }
+    this.props.dispatch({
+      type: 'selectedFranchise',
+      state: franchise
+    });
+    this.props.dispatch({
+      type: 'selectedAddress',
+      state: address
+    });
   };
 
   handleSelect = selected => {
-    this.setState({ isGeocoding: true, address: selected });
+    this.setState({ isGeocoding: true });
+    this.props.dispatch({
+      type: 'tempSearchAddress',
+      state: selected
+    });
     geocodeByAddress(selected)
       .then(res => getLatLng(res[0]))
       .then(({ lat, lng }) => {
@@ -36,6 +64,8 @@ class SearchBar extends React.Component {
           longitude: lng,
           isGeocoding: false
         });
+
+        this.extractFranchiseAndAddress(selected);
       })
       .catch(error => {
         this.setState({ isGeocoding: false });
@@ -45,9 +75,20 @@ class SearchBar extends React.Component {
 
   handleCloseClick = () => {
     this.setState({
-      address: '',
       latitude: null,
       longitude: null
+    });
+    this.props.dispatch({
+      type: 'selectedFranchise',
+      state: ''
+    });
+    this.props.dispatch({
+      type: 'selectedAddress',
+      state: ''
+    });
+    this.props.dispatch({
+      type: 'tempSearchAddress',
+      state: ''
     });
   };
 
@@ -59,16 +100,10 @@ class SearchBar extends React.Component {
   };
 
   render() {
-    const {
-      address,
-      errorMessage,
-      latitude,
-      longitude,
-      isGeocoding
-    } = this.state;
-
+    const { errorMessage, latitude, longitude, isGeocoding } = this.state;
+    const address = this.props.address;
     return (
-      <div>
+      <div style={{ paddingBottom: '25px' }}>
         <PlacesAutocomplete
           onChange={this.handleChange}
           value={address}
@@ -82,11 +117,11 @@ class SearchBar extends React.Component {
                 <div className="Demo__search-input-container">
                   <input
                     {...getInputProps({
-                      placeholder: 'Search your restuarant location...',
+                      placeholder: 'Enter the name of your restaurant',
                       className: 'Demo__search-input'
                     })}
                   />
-                  {this.state.address.length > 0 && (
+                  {address.length > 0 && (
                     <button
                       className="Demo__clear-button"
                       onClick={this.handleCloseClick}

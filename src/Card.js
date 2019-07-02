@@ -9,7 +9,6 @@ import {
   MDBCol
 } from 'mdbreact';
 import StoreLocater from './StoreLocator';
-import TableModal from './TableModal';
 
 const Card = props => {
   return (
@@ -20,7 +19,6 @@ const Card = props => {
         <MDBCardTitle>{props.name}</MDBCardTitle>
         <MDBCardText>{props.location}</MDBCardText>
       </MDBCardBody>
-      {/* <TableModal location={props.location} /> */}
     </MDBCard>
   );
 };
