@@ -25,14 +25,3 @@ const EmbededMaps = props => {
 };
 
 export default EmbededMaps;
-
-{
-  /* <StaticMap
-      width={352}
-      height={500}
-      latitude={props.lat}
-      longitude={props.lng}
-      zoom={15}
-      mapboxApiAccessToken="pk.eyJ1Ijoibmljb2xhc20xMSIsImEiOiJjand4MzllZ2Qwb2JyNGRwZm9pNGtzZDByIn0.W6Q-O5Glism3QfQ1Wm_C6A"
-    /> */
-}

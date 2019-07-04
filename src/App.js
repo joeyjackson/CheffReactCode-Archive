@@ -21,9 +21,9 @@ import {
 import CardList from './CardList';
 import SearchBar from './components/SearchBar';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import InventoryTable from './InventoryTable';
+import InventoryTable from './components/InventoryTable';
 import './App.css';
-import UserCompletionPage from './UserCompletionPage';
+import UserCompletionPage from './components/UserCompletionPage';
 
 Amplify.configure(awsconfig);
 

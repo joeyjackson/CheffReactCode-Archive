@@ -3,9 +3,9 @@ import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import MaterialTable from 'material-table';
 import Loader from 'react-loader-spinner';
 import useIsMounted from 'ismounted';
-import awsconfig from './aws-exports.js';
-import * as queries from './graphql/queries';
-import * as mutations from './graphql/mutations';
+import awsconfig from '../aws-exports.js';
+import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
 import {
   MDBContainer,
   MDBBtn,

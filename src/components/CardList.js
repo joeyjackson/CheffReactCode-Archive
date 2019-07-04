@@ -3,7 +3,7 @@ import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import Card from './Card';
 import Loader from 'react-loader-spinner';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { useStateValue } from './StateManagement';
+import { useStateValue } from '../StateManagement';
 
 const CardList = props => {
   const zoneInfoObject = props.zoneInfoObject;

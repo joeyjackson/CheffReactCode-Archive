@@ -14,14 +14,14 @@ import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import ReactDataGrid from 'react-data-grid';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
-import SearchBar from './components/SearchBar';
-import awsconfig from './aws-exports.js';
-import * as queries from './graphql/queries';
-import * as mutations from './graphql/mutations';
+import SearchBar from './SearchBar';
+import awsconfig from '../aws-exports.js';
+import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from './StateManagement';
+import { useStateValue } from '../StateManagement';
 
 const useStyles = makeStyles(theme => ({
   margin: {

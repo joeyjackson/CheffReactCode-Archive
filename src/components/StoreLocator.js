@@ -4,7 +4,7 @@ import Geocode from 'react-geocode';
 import Loader from 'react-loader-spinner';
 import useIsMounted from 'ismounted';
 import EmbededMaps from './EmbededMaps';
-import MapTest from './MapTest';
+import StaticMap from './StaticMap';
 
 // set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
 Geocode.setApiKey('AIzaSyAojclCkVnINxiSN0uKSLG1Q5RPBvtX9HI');
@@ -35,7 +35,7 @@ const StoreLocator = props => {
 
   if (Object.keys(coordinates).length > 0) {
     if (isMounted.current) {
-      return <MapTest lat={coordinates.lat} lng={coordinates.lng} />;
+      return <StaticMap lat={coordinates.lat} lng={coordinates.lng} />;
     }
   } else {
     // console.log(coordinates);

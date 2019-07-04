@@ -3,7 +3,7 @@ import { MDBContainer, MDBJumbotron, MDBBtn } from 'mdbreact';
 import EditableTable from './EditableTable';
 import StorageFilterStepper from './StorageFilterStepper';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { useStateValue } from './StateManagement';
+import { useStateValue } from '../StateManagement';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 

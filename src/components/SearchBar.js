@@ -3,7 +3,7 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete';
-import { classnames } from '../helpers';
+import { classnames } from './helpers';
 
 class SearchBar extends React.Component {
   constructor(props) {

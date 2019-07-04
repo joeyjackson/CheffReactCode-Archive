@@ -8,6 +8,7 @@ import App from './App';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import { StateProvider } from './StateManagement.js';
 import AlertTemplate from 'react-alert-template-basic';
+import reducer from './reducer'; // reducer used for global state management
 
 // optional cofiguration
 const options = {
@@ -19,66 +20,7 @@ const options = {
   transition: transitions.SCALE
 };
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'franchiseLocations':
-      return {
-        ...state,
-        franchiseLocations: action.state
-      };
-
-    case 'dryStorage':
-      return {
-        ...state,
-        dryStorage: action.state
-      };
-
-    case 'coldStorage':
-      return {
-        ...state,
-        coldStorage: action.state
-      };
-
-    case 'freezer':
-      return {
-        ...state,
-        freezer: action.state
-      };
-
-    case 'lowVelocity':
-      return {
-        ...state,
-        lowVelocity: action.state
-      };
-
-    case 'updateRef':
-      return {
-        ...state,
-        cardRef: action.state
-      };
-
-    case 'selectedFranchise':
-      return {
-        ...state,
-        selectedFranchise: action.state
-      };
-
-    case 'selectedAddress':
-      return {
-        ...state,
-        selectedAddress: action.state
-      };
-    case 'tempSearchAddress':
-      return {
-        ...state,
-        tempSearchAddress: action.state
-      };
-
-    default:
-      return state;
-  }
-};
-
+// initial global store
 const initialState = {
   franchiseLocations: [],
   dryStorage: false,

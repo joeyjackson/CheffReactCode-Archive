@@ -1,7 +1,7 @@
 import React from 'react';
 import { StaticGoogleMap, Marker, Path } from 'react-static-google-map';
 
-const MapTest = props => {
+const StaticMap = props => {
   return (
     <div>
       <StaticGoogleMap
@@ -15,4 +15,4 @@ const MapTest = props => {
   );
 };
 
-export default MapTest;
+export default StaticMap;
