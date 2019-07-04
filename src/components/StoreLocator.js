@@ -3,7 +3,6 @@ import { Map as Maps } from 'react-store-locator';
 import Geocode from 'react-geocode';
 import Loader from 'react-loader-spinner';
 import useIsMounted from 'ismounted';
-import EmbededMaps from './EmbededMaps';
 import StaticMap from './StaticMap';
 
 // set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.

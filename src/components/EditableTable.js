@@ -22,7 +22,7 @@ import {
   MDBCol
 } from 'mdbreact';
 
-import { useStateValue } from './StateManagement';
+import { useStateValue } from '../StateManagement';
 
 import { useAlert } from 'react-alert';
 

@@ -18,7 +18,7 @@ import {
   VerifyContact
 } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
 
-import CardList from './CardList';
+import CardList from './components/CardList';
 import SearchBar from './components/SearchBar';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import InventoryTable from './components/InventoryTable';
