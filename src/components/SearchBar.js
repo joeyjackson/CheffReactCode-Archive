@@ -64,6 +64,13 @@ class SearchBar extends React.Component {
           longitude: lng,
           isGeocoding: false
         });
+        this.props.dispatch({
+          type: 'selectedCoordinates',
+          state: {
+            lat: lat,
+            lng: lng
+          }
+        });
 
         this.extractFranchiseAndAddress(selected);
       })

@@ -34,14 +34,6 @@ require('jspdf-autotable');
 const uuidv1 = require('uuid/v1');
 var _ = require('underscore');
 
-// Configure a custom GraphQL endpoint
-Amplify.configure({
-  API: {
-    graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-    graphql_endpoint_iam_region: 'us-east-2'
-  }
-});
-
 const storageTypes = {
   options: [
     { checked: false, value: 'Dry Storage', text: 'Dry Storage' },

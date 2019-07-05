@@ -52,6 +52,17 @@ const reducer = (state, action) => {
         ...state,
         tempSearchAddress: action.state
       };
+    case 'userEmail':
+      return {
+        ...state,
+        userEmail: action.state
+      };
+    case 'selectedCoordinates':
+      return {
+        ...state,
+        latitude: action.state.lat,
+        longitude: action.state.lng
+      };
 
     default:
       return state;

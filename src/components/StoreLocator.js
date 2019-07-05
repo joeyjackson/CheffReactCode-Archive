@@ -33,9 +33,7 @@ const StoreLocator = props => {
   }, []);
 
   if (Object.keys(coordinates).length > 0) {
-    if (isMounted.current) {
-      return <StaticMap lat={coordinates.lat} lng={coordinates.lng} />;
-    }
+    return <StaticMap lat={coordinates.lat} lng={coordinates.lng} />;
   } else {
     // console.log(coordinates);
     return <Loader type="Puff" color="#00BFFF" height="100" width="100" />;

@@ -9,7 +9,8 @@ import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import { StateProvider } from './StateManagement.js';
 import AlertTemplate from 'react-alert-template-basic';
 import reducer from './reducer'; // reducer used for global state management
-
+import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import awsconfig from './aws-exports.js';
 // optional cofiguration
 const options = {
   // you can also just use 'bottom center'
@@ -22,16 +23,35 @@ const options = {
 
 // initial global store
 const initialState = {
-  franchiseLocations: [],
+  franchiseLocations: [], // stores our user's franchise and locations
   dryStorage: false,
   coldStorage: false,
   freezer: false,
   lowVelocity: false,
-  cardRef: 'root',
-  tempSearchAddress: '',
+  tempSearchAddress: '', // for Google API Search Bar
   selectedFranchise: '',
   selectedAddress: ''
 };
+
+Amplify.configure(awsconfig);
+// API.configure(awsconfig);
+// Auth.configure(awsconfig);
+
+// Amplify.configure({
+//   Auth: {
+//     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
+//     region: awsconfig.aws_cognito_region,
+//     userPoolId: awsconfig.aws_user_pools_id,
+//     userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
+//   },
+//   API: {
+//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region,
+//     aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     aws_appsync_region: awsconfig.aws_appsync_region,
+//     aws_appsync_authenticationType: awsconfig.aws_appsync_authenticationType
+//   }
+// });
 
 ReactDOM.render(
   <AlertProvider template={AlertTemplate} {...options}>

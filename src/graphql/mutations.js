@@ -49,6 +49,8 @@ export const createUserLocations = `mutation CreateUserLocations($input: CreateU
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;
@@ -58,6 +60,8 @@ export const updateUserLocations = `mutation UpdateUserLocations($input: UpdateU
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;
@@ -67,6 +71,8 @@ export const deleteUserLocations = `mutation DeleteUserLocations($input: DeleteU
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;

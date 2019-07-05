@@ -4,7 +4,6 @@ import awsconfig from './aws-exports';
 import IdleTimer from 'react-idle-timer';
 import { MDBContainer, MDBRow, MDBCol, MDBFooter, MDBBtn } from 'mdbreact';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-import { useStateValue } from './StateManagement';
 import {
   withAuthenticator,
   AmplifyTheme,
@@ -24,31 +23,44 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import InventoryTable from './components/InventoryTable';
 import './App.css';
 import UserCompletionPage from './components/UserCompletionPage';
+import * as queries from './graphql/queries';
+import { useStateValue } from './StateManagement';
 
-Amplify.configure(awsconfig);
+// Amplify.configure(awsconfig);
 
-Amplify.configure({
-  API: {
-    graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-    graphql_endpoint_iam_region: 'us-east-2'
-  }
-});
+// Amplify.configure({
+//   Auth: {
+//     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
+//     region: awsconfig.aws_cognito_region,
+//     userPoolId: awsconfig.aws_user_pools_id,
+//     userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
+//   },
+//   API: {
+//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region,
+//     aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     aws_appsync_region: awsconfig.aws_appsync_region,
+//     aws_appsync_authenticationType: awsconfig.aws_appsync_authenticationType
+//   }
+// });
 
-new AWSAppSyncClient({
-  url: awsconfig.aws_appsync_graphqlEndpoint,
-  region: awsconfig.aws_appsync_region,
-  auth: {
-    type: awsconfig.aws_appsync_authenticationType,
-    jwtToken: async () =>
-      (await Auth.currentSession()).getIdToken().getJwtToken()
-  }
-});
+// new AWSAppSyncClient({
+//   url: awsconfig.aws_appsync_graphqlEndpoint,
+//   region: awsconfig.aws_appsync_region,
+//   auth: {
+//     type: awsconfig.aws_appsync_authenticationType,
+//     jwtToken: async () =>
+//       (await Auth.currentSession()).getIdToken().getJwtToken()
+//   }
+// });
 
 let tacobellAddresses = {};
 
 var scrollIntoView = require('scroll-into-view');
 
 const App = () => {
+  const [globalStore, dispatch] = useStateValue();
+
   const signOut = () => {
     Auth.signOut()
       .then(data => console.log(data))
@@ -61,13 +73,47 @@ const App = () => {
       .then(data => console.log(data))
       .catch(err => console.log(err));
   };
-  // tacobellAddresses = {
-  //   Tacobell: 'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
-  //   Tacobell2: '3595 Biscayne Blvd, Miami, FL 33137',
-  //   McDonalds: '1105 Northside Dr NW, Atlanta, GA 30318'
-  // };
+  tacobellAddresses = {
+    Tacobell: 'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
+    Tacobell2: '3595 Biscayne Blvd, Miami, FL 33137',
+    McDonalds: '1105 Northside Dr NW, Atlanta, GA 30318'
+  };
 
-  Auth.currentUserInfo().then(data => console.log(data));
+  // Auth.currentUserInfo().then(data => console.log(data));
+  const getUserEmail = () => {
+    Auth.currentUserInfo().then(data => {
+      const userEmail = data.attributes.email;
+      getUserFranchiseLocations(userEmail);
+    });
+  };
+
+  const getUserFranchiseLocations = userEmail => {
+    API.graphql(
+      graphqlOperation(queries.listUserLocationss, {
+        filter: {
+          user: {
+            eq: userEmail
+          }
+        }
+      })
+    )
+      .then(result => {
+        dispatch({
+          type: 'franchiseLocations',
+          state: result.data.listUserLocationss.items
+        });
+        dispatch({
+          type: 'userEmail',
+          state: userEmail
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getUserEmail();
+  }, []);
 
   return (
     <Router>
@@ -84,64 +130,26 @@ const App = () => {
         /> */}
 
       <Switch>
-        <Route
-          exact
-          path="/"
-          render={routeProps => {
-            {
-              /* return (
-                <CardList {...routeProps} zoneInfoObject={tacobellAddresses} />
-              ); */
-            }
-
-            return <UserCompletionPage />;
-          }}
-        />
+        {globalStore.userEmail && (
+          <Route
+            exact
+            path="/"
+            render={routeProps => {
+              if (globalStore.franchiseLocations.length === 0) {
+                return <UserCompletionPage />;
+              } else {
+                return <CardList />;
+              }
+            }}
+          />
+        )}
         <Route
           path="/location/:location"
-          render={linkProps => {
-            return (
-              <InventoryTable location={linkProps.location.state.location} />
-            );
-          }}
+          render={linkProps => (
+            <InventoryTable location={linkProps.location.state.location} />
+          )}
         />
       </Switch>
-      <MDBFooter color="blue" className="font-small pt-4 mt-4">
-        <MDBContainer fluid className="text-center text-md-left">
-          <MDBRow>
-            <MDBCol md="6">
-              <h5 className="title">Footer Content</h5>
-              <p>
-                Here you can use rows and columns here to organize your footer
-                content.
-              </p>
-            </MDBCol>
-            <MDBCol md="6">
-              <h5 className="title">Links</h5>
-              <ul>
-                <li className="list-unstyled">
-                  <a href="#!">Link 1</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 2</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 3</a>
-                </li>
-                <li className="list-unstyled">
-                  <a href="#!">Link 4</a>
-                </li>
-              </ul>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-        <div className="footer-copyright text-center py-3">
-          <MDBContainer fluid>
-            &copy; {new Date().getFullYear()} Copyright:{' '}
-            <a href="https://www.MDBootstrap.com"> MDBootstrap.com </a>
-          </MDBContainer>
-        </div>
-      </MDBFooter>
     </Router>
   );
 };

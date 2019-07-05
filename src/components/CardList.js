@@ -5,37 +5,39 @@ import Loader from 'react-loader-spinner';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { useStateValue } from '../StateManagement';
 
-const CardList = props => {
-  const zoneInfoObject = props.zoneInfoObject;
+const CardList = () => {
+  const [globalStore, dispatch] = useStateValue();
+  const zoneInfoObject = globalStore.franchiseLocations;
+  console.log(zoneInfoObject);
 
-  // console.log(props);
-  if (Object.keys(zoneInfoObject).length > 0) {
-    const names = Object.keys(zoneInfoObject);
-    const cardList = names.map(name => (
-      <MDBCol
-        key={name}
-        sm="6"
-        style={{ paddingTop: '50px', paddingBottom: '50px' }}
+  const cardList = zoneInfoObject.map(eachLocation => (
+    <MDBCol
+      key={eachLocation.location}
+      lg="4"
+      md="6"
+      style={{ paddingTop: '50px', paddingBottom: '50px' }}
+    >
+      <Link
+        to={{
+          pathname: `/location/${eachLocation.location}`,
+          state: {
+            location: zoneInfoObject[eachLocation.location]
+          }
+        }}
       >
-        <Link
-          to={{
-            pathname: `/location/${name}`,
-            state: {
-              location: zoneInfoObject[name]
-            }
-          }}
-        >
-          <div className="d-flex justify-content-center">
-            <Card location={zoneInfoObject[name]} name={name} />
-          </div>
-        </Link>
-      </MDBCol>
-    ));
+        <div className="d-flex justify-content-center">
+          <Card
+            location={eachLocation.location}
+            name={eachLocation.franchise}
+            latitude={eachLocation.latitude}
+            longitude={eachLocation.longitude}
+          />
+        </div>
+      </Link>
+    </MDBCol>
+  ));
 
-    return <MDBRow>{cardList}</MDBRow>;
-  }
-
-  return <Loader type="Puff" color="#00BFFF" height="100" width="100" />;
+  return <MDBRow>{cardList}</MDBRow>;
 };
 
 export default CardList;

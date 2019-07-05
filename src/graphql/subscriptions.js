@@ -49,6 +49,8 @@ export const onCreateUserLocations = `subscription OnCreateUserLocations {
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;
@@ -58,6 +60,8 @@ export const onUpdateUserLocations = `subscription OnUpdateUserLocations {
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;
@@ -67,6 +71,8 @@ export const onDeleteUserLocations = `subscription OnDeleteUserLocations {
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;

@@ -42,6 +42,8 @@ export const getUserLocations = `query GetUserLocations($id: ID!) {
     franchise
     location
     id
+    longitude
+    latitude
   }
 }
 `;
@@ -56,6 +58,8 @@ export const listUserLocationss = `query ListUserLocationss(
       franchise
       location
       id
+      longitude
+      latitude
     }
     nextToken
   }

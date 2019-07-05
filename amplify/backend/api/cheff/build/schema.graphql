@@ -13,8 +13,10 @@ type InventoryItem {
 type UserLocations {
   user: String!
   franchise: String
-  location: AWSJSON
+  location: String
   id: String
+  longitude: Float
+  latitude: Float
 }
 
 enum ModelSortDirection {
@@ -160,6 +162,8 @@ input ModelUserLocationsFilterInput {
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
   id: ModelStringFilterInput
+  longitude: ModelFloatFilterInput
+  latitude: ModelFloatFilterInput
   and: [ModelUserLocationsFilterInput]
   or: [ModelUserLocationsFilterInput]
   not: ModelUserLocationsFilterInput
@@ -168,15 +172,19 @@ input ModelUserLocationsFilterInput {
 input CreateUserLocationsInput {
   user: String!
   franchise: String
-  location: AWSJSON
+  location: String
   id: ID
+  longitude: Float
+  latitude: Float
 }
 
 input UpdateUserLocationsInput {
   user: String
   franchise: String
-  location: AWSJSON
+  location: String
   id: String!
+  longitude: Float
+  latitude: Float
 }
 
 input DeleteUserLocationsInput {

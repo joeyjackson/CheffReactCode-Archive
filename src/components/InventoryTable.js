@@ -14,7 +14,7 @@ const InventoryTable = props => {
   const [currentFilterState, dispatch] = useStateValue();
 
   return (
-    <MDBContainer style={{ paddingBottom: '20px', paddingTop: '50px' }}>
+    <MDBContainer style={{ paddingBottom: '50px', paddingTop: '50px' }}>
       <h5 className="text-center">
         <b>{props.location}</b>
       </h5>

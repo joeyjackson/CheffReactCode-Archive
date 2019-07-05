@@ -9,12 +9,14 @@ import {
   MDBCol
 } from 'mdbreact';
 import StoreLocater from './StoreLocator';
+import StaticMap from './StaticMap';
 
 const Card = props => {
+  console.log(props);
   return (
     <MDBCard style={{ width: '22rem' }}>
       {/* just the map */}
-      <StoreLocater location={props.location} />
+      <StaticMap lat={props.latitude} lng={props.longitude} />
       <MDBCardBody>
         <MDBCardTitle>{props.name}</MDBCardTitle>
         <MDBCardText>{props.location}</MDBCardText>

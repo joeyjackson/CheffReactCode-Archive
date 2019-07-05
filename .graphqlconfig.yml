@@ -1,6 +1,6 @@
 projects:
   cheff:
-    schemaPath: src\graphql\schema.json
+    schemaPath: src\src\graphql\schema.json
     includes:
       - src\graphql\**\*.js
     excludes:

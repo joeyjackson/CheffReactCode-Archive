@@ -22,6 +22,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { useStateValue } from '../StateManagement';
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+
+// Amplify.configure({
+//   API: {
+//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
+//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region
+//   }
+// });
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -33,14 +41,48 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserCompletionPage = () => {
+  const [localFranchiseLocations, setLocalFranchiseLocations] = useState([]);
   const [globalStore, dispatch] = useStateValue();
   const classes = useStyles();
+
+  const createUserFranchiseLocations = Item => {
+    API.graphql(
+      graphqlOperation(mutations.createUserLocations, {
+        input: Item
+      })
+    )
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const pushChanges = () => {
+    new Promise(resolve => {
+      localFranchiseLocations.map(eachItem => {
+        let eachItemCopy = { ...eachItem };
+        eachItemCopy['user'] = globalStore.userEmail;
+        console.log(eachItemCopy);
+        createUserFranchiseLocations(eachItemCopy);
+      });
+      dispatch({
+        type: 'franchiseLocations',
+        state: localFranchiseLocations
+      });
+      resolve();
+    });
+  };
+
   const addRestaurant = () => {
-    let newData = [...globalStore.franchiseLocations];
-    console.log(globalStore.franchiseLocations);
+    let newData = [...localFranchiseLocations];
+    console.log(localFranchiseLocations);
     newData.push({
       franchise: globalStore.selectedFranchise,
-      location: globalStore.selectedAddress
+      location: globalStore.selectedAddress,
+      latitude: globalStore.latitude,
+      longitude: globalStore.longitude
     });
     dispatch({
       type: 'selectedFranchise',
@@ -51,17 +93,14 @@ const UserCompletionPage = () => {
       state: ''
     });
     dispatch({
-      type: 'franchiseLocations',
-      state: newData
-    });
-    dispatch({
       type: 'tempSearchAddress',
       state: ''
     });
+    setLocalFranchiseLocations(newData);
   };
 
   const renderEditable = cellInfo => {
-    const newData = [...globalStore.franchiseLocations];
+    const newData = [...localFranchiseLocations];
 
     if (cellInfo.column.Header === 'Franchise') {
       return (
@@ -71,14 +110,11 @@ const UserCompletionPage = () => {
               aria-label="Delete"
               className={classes.margin}
               onClick={() => {
-                let newData = [...globalStore.franchiseLocations];
+                let newData = [...localFranchiseLocations];
                 console.log(newData);
                 newData.splice(cellInfo.index, 1);
                 console.log(newData);
-                dispatch({
-                  type: 'franchiseLocations',
-                  state: newData
-                });
+                setLocalFranchiseLocations(newData);
               }}
             >
               <DeleteIcon fontSize="large" />
@@ -93,10 +129,7 @@ const UserCompletionPage = () => {
                 newData[cellInfo.index][cellInfo.column.id] = value;
               }}
               onBlur={() => {
-                dispatch({
-                  type: 'franchiseLocations',
-                  state: newData
-                });
+                setLocalFranchiseLocations(newData);
               }}
             />
           </MDBCol>
@@ -112,10 +145,7 @@ const UserCompletionPage = () => {
             newData[cellInfo.index][cellInfo.column.id] = value;
           }}
           onBlur={() => {
-            dispatch({
-              type: 'franchiseLocations',
-              state: newData
-            });
+            setLocalFranchiseLocations(newData);
           }}
         />
       );
@@ -145,7 +175,7 @@ const UserCompletionPage = () => {
       </h1>
       <hr className="my-5" />
 
-      {globalStore.franchiseLocations.length === 0 ? (
+      {localFranchiseLocations.length === 0 ? (
         <p className="lead" style={{ paddingBottom: '25px' }}>
           You currently have no restaurants associated with your account.
         </p>
@@ -156,8 +186,11 @@ const UserCompletionPage = () => {
       <ReactTable
         className="-striped -highlight"
         columns={columns}
-        data={globalStore.franchiseLocations}
+        data={localFranchiseLocations}
         defaultPageSize={5}
+        style={{
+          height: '400px'
+        }}
       />
       <p className="lead" style={{ paddingTop: '50px' }}>
         Start typing the name of your restaurant below and choose from the list
@@ -178,9 +211,9 @@ const UserCompletionPage = () => {
           </MDBBtn>
         )}
 
-        {globalStore.franchiseLocations.length > 0 ? (
+        {localFranchiseLocations.length > 0 ? (
           <MDBAnimation type="pulse" infinite>
-            <MDBBtn color="success" rounded onClick={() => addRestaurant()}>
+            <MDBBtn color="success" rounded onClick={() => pushChanges()}>
               Done
             </MDBBtn>
           </MDBAnimation>
