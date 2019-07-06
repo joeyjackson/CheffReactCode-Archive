@@ -2,11 +2,13 @@ type InventoryItem @model {
   franchise: String
   location: String
   item: String
+  itemNumber: Int
   storage: String
   category: String
   quantity: String
+  packSize: String
+  brand: String
   parValue: String
-  updatedAt: AWSDateTime
   id: String
 }
 

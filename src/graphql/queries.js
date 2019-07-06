@@ -6,11 +6,13 @@ export const getInventoryItem = `query GetInventoryItem($id: ID!) {
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }
@@ -25,11 +27,13 @@ export const listInventoryItems = `query ListInventoryItems(
       franchise
       location
       item
+      itemNumber
       storage
       category
       quantity
+      packSize
+      brand
       parValue
-      updatedAt
       id
     }
     nextToken

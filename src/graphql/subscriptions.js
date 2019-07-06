@@ -6,11 +6,13 @@ export const onCreateInventoryItem = `subscription OnCreateInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }
@@ -20,11 +22,13 @@ export const onUpdateInventoryItem = `subscription OnUpdateInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }
@@ -34,11 +38,13 @@ export const onDeleteInventoryItem = `subscription OnDeleteInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }

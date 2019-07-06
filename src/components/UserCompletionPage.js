@@ -188,6 +188,8 @@ const UserCompletionPage = () => {
         columns={columns}
         data={localFranchiseLocations}
         defaultPageSize={5}
+        pageSizeOptions={[5, 10]}
+        showPageSizeOptions={true}
         style={{
           height: '400px'
         }}

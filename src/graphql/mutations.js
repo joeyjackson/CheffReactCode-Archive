@@ -6,11 +6,13 @@ export const createInventoryItem = `mutation CreateInventoryItem($input: CreateI
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }
@@ -20,11 +22,13 @@ export const updateInventoryItem = `mutation UpdateInventoryItem($input: UpdateI
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }
@@ -34,11 +38,13 @@ export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteI
     franchise
     location
     item
+    itemNumber
     storage
     category
     quantity
+    packSize
+    brand
     parValue
-    updatedAt
     id
   }
 }

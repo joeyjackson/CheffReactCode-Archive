@@ -2,11 +2,13 @@ type InventoryItem {
   franchise: String
   location: String
   item: String
+  itemNumber: Int
   storage: String
   category: String
   quantity: String
+  packSize: String
+  brand: String
   parValue: String
-  updatedAt: AWSDateTime
   id: String
 }
 
@@ -88,11 +90,13 @@ input ModelInventoryItemFilterInput {
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
   item: ModelStringFilterInput
+  itemNumber: ModelIntFilterInput
   storage: ModelStringFilterInput
   category: ModelStringFilterInput
   quantity: ModelStringFilterInput
+  packSize: ModelStringFilterInput
+  brand: ModelStringFilterInput
   parValue: ModelStringFilterInput
-  updatedAt: ModelStringFilterInput
   id: ModelStringFilterInput
   and: [ModelInventoryItemFilterInput]
   or: [ModelInventoryItemFilterInput]
@@ -110,11 +114,13 @@ input CreateInventoryItemInput {
   franchise: String
   location: String
   item: String
+  itemNumber: Int
   storage: String
   category: String
   quantity: String
+  packSize: String
+  brand: String
   parValue: String
-  updatedAt: AWSDateTime
   id: ID
 }
 
@@ -122,11 +128,13 @@ input UpdateInventoryItemInput {
   franchise: String
   location: String
   item: String
+  itemNumber: Int
   storage: String
   category: String
   quantity: String
+  packSize: String
+  brand: String
   parValue: String
-  updatedAt: AWSDateTime
   id: String!
 }
 

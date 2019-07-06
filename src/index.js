@@ -11,6 +11,7 @@ import AlertTemplate from 'react-alert-template-basic';
 import reducer from './reducer'; // reducer used for global state management
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './aws-exports.js';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // optional cofiguration
 const options = {
   // you can also just use 'bottom center'
@@ -56,7 +57,9 @@ Amplify.configure(awsconfig);
 ReactDOM.render(
   <AlertProvider template={AlertTemplate} {...options}>
     <StateProvider initialState={initialState} reducer={reducer}>
-      <App />
+      <MuiThemeProvider>
+        <App />
+      </MuiThemeProvider>
     </StateProvider>
   </AlertProvider>,
   document.getElementById('root')
