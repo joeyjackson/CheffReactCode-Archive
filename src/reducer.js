@@ -6,30 +6,49 @@ const reducer = (state, action) => {
         franchiseLocations: action.state
       };
 
-    case 'dryStorage':
+    case 'storageOptions':
       return {
         ...state,
-        dryStorage: action.state
+        storageOptions: action.state
       };
 
-    case 'coldStorage':
+    case 'brandOptions':
       return {
         ...state,
-        coldStorage: action.state
+        brandOptions: action.state
       };
 
-    case 'freezer':
+    case 'supplierOptions':
       return {
         ...state,
-        freezer: action.state
+        supplierOptions: action.state
       };
 
-    case 'lowVelocity':
+    case 'unitOptions':
       return {
         ...state,
-        lowVelocity: action.state
+        unitOptions: action.state
       };
-
+    case 'currentLocation':
+      return {
+        ...state,
+        currentLocation: action.state
+      };
+    case 'currentFranchise':
+      return {
+        ...state,
+        currentFranchise: action.state
+      };
+    case 'inventoryTableItems':
+      return {
+        ...state,
+        inventoryTableItems: action.state
+      };
+    case 'inventoryTableLoading':
+      return {
+        ...state,
+        inventoryTableLoading: action.state
+      };
     case 'selectedFranchise':
       return {
         ...state,

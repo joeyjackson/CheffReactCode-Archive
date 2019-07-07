@@ -9,6 +9,7 @@ export const onCreateInventoryItem = `subscription OnCreateInventoryItem {
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units
@@ -27,6 +28,7 @@ export const onUpdateInventoryItem = `subscription OnUpdateInventoryItem {
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units
@@ -45,6 +47,7 @@ export const onDeleteInventoryItem = `subscription OnDeleteInventoryItem {
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units

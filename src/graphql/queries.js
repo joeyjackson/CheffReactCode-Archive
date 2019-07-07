@@ -9,6 +9,7 @@ export const getInventoryItem = `query GetInventoryItem($id: ID!) {
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units
@@ -32,6 +33,7 @@ export const listInventoryItems = `query ListInventoryItems(
       itemNumber
       storage
       category
+      price
       quantity
       packSize
       units

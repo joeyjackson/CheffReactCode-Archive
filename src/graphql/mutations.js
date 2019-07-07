@@ -9,6 +9,7 @@ export const createInventoryItem = `mutation CreateInventoryItem($input: CreateI
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units
@@ -27,6 +28,7 @@ export const updateInventoryItem = `mutation UpdateInventoryItem($input: UpdateI
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units
@@ -45,6 +47,7 @@ export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteI
     itemNumber
     storage
     category
+    price
     quantity
     packSize
     units

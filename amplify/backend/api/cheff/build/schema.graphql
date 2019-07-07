@@ -1,23 +1,24 @@
 type InventoryItem {
-  franchise: String
-  location: String
-  item: String
-  itemNumber: Int
-  storage: String
+  franchise: String!
+  location: String!
+  item: String!
+  itemNumber: Int!
+  storage: String!
   category: String
-  quantity: String
+  price: Float!
+  quantity: String!
   packSize: String
-  units: String
-  brand: String
-  supplier: String
-  parValue: String
+  units: String!
+  brand: String!
+  supplier: String!
+  parValue: String!
   id: String
 }
 
 type UserLocations {
   user: String!
-  franchise: String
-  location: String
+  franchise: String!
+  location: String!
   longitude: Float
   latitude: Float
   units: AWSJSON
@@ -99,6 +100,7 @@ input ModelInventoryItemFilterInput {
   itemNumber: ModelIntFilterInput
   storage: ModelStringFilterInput
   category: ModelStringFilterInput
+  price: ModelFloatFilterInput
   quantity: ModelStringFilterInput
   packSize: ModelStringFilterInput
   units: ModelStringFilterInput
@@ -119,18 +121,19 @@ type Query {
 }
 
 input CreateInventoryItemInput {
-  franchise: String
-  location: String
-  item: String
-  itemNumber: Int
-  storage: String
+  franchise: String!
+  location: String!
+  item: String!
+  itemNumber: Int!
+  storage: String!
   category: String
-  quantity: String
+  price: Float!
+  quantity: String!
   packSize: String
-  units: String
-  brand: String
-  supplier: String
-  parValue: String
+  units: String!
+  brand: String!
+  supplier: String!
+  parValue: String!
   id: ID
 }
 
@@ -141,6 +144,7 @@ input UpdateInventoryItemInput {
   itemNumber: Int
   storage: String
   category: String
+  price: Float
   quantity: String
   packSize: String
   units: String
@@ -195,8 +199,8 @@ input ModelUserLocationsFilterInput {
 
 input CreateUserLocationsInput {
   user: String!
-  franchise: String
-  location: String
+  franchise: String!
+  location: String!
   longitude: Float
   latitude: Float
   units: AWSJSON

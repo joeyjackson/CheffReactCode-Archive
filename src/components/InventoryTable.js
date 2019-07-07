@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   MDBJumbotron,
   MDBBtn,
@@ -8,25 +8,31 @@ import {
   MDBDataTable,
   MDBTableEditable,
   MDBInput,
-  MDBAnimation
+  MDBAnimation,
+  MDBModal,
+  MDBModalBody,
+  MDBModalHeader,
+  MDBModalFooter
 } from 'mdbreact';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import ReactDataGrid from 'react-data-grid';
+import { Connect } from 'aws-amplify-react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
+import * as subscriptions from '../graphql/subscriptions';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
 import { useStateValue } from '../StateManagement';
 import matchSorter from 'match-sorter';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import SearchBar from 'material-ui-search-bar';
 import Select from 'react-select';
 import { minHeight } from '@material-ui/system';
-
+import CreateInventoryItem from './CreateInventoryItem';
+import LoadingComponent from './LoadingComponent';
 // Amplify.configure({
 //   API: {
 //     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
@@ -35,58 +41,52 @@ import { minHeight } from '@material-ui/system';
 // });
 
 const InventoryTable = props => {
-  const [localData, setLocalData] = useState([]);
-  const [searchData, setSearchData] = useState([...localData]);
-  const [storageOptions, setStorageOptions] = useState([
-    {
-      value: 'dryStorage',
-      label: 'Dry Storage'
-    },
-    {
-      value: 'coldStorage',
-      label: 'Cold Storage'
-    },
-    {
-      value: 'freezer',
-      label: 'Freezer'
-    },
-    {
-      value: 'lowVelocity',
-      label: 'Low Velocity'
-    }
-  ]);
-  const [unitsOptions, setUnitOptions] = useState([
-    {
-      value: 'OZ',
-      label: 'OZ'
-    },
-    {
-      value: 'LB',
-      label: 'LB'
-    },
-    {
-      value: 'CT',
-      label: 'CT'
-    },
-    {
-      value: 'GM',
-      label: 'GM'
-    },
-    {
-      value: 'AV',
-      label: 'AV'
-    },
-    {
-      value: 'GA',
-      label: 'GA'
-    }
-  ]);
-  const [supplierOptions, setSupplierOptions] = useState([]);
-  const [brandOptions, setBrandOptions] = useState([]);
-  const handleStorageOption = event => {};
+  const [searchData, setSearchData] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [globalStore, dispatch] = useStateValue();
+  const [, updateState] = useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'currentLocation',
+      state: props.location
+    });
+    dispatch({
+      type: 'currentFranchise',
+      state: props.franchise
+    });
+    // setTimeout(listInventoryItems, 250);
+  }, []);
+
+  const listInventoryItems = () => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryItems, {
+        filter: {
+          location: {
+            eq: props.location
+          }
+        }
+      })
+    )
+      .then(result => {
+        console.log(result);
+        let data = result.data.listInventoryItems.items;
+        dispatch({
+          type: 'inventoryTableLoading',
+          state: false
+        });
+        console.log(data);
+        dispatch({
+          type: 'inventoryTableItems',
+          state: data
+        });
+      })
+      .catch(err => console.log(err));
+  };
 
   const renderEditable = cellInfo => {
-    const newData = [...localData];
+    const newData = [...globalStore.inventoryTableItems];
     if (cellInfo.column.Header === 'Item') {
       return (
         <div
@@ -101,15 +101,17 @@ const InventoryTable = props => {
               className="position-relative"
               flat
               onClick={() => {
-                let newData = [...localData];
+                let newData = [...globalStore.inventoryTableItems];
                 console.log(newData);
                 newData.splice(cellInfo.index, 1);
                 console.log(newData);
-                setLocalData(newData);
-                setSearchData(newData);
+                dispatch({
+                  type: 'inventoryTableItems',
+                  state: newData
+                });
               }}
             >
-              <i class="material-icons">clear</i>
+              <i className="material-icons">clear</i>
             </MDBBtn>
           </span>
           <span>
@@ -121,7 +123,10 @@ const InventoryTable = props => {
                 newData[cellInfo.index][cellInfo.column.id] = value;
               }}
               onBlur={() => {
-                setLocalData(newData);
+                dispatch({
+                  type: 'inventoryTableItems',
+                  state: newData
+                });
               }}
             />
           </span>
@@ -137,7 +142,10 @@ const InventoryTable = props => {
             newData[cellInfo.index][cellInfo.column.id] = value;
           }}
           onBlur={() => {
-            setLocalData(newData);
+            dispatch({
+              type: 'inventoryTableItems',
+              state: newData
+            });
           }}
         />
       );
@@ -171,7 +179,7 @@ const InventoryTable = props => {
         <SearchBar
           hintText="Search by item number/description, quantity, storage type, price, brand, or supplier"
           onChange={event => {
-            let results = matchSorter(localData, event, {
+            let results = matchSorter(globalStore.inventoryTableItems, event, {
               keys: ['item', 'quantity', 'storage']
             });
             setSearchData(results);
@@ -183,131 +191,118 @@ const InventoryTable = props => {
           }}
         />
       </div>
-      <ReactTable
-        className="-striped -highlight"
-        noDataText={'Inventory has not been setup'}
-        columns={columns}
-        data={searchData}
-        defaultPageSize={10}
-        pageSizeOptions={[5, 10, 20, 50, 100]}
-        onPageChange={pageIndex => {
-          const newData = [...localData];
-          setLocalData(newData);
-        }}
-        renderPageSizeOptions={({
-          pageSize,
-          pageSizeOptions,
-          rowsSelectorText,
-          onPageSizeChange,
-          rowsText
-        }) => {
-          return (
-            <span style={{ width: '150px' }}>
-              <Select
-                onChange={e => onPageSizeChange(e.value)}
-                placeholder={`${pageSize} rows`}
-                options={[
-                  {
-                    value: 5,
-                    label: '5 rows'
-                  },
-                  {
-                    value: 10,
-                    label: '10 rows'
-                  },
-                  {
-                    value: 20,
-                    label: '20 rows'
-                  },
-                  {
-                    value: 50,
-                    label: '50 rows'
-                  },
-                  {
-                    value: 100,
-                    label: '100 rows'
-                  }
-                ]}
-              />
-            </span>
-          );
-        }}
-      />
-      <h1 className="display-4" style={{ paddingTop: '80px' }}>
-        <strong>Create New Inventory Item</strong>
-      </h1>
-      <hr className="my-4" />
-      <div
-        className="d-flex justify-content-center"
-        style={{
-          maxWidth: '600px',
-          position: 'absolute',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          left: '0',
-          right: '0',
-          paddingBottom: '50px'
+      <Connect
+        query={graphqlOperation(queries.listInventoryItems, {
+          filter: {
+            location: {
+              eq: props.location
+            }
+          },
+          limit: 20
+        })}
+        subscription={graphqlOperation(subscriptions.onCreateInventoryItem)}
+        onSubscriptionMsg={(prev, { onCreateInventoryItem }) => {
+          console.log(prev);
+          console.log(onCreateInventoryItem);
+          let newData = [...prev.listInventoryItems.items];
+          newData.push(onCreateInventoryItem);
+          console.log(newData);
+          return newData;
         }}
       >
-        <form>
-          <label className="grey-text">Item Number</label>
-          <input className="form-control" />
-          <br />
-          <label className="grey-text">Item Description</label>
-          <input className="form-control" />
-          <br />
-          <label className="grey-text">Price</label>
-          <input className="form-control" />
-          <br />
-          <MDBRow>
-            <MDBCol sm="7">
-              <label className="grey-text">Quantity</label>
-              <input className="form-control" />
-            </MDBCol>
-            <MDBCol sm="5">
-              <label className="grey-text">Units</label>
-              <CreatableSelect
-                isClearable
-                onChange={e => console.log(e)}
-                onInputChange={e => console.log(e)}
-                options={unitsOptions}
-                placeholder={'OZ'}
+        {({ data: { listInventoryItems }, loading, error }) => {
+          if (error) {
+            console.log(error);
+          }
+          let isLoading = true;
+          if (loading || !listInventoryItems) {
+            isLoading = true;
+          } else {
+            console.log('Got Something', listInventoryItems);
+            isLoading = false;
+          }
+          if (listInventoryItems) {
+            return (
+              <ReactTable
+                className="-striped -highlight"
+                noDataText={'Inventory has not been setup'}
+                columns={columns}
+                data={listInventoryItems.items}
+                loading={isLoading}
+                LoadingComponent={LoadingComponent}
+                defaultPageSize={20}
+                pageSizeOptions={[5, 10, 20, 50, 100]}
+                onPageChange={pageIndex => {
+                  forceUpdate();
+                }}
+                renderPageSizeOptions={({
+                  pageSize,
+                  pageSizeOptions,
+                  rowsSelectorText,
+                  onPageSizeChange,
+                  rowsText
+                }) => {
+                  return (
+                    <span style={{ width: '150px' }}>
+                      <Select
+                        onChange={e => onPageSizeChange(e.value)}
+                        placeholder={`${pageSize} rows`}
+                        options={[
+                          {
+                            value: 5,
+                            label: '5 rows'
+                          },
+                          {
+                            value: 10,
+                            label: '10 rows'
+                          },
+                          {
+                            value: 20,
+                            label: '20 rows'
+                          },
+                          {
+                            value: 50,
+                            label: '50 rows'
+                          },
+                          {
+                            value: 100,
+                            label: '100 rows'
+                          }
+                        ]}
+                      />
+                    </span>
+                  );
+                }}
               />
-            </MDBCol>
-          </MDBRow>
-          <br />
-          <label className="grey-text">Storage</label>
-          <CreatableSelect
-            isClearable
-            onChange={e => console.log(e)}
-            onInputChange={e => console.log(e)}
-            options={storageOptions}
-            placeholder={'Select/Type Storage'}
-          />
-          <br />
-          <label className="grey-text">Brand</label>
-          <CreatableSelect
-            isClearable
-            onChange={e => console.log(e)}
-            onInputChange={e => console.log(e)}
-            options={brandOptions}
-            placeholder={'Select/Type Brand'}
-          />
-          <br />
-          <label className="grey-text">Supplier</label>
-          <CreatableSelect
-            isClearable
-            onChange={e => console.log(e)}
-            onInputChange={e => console.log(e)}
-            options={supplierOptions}
-            placeholder={'Select/Type Supplier'}
-          />
+            );
+          }
+        }}
+      </Connect>
 
-          <div className="text-center mt-4">
-            <MDBBtn color="primary">Create Item</MDBBtn>
-          </div>
-        </form>
-      </div>
+      <MDBBtn
+        color="primary"
+        onClick={() => {
+          setModalOpen(!modalOpen);
+        }}
+      >
+        Create New Inventory Item
+      </MDBBtn>
+      <MDBModal
+        isOpen={modalOpen}
+        toggle={() => setModalOpen(!modalOpen)}
+        centered
+        size="lg"
+      >
+        <MDBModalHeader toggle={() => setModalOpen(!modalOpen)} />
+        <MDBModalBody>
+          <CreateInventoryItem />
+        </MDBModalBody>
+        <MDBModalFooter>
+          <MDBBtn color="secondary" onClick={() => setModalOpen(!modalOpen)}>
+            Close
+          </MDBBtn>
+        </MDBModalFooter>
+      </MDBModal>
     </MDBContainer>
   );
 };
