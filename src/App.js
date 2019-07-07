@@ -54,9 +54,7 @@ import { useStateValue } from './StateManagement';
 //   }
 // });
 
-let tacobellAddresses = {};
-
-var scrollIntoView = require('scroll-into-view');
+// var scrollIntoView = require('scroll-into-view');
 
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
@@ -72,11 +70,6 @@ const App = () => {
     Auth.signOut({ global: true })
       .then(data => console.log(data))
       .catch(err => console.log(err));
-  };
-  tacobellAddresses = {
-    Tacobell: 'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
-    Tacobell2: '3595 Biscayne Blvd, Miami, FL 33137',
-    McDonalds: '1105 Northside Dr NW, Atlanta, GA 30318'
   };
 
   // Auth.currentUserInfo().then(data => console.log(data));
@@ -145,9 +138,12 @@ const App = () => {
         )}
         <Route
           path="/location/:location"
-          render={linkProps => (
-            <InventoryTable location={linkProps.location.state.location} />
-          )}
+          render={linkProps => {
+            console.log(linkProps);
+            return (
+              <InventoryTable location={linkProps.location.state.location} />
+            );
+          }}
         />
       </Switch>
     </Router>

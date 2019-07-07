@@ -7,7 +7,9 @@ type InventoryItem @model {
   category: String
   quantity: String
   packSize: String
+  units: String
   brand: String
+  supplier: String
   parValue: String
   id: String
 }
@@ -16,7 +18,11 @@ type UserLocations @model {
   user: String!
   franchise: String
   location: String
-  id: String
   longitude: Float
   latitude: Float
+  units: AWSJSON
+  storageTypes: AWSJSON
+  brands: AWSJSON
+  suppliers: AWSJSON
+  id: String
 }

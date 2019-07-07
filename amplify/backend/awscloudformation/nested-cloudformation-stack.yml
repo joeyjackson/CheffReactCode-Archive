@@ -157,7 +157,7 @@
 						]
 					},
 					"S3DeploymentBucket": "cheff-cheff-20190611210030-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/53fb4ed86a5b468edb8e3c50f95f9e5ae2f4bc67",
+					"S3DeploymentRootKey": "amplify-appsync-files/733387fb9a18c14fc8dac43710e76f86e1737d25",
 					"env": "cheff"
 				}
 			}

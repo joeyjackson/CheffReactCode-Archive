@@ -8,6 +8,7 @@ import {
   MDBDataTable,
   MDBTableEditable,
   MDBInput,
+  MDBSelect,
   MDBAnimation
 } from 'mdbreact';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
@@ -22,14 +23,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { useStateValue } from '../StateManagement';
+import Select from 'react-select';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-
-// Amplify.configure({
-//   API: {
-//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region
-//   }
-// });
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -43,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 const UserCompletionPage = () => {
   const [localFranchiseLocations, setLocalFranchiseLocations] = useState([]);
   const [globalStore, dispatch] = useStateValue();
+
   const classes = useStyles();
 
   const createUserFranchiseLocations = Item => {
@@ -101,10 +97,16 @@ const UserCompletionPage = () => {
 
   const renderEditable = cellInfo => {
     const newData = [...localFranchiseLocations];
-
+    console.log(cellInfo);
     if (cellInfo.column.Header === 'Franchise') {
       return (
-        <MDBRow>
+        <MDBRow
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           <MDBCol size="2">
             <IconButton
               aria-label="Delete"
@@ -117,7 +119,7 @@ const UserCompletionPage = () => {
                 setLocalFranchiseLocations(newData);
               }}
             >
-              <DeleteIcon fontSize="large" />
+              <i className="material-icons">clear</i>
             </IconButton>
           </MDBCol>
           <MDBCol>
@@ -170,7 +172,7 @@ const UserCompletionPage = () => {
       className="mt-5 text-center"
       style={{ paddingBottom: '50px' }}
     >
-      <h1 className="display-4">
+      <h1 className="display-5">
         <strong>First Time Setup</strong>
       </h1>
       <hr className="my-5" />
@@ -187,11 +189,44 @@ const UserCompletionPage = () => {
         className="-striped -highlight"
         columns={columns}
         data={localFranchiseLocations}
-        defaultPageSize={5}
-        pageSizeOptions={[5, 10]}
+        pageSize={5}
+        pageSizeOptions={[5, 10, 20, 50, 100]}
         showPageSizeOptions={true}
-        style={{
-          height: '400px'
+        noDataText={'No locations setup yet'}
+        renderPageSizeOptions={({
+          pageSize,
+          pageSizeOptions,
+          rowsSelectorText,
+          onPageSizeChange,
+          rowsText
+        }) => {
+          return (
+            <span style={{ width: '150px' }}>
+              <Select
+                onChange={e => onPageSizeChange(e.value)}
+                placeholder={`${pageSize} rows`}
+                options={[
+                  {
+                    value: 5,
+                    label: '5 rows'
+                  },
+                  {
+                    value: 10,
+                    label: '10 rows'
+                  },
+                  {
+                    value: 20,
+                    label: '20 rows'
+                  }
+                ]}
+              />
+            </span>
+          );
+        }}
+        // do this to force the next page to update properly, there is a bug and this is the only workaround I could figure out
+        onPageChange={pageIndex => {
+          const newData = [...localFranchiseLocations];
+          setLocalFranchiseLocations(newData);
         }}
       />
       <p className="lead" style={{ paddingTop: '50px' }}>

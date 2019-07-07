@@ -11,7 +11,9 @@ export const createInventoryItem = `mutation CreateInventoryItem($input: CreateI
     category
     quantity
     packSize
+    units
     brand
+    supplier
     parValue
     id
   }
@@ -27,7 +29,9 @@ export const updateInventoryItem = `mutation UpdateInventoryItem($input: UpdateI
     category
     quantity
     packSize
+    units
     brand
+    supplier
     parValue
     id
   }
@@ -43,7 +47,9 @@ export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteI
     category
     quantity
     packSize
+    units
     brand
+    supplier
     parValue
     id
   }
@@ -54,9 +60,13 @@ export const createUserLocations = `mutation CreateUserLocations($input: CreateU
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;
@@ -65,9 +75,13 @@ export const updateUserLocations = `mutation UpdateUserLocations($input: UpdateU
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;
@@ -76,9 +90,13 @@ export const deleteUserLocations = `mutation DeleteUserLocations($input: DeleteU
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;

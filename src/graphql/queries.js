@@ -11,7 +11,9 @@ export const getInventoryItem = `query GetInventoryItem($id: ID!) {
     category
     quantity
     packSize
+    units
     brand
+    supplier
     parValue
     id
   }
@@ -32,7 +34,9 @@ export const listInventoryItems = `query ListInventoryItems(
       category
       quantity
       packSize
+      units
       brand
+      supplier
       parValue
       id
     }
@@ -45,9 +49,13 @@ export const getUserLocations = `query GetUserLocations($id: ID!) {
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;
@@ -61,9 +69,13 @@ export const listUserLocationss = `query ListUserLocationss(
       user
       franchise
       location
-      id
       longitude
       latitude
+      units
+      storageTypes
+      brands
+      suppliers
+      id
     }
     nextToken
   }

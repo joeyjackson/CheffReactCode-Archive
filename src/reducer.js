@@ -30,12 +30,6 @@ const reducer = (state, action) => {
         lowVelocity: action.state
       };
 
-    case 'updateRef':
-      return {
-        ...state,
-        cardRef: action.state
-      };
-
     case 'selectedFranchise':
       return {
         ...state,
