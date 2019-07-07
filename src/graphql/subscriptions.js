@@ -6,11 +6,16 @@ export const onCreateInventoryItem = `subscription OnCreateInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
+    price
     quantity
+    packSize
+    units
+    brand
+    supplier
     parValue
-    updatedAt
     id
   }
 }
@@ -20,11 +25,16 @@ export const onUpdateInventoryItem = `subscription OnUpdateInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
+    price
     quantity
+    packSize
+    units
+    brand
+    supplier
     parValue
-    updatedAt
     id
   }
 }
@@ -34,11 +44,16 @@ export const onDeleteInventoryItem = `subscription OnDeleteInventoryItem {
     franchise
     location
     item
+    itemNumber
     storage
     category
+    price
     quantity
+    packSize
+    units
+    brand
+    supplier
     parValue
-    updatedAt
     id
   }
 }
@@ -48,9 +63,13 @@ export const onCreateUserLocations = `subscription OnCreateUserLocations {
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;
@@ -59,9 +78,13 @@ export const onUpdateUserLocations = `subscription OnUpdateUserLocations {
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;
@@ -70,9 +93,13 @@ export const onDeleteUserLocations = `subscription OnDeleteUserLocations {
     user
     franchise
     location
-    id
     longitude
     latitude
+    units
+    storageTypes
+    brands
+    suppliers
+    id
   }
 }
 `;

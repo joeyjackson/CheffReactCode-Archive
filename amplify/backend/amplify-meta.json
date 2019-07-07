@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/auth/cheff2fec0ed8-cloudformation-template.yml",
 				"logicalId": "authcheff2fec0ed8"
 			},
-			"lastPushTimeStamp": "2019-07-04T16:56:40.114Z",
+			"lastPushTimeStamp": "2019-07-07T07:13:49.594Z",
 			"output": {
 				"AppClientSecret": "9300ho35rn2u1bu74atekgeff5n9p38fja6j4ouh5ilp2gct6u7",
 				"UserPoolId": "us-east-2_9AlobejmS",
@@ -45,8 +45,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apicheff"
 			},
-			"lastPushTimeStamp": "2019-07-04T16:56:41.517Z",
-			"lastPushDirHash": "O9d+UnvNFJs/sa+L7BlIs71SFos="
+			"lastPushTimeStamp": "2019-07-07T07:13:50.626Z",
+			"lastPushDirHash": "P39llMnXTbNH9QHzTBWPzSiLNQw="
 		}
 	}
 }

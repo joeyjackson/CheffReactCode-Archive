@@ -26,37 +26,7 @@ import UserCompletionPage from './components/UserCompletionPage';
 import * as queries from './graphql/queries';
 import { useStateValue } from './StateManagement';
 
-// Amplify.configure(awsconfig);
-
-// Amplify.configure({
-//   Auth: {
-//     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
-//     region: awsconfig.aws_cognito_region,
-//     userPoolId: awsconfig.aws_user_pools_id,
-//     userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
-//   },
-//   API: {
-//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region,
-//     aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     aws_appsync_region: awsconfig.aws_appsync_region,
-//     aws_appsync_authenticationType: awsconfig.aws_appsync_authenticationType
-//   }
-// });
-
-// new AWSAppSyncClient({
-//   url: awsconfig.aws_appsync_graphqlEndpoint,
-//   region: awsconfig.aws_appsync_region,
-//   auth: {
-//     type: awsconfig.aws_appsync_authenticationType,
-//     jwtToken: async () =>
-//       (await Auth.currentSession()).getIdToken().getJwtToken()
-//   }
-// });
-
-let tacobellAddresses = {};
-
-var scrollIntoView = require('scroll-into-view');
+// var scrollIntoView = require('scroll-into-view');
 
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
@@ -72,11 +42,6 @@ const App = () => {
     Auth.signOut({ global: true })
       .then(data => console.log(data))
       .catch(err => console.log(err));
-  };
-  tacobellAddresses = {
-    Tacobell: 'Taco Bell, San Mateo Boulevard Northeast, Albuquerque, NM, USA',
-    Tacobell2: '3595 Biscayne Blvd, Miami, FL 33137',
-    McDonalds: '1105 Northside Dr NW, Atlanta, GA 30318'
   };
 
   // Auth.currentUserInfo().then(data => console.log(data));
@@ -145,9 +110,15 @@ const App = () => {
         )}
         <Route
           path="/location/:location"
-          render={linkProps => (
-            <InventoryTable location={linkProps.location.state.location} />
-          )}
+          render={linkProps => {
+            console.log(linkProps);
+            return (
+              <InventoryTable
+                location={linkProps.location.state.location}
+                franchise={linkProps.location.state.franchise}
+              />
+            );
+          }}
         />
       </Switch>
     </Router>
