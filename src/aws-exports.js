@@ -7,7 +7,6 @@ const awsconfig = {
   aws_cognito_region: 'us-east-2',
   aws_user_pools_id: 'us-east-2_9AlobejmS',
   aws_user_pools_web_client_id: '2bmf1sp9pf622o5r8egl23qgki',
-  oauth: {},
   aws_appsync_graphqlEndpoint:
     'https://46yagyum2nabbnl4qfbvw7qulm.appsync-api.us-east-2.amazonaws.com/graphql',
   aws_appsync_region: 'us-east-2',

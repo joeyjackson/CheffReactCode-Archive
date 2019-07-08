@@ -1,0 +1,12 @@
+{
+    "AppSyncApiName": "cheff",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcheff2fec0ed8",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "S3DeploymentBucket": "cheff-cheff-20190611210030-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/eb4384bf9e8c0591aeef9ada43aa5a04d3ef5414"
+}
