@@ -1,9 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import awsconfig from './aws-exports';
-import IdleTimer from 'react-idle-timer';
-import { MDBContainer, MDBRow, MDBCol, MDBFooter, MDBBtn } from 'mdbreact';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+
 import {
   withAuthenticator,
   AmplifyTheme,
