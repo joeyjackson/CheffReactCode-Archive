@@ -95,7 +95,8 @@ const initialState = {
   currentLocation: '',
   currentFranchise: '',
   inventoryTableLoading: true,
-  inventoryTableItems: []
+  inventoryTableItems: [],
+  itemToRemove: ''
 };
 
 Amplify.configure(awsconfig);

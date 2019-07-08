@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   MDBJumbotron,
@@ -12,7 +13,8 @@ import {
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
-  MDBModalFooter
+  MDBModalFooter,
+  MDBSelect
 } from 'mdbreact';
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import ReactDataGrid from 'react-data-grid';
@@ -33,21 +35,21 @@ import Select from 'react-select';
 import { minHeight } from '@material-ui/system';
 import CreateInventoryItem from './CreateInventoryItem';
 import LoadingComponent from './LoadingComponent';
-// Amplify.configure({
-//   API: {
-//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region
-//   }
-// });
+import './Custom.css';
+
+const uuidv1 = require('uuid/v1');
+
+const useForceUpdate = () => useState()[1];
 
 const InventoryTable = props => {
   const [searchData, setSearchData] = useState([]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [globalStore, dispatch] = useStateValue();
-  const [, updateState] = useState();
-  const forceUpdate = useCallback(() => updateState({}), []);
+  const forceUpdate = useForceUpdate();
 
   useEffect(() => {
+    console.log('mounted');
     dispatch({
       type: 'currentLocation',
       state: props.location
@@ -56,111 +58,172 @@ const InventoryTable = props => {
       type: 'currentFranchise',
       state: props.franchise
     });
-    // setTimeout(listInventoryItems, 250);
+    dispatch({
+      type: 'itemToRemove',
+      state: props.franchise
+    });
   }, []);
 
-  const listInventoryItems = () => {
+  const createFakeItem = () => {
+    const id = uuidv1();
     API.graphql(
-      graphqlOperation(queries.listInventoryItems, {
-        filter: {
-          location: {
-            eq: props.location
-          }
+      graphqlOperation(mutations.createInventoryItem, {
+        input: {
+          franchise: 'NA',
+          location: 'NA',
+          item: 'NA',
+          itemNumber: 1234,
+          storage: 'NA',
+          category: 'NA',
+          price: 123,
+          quantity: 123,
+          packSize: 'NA',
+          units: 'NA',
+          brand: 'NA',
+          supplier: 'NA',
+          parValue: 'NA',
+          id: id
         }
       })
     )
       .then(result => {
-        console.log(result);
-        let data = result.data.listInventoryItems.items;
-        dispatch({
-          type: 'inventoryTableLoading',
-          state: false
-        });
-        console.log(data);
-        dispatch({
-          type: 'inventoryTableItems',
-          state: data
-        });
+        API.graphql(
+          graphqlOperation(mutations.deleteInventoryItem, {
+            input: { id: id }
+          })
+        );
       })
-      .catch(err => console.log(err));
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const updateInventoryItem = item => {
+    if ('__typename' in item) {
+      delete item.__typename;
+    }
+    API.graphql(
+      graphqlOperation(mutations.updateInventoryItem, {
+        input: item
+      })
+    )
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const deleteInventoryItem = ItemID => {
+    console.log(ItemID);
+    API.graphql(
+      graphqlOperation(mutations.deleteInventoryItem, {
+        input: { id: ItemID }
+      })
+    )
+      .then(result => {
+        createFakeItem();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const renderEditable = cellInfo => {
     const newData = [...globalStore.inventoryTableItems];
-    if (cellInfo.column.Header === 'Item') {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <span>
-            <MDBBtn
-              className="position-relative"
-              flat
-              onClick={() => {
-                let newData = [...globalStore.inventoryTableItems];
-                console.log(newData);
-                newData.splice(cellInfo.index, 1);
-                console.log(newData);
-                dispatch({
-                  type: 'inventoryTableItems',
-                  state: newData
-                });
-              }}
-            >
-              <i className="material-icons">clear</i>
-            </MDBBtn>
-          </span>
-          <span>
-            <MDBInput
-              style={{ textAlign: 'center' }}
-              size="md"
-              valueDefault={cellInfo.original[cellInfo.column.id]}
-              getValue={value => {
-                newData[cellInfo.index][cellInfo.column.id] = value;
-              }}
-              onBlur={() => {
-                dispatch({
-                  type: 'inventoryTableItems',
-                  state: newData
-                });
-              }}
-            />
-          </span>
-        </div>
-      );
-    } else {
-      return (
-        <MDBInput
-          style={{ textAlign: 'center' }}
-          size="md"
-          valueDefault={cellInfo.original[cellInfo.column.id]}
-          getValue={value => {
-            newData[cellInfo.index][cellInfo.column.id] = value;
-          }}
-          onBlur={() => {
-            dispatch({
-              type: 'inventoryTableItems',
-              state: newData
-            });
-          }}
-        />
-      );
+    switch (cellInfo.column.Header) {
+      case 'Item Description':
+        return (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <span>
+              <MDBBtn
+                className="position-relative"
+                flat
+                onClick={() => {
+                  deleteInventoryItem(cellInfo.original.id);
+                }}
+              >
+                <i className="material-icons">clear</i>
+              </MDBBtn>
+            </span>
+            <span>
+              <MDBInput
+                style={{ textAlign: 'center' }}
+                size="md"
+                valueDefault={cellInfo.original[cellInfo.column.id]}
+                getValue={value => {
+                  newData[cellInfo.index][cellInfo.column.id] = value;
+                }}
+                onBlur={() => {
+                  updateInventoryItem(cellInfo.original);
+                }}
+              />
+            </span>
+          </div>
+        );
+      case 'Quantity':
+        return (
+          <MDBInput
+            style={{ textAlign: 'center' }}
+            size="md"
+            type="number"
+            valueDefault={cellInfo.original[cellInfo.column.id]}
+            getValue={value => {
+              newData[cellInfo.index][cellInfo.column.id] = value;
+            }}
+            onBlur={() => {
+              updateInventoryItem(cellInfo.original);
+            }}
+          />
+        );
+      case 'Units':
+        return (
+          <MDBSelect
+            style={{ textAlign: 'center' }}
+            options={globalStore.unitOptions}
+            selected={cellInfo.original.units}
+            getValue={value => {
+              newData[cellInfo.index][cellInfo.column.id] = value[0];
+              updateInventoryItem(cellInfo.original);
+            }}
+          />
+        );
+
+      case 'Storage':
+        return (
+          <MDBSelect
+            options={globalStore.storageOptions}
+            selected={cellInfo.original.storage}
+            getValue={value => {
+              newData[cellInfo.index][cellInfo.column.id] = value[0];
+              updateInventoryItem(cellInfo.original);
+            }}
+          />
+        );
     }
   };
 
   const columns = [
     {
-      Header: 'Item',
+      Header: 'Item Description',
       accessor: 'item',
       Cell: renderEditable
     },
     {
       Header: 'Quantity',
       accessor: 'quantity',
+      Cell: renderEditable
+    },
+    {
+      Header: 'Units',
+      accessor: 'units',
       Cell: renderEditable
     },
     {
@@ -202,35 +265,73 @@ const InventoryTable = props => {
         })}
         subscription={graphqlOperation(subscriptions.onCreateInventoryItem)}
         onSubscriptionMsg={(prev, { onCreateInventoryItem }) => {
-          console.log(prev);
-          console.log(onCreateInventoryItem);
-          let newData = [...prev.listInventoryItems.items];
-          newData.push(onCreateInventoryItem);
-          console.log(newData);
-          return newData;
+          var listInventoryItems;
+          if ('listInventoryItems' in prev) {
+            listInventoryItems = [...prev.listInventoryItems.items];
+          } else {
+            listInventoryItems = prev;
+          }
+          console.log(globalStore);
+          console.log(listInventoryItems);
+          // fake data created so we can remove from the table
+          if (onCreateInventoryItem.franchise === 'NA') {
+            for (let i = 0; i < listInventoryItems.length; i++) {
+              if (listInventoryItems[i].id === globalStore.itemToRemove) {
+                listInventoryItems.splice(i, 1);
+              }
+            }
+            console.log(listInventoryItems);
+            return listInventoryItems;
+          }
+          listInventoryItems.push(onCreateInventoryItem);
+          return listInventoryItems;
         }}
       >
-        {({ data: { listInventoryItems }, loading, error }) => {
-          if (error) {
-            console.log(error);
-          }
-          let isLoading = true;
-          if (loading || !listInventoryItems) {
-            isLoading = true;
-          } else {
-            console.log('Got Something', listInventoryItems);
-            isLoading = false;
-          }
-          if (listInventoryItems) {
+        {props => {
+          console.log(props);
+          var data;
+          if (props.loading) {
             return (
               <ReactTable
                 className="-striped -highlight"
                 noDataText={'Inventory has not been setup'}
                 columns={columns}
-                data={listInventoryItems.items}
-                loading={isLoading}
+                data={[]}
+                defaultPageSize={10}
+                loading={props.loading}
                 LoadingComponent={LoadingComponent}
-                defaultPageSize={20}
+              />
+            );
+          } else {
+            if ('listInventoryItems' in props.data) {
+              data = props.data.listInventoryItems.items;
+            } else {
+              data = props.data;
+            }
+
+            return (
+              <ReactTable
+                className="-striped -highlight"
+                noDataText={'Inventory has not been setup'}
+                columns={columns}
+                data={data}
+                getTdProps={() => {
+                  return {
+                    style: {
+                      overflow: 'visible'
+                    }
+                  };
+                }}
+                resolveData={data => {
+                  dispatch({
+                    type: 'inventoryTableItems',
+                    state: data
+                  });
+                  return data;
+                }}
+                loading={props.loading}
+                LoadingComponent={LoadingComponent}
+                defaultPageSize={10}
                 pageSizeOptions={[5, 10, 20, 50, 100]}
                 onPageChange={pageIndex => {
                   forceUpdate();
