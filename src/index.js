@@ -12,6 +12,7 @@ import reducer from './reducer'; // reducer used for global state management
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './aws-exports.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { BrowserRouter as Router } from 'react-router-dom';
 // optional cofiguration
 const options = {
   // you can also just use 'bottom center'

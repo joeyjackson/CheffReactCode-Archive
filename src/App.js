@@ -4,11 +4,11 @@ import awsconfig from './aws-exports';
 import IdleTimer from 'react-idle-timer';
 import { MDBContainer, MDBRow, MDBCol, MDBFooter, MDBBtn } from 'mdbreact';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import NavBar from './components/navigation/NavBar'
 import {
   withAuthenticator,
   AmplifyTheme,
   SignIn,
-  Greetings,
   ConfirmSignIn,
   TOTPSetup,
   ForgotPassword,
@@ -16,6 +16,7 @@ import {
   RequireNewPassword,
   VerifyContact
 } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
+import SettingsView from './views/Settings';
 
 import CardList from './components/CardList';
 import SearchBar from './components/SearchBar';
@@ -82,31 +83,14 @@ const App = () => {
 
   return (
     <Router>
-      {/* <IdleTimer
-          element={document}
-          onActive={() => {
-            console.log('user is active');
-          }}
-          onIdle={() => {
-            signOut();
-          }}
-          debounce={250}
-          timeout={30 * 1000 * 60}
-        /> */}
-
+      <NavBar />
       <Switch>
         {globalStore.userEmail && (
-          <Route
-            exact
-            path="/"
-            render={routeProps => {
-              if (globalStore.franchiseLocations.length === 0) {
-                return <UserCompletionPage />;
-              } else {
-                return <CardList />;
-              }
-            }}
-          />
+        <Route
+          exact
+          path="/"
+          render={() => (globalStore.franchiseLocations.length === 0 ? <UserCompletionPage /> : <CardList />) }
+        />
         )}
         <Route
           path="/location/:location"
@@ -120,15 +104,18 @@ const App = () => {
             );
           }}
         />
+        <Route
+          path="/settings"
+          component={SettingsView}
+        />
       </Switch>
-    </Router>
+     </Router>
   );
 };
 
 export default withAuthenticator(App, {
   includeGreetings: true,
   authenticatorComponents: [
-    <Greetings />,
     <ConfirmSignIn />,
     <TOTPSetup />,
     <ForgotPassword />,
