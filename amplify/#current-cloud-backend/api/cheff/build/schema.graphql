@@ -1,22 +1,31 @@
 type InventoryItem {
-  franchise: String
-  location: String
-  item: String
-  storage: String
+  franchise: String!
+  location: String!
+  item: String!
+  itemNumber: Int!
+  storage: String!
   category: String
-  quantity: String
-  parValue: String
-  updatedAt: AWSDateTime
+  price: Float!
+  quantity: String!
+  packSize: String
+  units: String!
+  brand: String!
+  supplier: String!
+  parValue: String!
   id: String
 }
 
 type UserLocations {
   user: String!
-  franchise: String
-  location: String
-  id: String
+  franchise: String!
+  location: String!
   longitude: Float
   latitude: Float
+  units: AWSJSON
+  storageTypes: AWSJSON
+  brands: AWSJSON
+  suppliers: AWSJSON
+  id: String
 }
 
 enum ModelSortDirection {
@@ -88,11 +97,16 @@ input ModelInventoryItemFilterInput {
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
   item: ModelStringFilterInput
+  itemNumber: ModelIntFilterInput
   storage: ModelStringFilterInput
   category: ModelStringFilterInput
+  price: ModelFloatFilterInput
   quantity: ModelStringFilterInput
+  packSize: ModelStringFilterInput
+  units: ModelStringFilterInput
+  brand: ModelStringFilterInput
+  supplier: ModelStringFilterInput
   parValue: ModelStringFilterInput
-  updatedAt: ModelStringFilterInput
   id: ModelStringFilterInput
   and: [ModelInventoryItemFilterInput]
   or: [ModelInventoryItemFilterInput]
@@ -107,14 +121,19 @@ type Query {
 }
 
 input CreateInventoryItemInput {
-  franchise: String
-  location: String
-  item: String
-  storage: String
+  franchise: String!
+  location: String!
+  item: String!
+  itemNumber: Int!
+  storage: String!
   category: String
-  quantity: String
-  parValue: String
-  updatedAt: AWSDateTime
+  price: Float!
+  quantity: String!
+  packSize: String
+  units: String!
+  brand: String!
+  supplier: String!
+  parValue: String!
   id: ID
 }
 
@@ -122,11 +141,16 @@ input UpdateInventoryItemInput {
   franchise: String
   location: String
   item: String
+  itemNumber: Int
   storage: String
   category: String
+  price: Float
   quantity: String
+  packSize: String
+  units: String
+  brand: String
+  supplier: String
   parValue: String
-  updatedAt: AWSDateTime
   id: String!
 }
 
@@ -161,9 +185,13 @@ input ModelUserLocationsFilterInput {
   user: ModelStringFilterInput
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
-  id: ModelStringFilterInput
   longitude: ModelFloatFilterInput
   latitude: ModelFloatFilterInput
+  units: ModelStringFilterInput
+  storageTypes: ModelStringFilterInput
+  brands: ModelStringFilterInput
+  suppliers: ModelStringFilterInput
+  id: ModelStringFilterInput
   and: [ModelUserLocationsFilterInput]
   or: [ModelUserLocationsFilterInput]
   not: ModelUserLocationsFilterInput
@@ -171,20 +199,28 @@ input ModelUserLocationsFilterInput {
 
 input CreateUserLocationsInput {
   user: String!
-  franchise: String
-  location: String
-  id: ID
+  franchise: String!
+  location: String!
   longitude: Float
   latitude: Float
+  units: AWSJSON
+  storageTypes: AWSJSON
+  brands: AWSJSON
+  suppliers: AWSJSON
+  id: ID
 }
 
 input UpdateUserLocationsInput {
   user: String
   franchise: String
   location: String
-  id: String!
   longitude: Float
   latitude: Float
+  units: AWSJSON
+  storageTypes: AWSJSON
+  brands: AWSJSON
+  suppliers: AWSJSON
+  id: String!
 }
 
 input DeleteUserLocationsInput {

@@ -21,7 +21,8 @@ const CardList = () => {
         to={{
           pathname: `/location/${eachLocation.location}`,
           state: {
-            location: zoneInfoObject[eachLocation.location]
+            location: eachLocation.location,
+            franchise: eachLocation.franchise
           }
         }}
       >

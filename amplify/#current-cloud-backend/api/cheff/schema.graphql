@@ -1,20 +1,29 @@
 type InventoryItem @model {
-  franchise: String
-  location: String
-  item: String
-  storage: String
+  franchise: String!
+  location: String!
+  item: String!
+  itemNumber: Int!
+  storage: String!
   category: String
-  quantity: String
-  parValue: String
-  updatedAt: AWSDateTime
+  price: Float!
+  quantity: String!
+  packSize: String
+  units: String!
+  brand: String!
+  supplier: String!
+  parValue: String!
   id: String
 }
 
 type UserLocations @model {
   user: String!
-  franchise: String
-  location: String
-  id: String
+  franchise: String!
+  location: String!
   longitude: Float
   latitude: Float
+  units: AWSJSON
+  storageTypes: AWSJSON
+  brands: AWSJSON
+  suppliers: AWSJSON
+  id: String
 }

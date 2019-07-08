@@ -11,6 +11,8 @@ import AlertTemplate from 'react-alert-template-basic';
 import reducer from './reducer'; // reducer used for global state management
 import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
 import awsconfig from './aws-exports.js';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { BrowserRouter as Router } from 'react-router-dom';
 // optional cofiguration
 const options = {
   // you can also just use 'bottom center'
@@ -24,13 +26,77 @@ const options = {
 // initial global store
 const initialState = {
   franchiseLocations: [], // stores our user's franchise and locations
-  dryStorage: false,
-  coldStorage: false,
-  freezer: false,
-  lowVelocity: false,
+  storageOptions: [
+    {
+      value: 'Dry Storage',
+      label: 'Dry Storage'
+    },
+    {
+      value: 'Cold Storage',
+      label: 'Cold Storage'
+    },
+    {
+      value: 'Freezer',
+      label: 'Freezer'
+    },
+    {
+      value: 'Low Velocity',
+      label: 'Low Velocity'
+    }
+  ],
+  unitOptions: [
+    {
+      value: 'OZ',
+      label: 'OZ'
+    },
+    {
+      value: 'LB',
+      label: 'LB'
+    },
+    {
+      value: 'CT',
+      label: 'CT'
+    },
+    {
+      value: 'GM',
+      label: 'GM'
+    },
+    {
+      value: 'AV',
+      label: 'AV'
+    },
+    {
+      value: 'GA',
+      label: 'GA'
+    }
+  ],
+  supplierOptions: [],
+  brandOptions: [],
+  storageFilter: [
+    {
+      type: 'Dry Storage',
+      filtered: false
+    },
+    {
+      type: 'Cold Storage',
+      filtered: false
+    },
+    {
+      type: 'Freezer',
+      filtered: false
+    },
+    {
+      type: 'Low  Velocity',
+      filtered: false
+    }
+  ],
   tempSearchAddress: '', // for Google API Search Bar
   selectedFranchise: '',
-  selectedAddress: ''
+  selectedAddress: '',
+  currentLocation: '',
+  currentFranchise: '',
+  inventoryTableLoading: true,
+  inventoryTableItems: []
 };
 
 Amplify.configure(awsconfig);
@@ -56,7 +122,9 @@ Amplify.configure(awsconfig);
 ReactDOM.render(
   <AlertProvider template={AlertTemplate} {...options}>
     <StateProvider initialState={initialState} reducer={reducer}>
-      <App />
+      <MuiThemeProvider>
+        <App />
+      </MuiThemeProvider>
     </StateProvider>
   </AlertProvider>,
   document.getElementById('root')
