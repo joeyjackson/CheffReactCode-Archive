@@ -42,7 +42,7 @@ const uuidv1 = require('uuid/v1');
 const useForceUpdate = () => useState()[1];
 
 const InventoryTable = props => {
-  const [searchData, setSearchData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [globalStore, dispatch] = useStateValue();
@@ -58,40 +58,78 @@ const InventoryTable = props => {
       type: 'currentFranchise',
       state: props.franchise
     });
-    dispatch({
-      type: 'itemToRemove',
-      state: props.franchise
-    });
+    listInventoryItems();
   }, []);
 
-  const createFakeItem = () => {
-    const id = uuidv1();
+  const refreshInventoryItems = () => {
+    dispatch({
+      type: 'inventoryTableLoading',
+      state: true
+    });
+    setTimeout(listInventoryItems(), 250);
+  };
+
+  const addNextTokenData = (currentData, nextToken) => {
     API.graphql(
-      graphqlOperation(mutations.createInventoryItem, {
-        input: {
-          franchise: 'NA',
-          location: 'NA',
-          item: 'NA',
-          itemNumber: 1234,
-          storage: 'NA',
-          category: 'NA',
-          price: 123,
-          quantity: 123,
-          packSize: 'NA',
-          units: 'NA',
-          brand: 'NA',
-          supplier: 'NA',
-          parValue: 'NA',
-          id: id
+      graphqlOperation(queries.listInventoryItems, {
+        filter: {
+          location: {
+            eq: props.location
+          }
+        },
+        nextToken: nextToken
+      })
+    )
+      .then(result => {
+        currentData.push(...result.data.listInventoryItems.items);
+
+        if (result.data.listInventoryItems.nextToken !== null) {
+          addNextTokenData(
+            currentData,
+            result.data.listInventoryItems.nextToken
+          );
+        } else {
+          dispatch({
+            type: 'inventoryTableItems',
+            state: currentData
+          });
+          dispatch({
+            type: 'inventoryTableLoading',
+            state: false
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const listInventoryItems = () => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryItems, {
+        filter: {
+          location: {
+            eq: props.location
+          }
         }
       })
     )
       .then(result => {
-        API.graphql(
-          graphqlOperation(mutations.deleteInventoryItem, {
-            input: { id: id }
-          })
-        );
+        if (result.data.listInventoryItems.nextToken !== null) {
+          addNextTokenData(
+            result.data.listInventoryItems.items,
+            result.data.listInventoryItems.nextToken
+          );
+        } else {
+          dispatch({
+            type: 'inventoryTableItems',
+            state: result.data.listInventoryItems.items
+          });
+          dispatch({
+            type: 'inventoryTableLoading',
+            state: false
+          });
+        }
       })
       .catch(error => {
         console.log(error);
@@ -108,7 +146,7 @@ const InventoryTable = props => {
       })
     )
       .then(result => {
-        console.log(result);
+        refreshInventoryItems();
       })
       .catch(error => {
         console.log(error);
@@ -123,7 +161,7 @@ const InventoryTable = props => {
       })
     )
       .then(result => {
-        createFakeItem();
+        refreshInventoryItems();
       })
       .catch(error => {
         console.log(error);
@@ -142,7 +180,7 @@ const InventoryTable = props => {
               justifyContent: 'center'
             }}
           >
-            <span>
+            <span style={{ width: '50px' }}>
               <MDBBtn
                 className="position-relative"
                 flat
@@ -153,6 +191,18 @@ const InventoryTable = props => {
                 <i className="material-icons">clear</i>
               </MDBBtn>
             </span>
+            <span style={{ width: '50px', paddingRight: '100px' }}>
+              <MDBBtn
+                className="position-relative"
+                flat
+                onClick={() => {
+                  deleteInventoryItem(cellInfo.original.id);
+                }}
+              >
+                <i className="material-icons">edit</i>
+              </MDBBtn>
+            </span>
+
             <span>
               <MDBInput
                 style={{ textAlign: 'center' }}
@@ -241,144 +291,106 @@ const InventoryTable = props => {
       <div style={{ paddingTop: '50px', paddingBottom: '80px' }}>
         <SearchBar
           hintText="Search by item number/description, quantity, storage type, price, brand, or supplier"
-          onChange={event => {
-            let results = matchSorter(globalStore.inventoryTableItems, event, {
-              keys: ['item', 'quantity', 'storage']
-            });
-            setSearchData(results);
+          onChange={searchString => {
+            if (searchString === '') {
+              dispatch({
+                type: 'inventoryTableItems',
+                state: originalData
+              });
+            } else {
+              let results = matchSorter(
+                globalStore.inventoryTableItems,
+                searchString,
+                {
+                  keys: [
+                    'item',
+                    'quantity',
+                    'storage',
+                    'units',
+                    'price',
+                    'brand',
+                    'supplier'
+                  ]
+                }
+              );
+              dispatch({
+                type: 'inventoryTableItems',
+                state: results
+              });
+            }
           }}
-          onRequestSearch={event => console.log(event)}
+          onBlur={event => {
+            dispatch({
+              type: 'inventoryTableItems',
+              state: originalData
+            });
+          }}
+          onFocus={event => setOriginalData(globalStore.inventoryTableItems)}
           style={{
             margin: '0 auto',
             maxWidth: 800
           }}
         />
       </div>
-      <Connect
-        query={graphqlOperation(queries.listInventoryItems, {
-          filter: {
-            location: {
-              eq: props.location
-            }
-          },
-          limit: 20
-        })}
-        subscription={graphqlOperation(subscriptions.onCreateInventoryItem)}
-        onSubscriptionMsg={(prev, { onCreateInventoryItem }) => {
-          var listInventoryItems;
-          if ('listInventoryItems' in prev) {
-            listInventoryItems = [...prev.listInventoryItems.items];
-          } else {
-            listInventoryItems = prev;
-          }
-          console.log(globalStore);
-          console.log(listInventoryItems);
-          // fake data created so we can remove from the table
-          if (onCreateInventoryItem.franchise === 'NA') {
-            for (let i = 0; i < listInventoryItems.length; i++) {
-              if (listInventoryItems[i].id === globalStore.itemToRemove) {
-                listInventoryItems.splice(i, 1);
-              }
-            }
-            console.log(listInventoryItems);
-            return listInventoryItems;
-          }
-          listInventoryItems.push(onCreateInventoryItem);
-          return listInventoryItems;
-        }}
-      >
-        {props => {
-          console.log(props);
-          var data;
-          if (props.loading) {
-            return (
-              <ReactTable
-                className="-striped -highlight"
-                noDataText={'Inventory has not been setup'}
-                columns={columns}
-                data={[]}
-                defaultPageSize={10}
-                loading={props.loading}
-                LoadingComponent={LoadingComponent}
-              />
-            );
-          } else {
-            if ('listInventoryItems' in props.data) {
-              data = props.data.listInventoryItems.items;
-            } else {
-              data = props.data;
-            }
 
-            return (
-              <ReactTable
-                className="-striped -highlight"
-                noDataText={'Inventory has not been setup'}
-                columns={columns}
-                data={data}
-                getTdProps={() => {
-                  return {
-                    style: {
-                      overflow: 'visible'
-                    }
-                  };
-                }}
-                resolveData={data => {
-                  dispatch({
-                    type: 'inventoryTableItems',
-                    state: data
-                  });
-                  return data;
-                }}
-                loading={props.loading}
-                LoadingComponent={LoadingComponent}
-                defaultPageSize={10}
-                pageSizeOptions={[5, 10, 20, 50, 100]}
-                onPageChange={pageIndex => {
-                  forceUpdate();
-                }}
-                renderPageSizeOptions={({
-                  pageSize,
-                  pageSizeOptions,
-                  rowsSelectorText,
-                  onPageSizeChange,
-                  rowsText
-                }) => {
-                  return (
-                    <span style={{ width: '150px' }}>
-                      <Select
-                        onChange={e => onPageSizeChange(e.value)}
-                        placeholder={`${pageSize} rows`}
-                        options={[
-                          {
-                            value: 5,
-                            label: '5 rows'
-                          },
-                          {
-                            value: 10,
-                            label: '10 rows'
-                          },
-                          {
-                            value: 20,
-                            label: '20 rows'
-                          },
-                          {
-                            value: 50,
-                            label: '50 rows'
-                          },
-                          {
-                            value: 100,
-                            label: '100 rows'
-                          }
-                        ]}
-                      />
-                    </span>
-                  );
-                }}
-              />
-            );
-          }
+      <ReactTable
+        className="-striped -highlight"
+        noDataText={'Inventory has not been setup'}
+        columns={columns}
+        data={globalStore.inventoryTableItems}
+        getTdProps={() => {
+          return {
+            style: {
+              overflow: 'visible'
+            }
+          };
         }}
-      </Connect>
+        loading={globalStore.inventoryTableLoading}
+        LoadingComponent={LoadingComponent}
+        defaultPageSize={10}
+        pageSizeOptions={[5, 10, 20, 50, 100]}
+        onPageChange={pageIndex => {
+          forceUpdate();
+        }}
+        renderPageSizeOptions={({
+          pageSize,
+          pageSizeOptions,
+          rowsSelectorText,
+          onPageSizeChange,
+          rowsText
+        }) => {
+          return (
+            <span style={{ width: '150px' }}>
+              <Select
+                onChange={e => onPageSizeChange(e.value)}
+                placeholder={`${pageSize} rows`}
+                options={[
+                  {
+                    value: 5,
+                    label: '5 rows'
+                  },
+                  {
+                    value: 10,
+                    label: '10 rows'
+                  },
+                  {
+                    value: 20,
+                    label: '20 rows'
+                  },
+                  {
+                    value: 50,
+                    label: '50 rows'
+                  },
+                  {
+                    value: 100,
+                    label: '100 rows'
+                  }
+                ]}
+              />
+            </span>
+          );
+        }}
+      />
 
       <MDBBtn
         color="primary"
@@ -399,7 +411,13 @@ const InventoryTable = props => {
           <CreateInventoryItem />
         </MDBModalBody>
         <MDBModalFooter>
-          <MDBBtn color="secondary" onClick={() => setModalOpen(!modalOpen)}>
+          <MDBBtn
+            color="secondary"
+            onClick={() => {
+              setModalOpen(!modalOpen);
+              refreshInventoryItems();
+            }}
+          >
             Close
           </MDBBtn>
         </MDBModalFooter>
