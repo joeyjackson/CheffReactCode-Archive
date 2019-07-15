@@ -161,6 +161,16 @@
 					"env": "cheff"
 				}
 			}
+		},
+		"hostingS3AndCloudFront": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/hosting/template.json",
+				"Parameters": {
+					"bucketName": "cheff-20190708000459-hostingbucket",
+					"env": "cheff"
+				}
+			}
 		}
 	},
 	"Outputs": {

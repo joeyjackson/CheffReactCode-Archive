@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/auth/cheff2fec0ed8-cloudformation-template.yml",
 				"logicalId": "authcheff2fec0ed8"
 			},
-			"lastPushTimeStamp": "2019-07-07T07:13:49.594Z",
+			"lastPushTimeStamp": "2019-07-08T06:06:20.235Z",
 			"output": {
 				"AppClientSecret": "9300ho35rn2u1bu74atekgeff5n9p38fja6j4ouh5ilp2gct6u7",
 				"UserPoolId": "us-east-2_9AlobejmS",
@@ -45,8 +45,26 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apicheff"
 			},
-			"lastPushTimeStamp": "2019-07-07T07:13:50.626Z",
+			"lastPushTimeStamp": "2019-07-08T06:06:20.237Z",
 			"lastPushDirHash": "P39llMnXTbNH9QHzTBWPzSiLNQw="
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/hosting/template.json",
+				"logicalId": "hostingS3AndCloudFront"
+			},
+			"lastPushTimeStamp": "2019-07-08T06:06:20.239Z",
+			"output": {
+				"S3BucketSecureURL": "https://cheff-20190708000459-hostingbucket-cheff.s3.amazonaws.com",
+				"WebsiteURL": "http://cheff-20190708000459-hostingbucket-cheff.s3-website.us-east-2.amazonaws.com",
+				"Region": "us-east-2",
+				"HostingBucketName": "cheff-20190708000459-hostingbucket-cheff"
+			},
+			"lastPushDirHash": "KT/vYAL6grJDe/w4yQY+MRIdgKo="
 		}
 	}
 }

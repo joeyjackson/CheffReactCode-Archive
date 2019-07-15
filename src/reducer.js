@@ -18,6 +18,12 @@ const reducer = (state, action) => {
         brandOptions: action.state
       };
 
+    case 'itemToRemove':
+      return {
+        ...state,
+        itemToRemove: action.state
+      };
+
     case 'supplierOptions':
       return {
         ...state,

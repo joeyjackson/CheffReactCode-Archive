@@ -96,28 +96,11 @@ const initialState = {
   currentLocation: '',
   currentFranchise: '',
   inventoryTableLoading: true,
-  inventoryTableItems: []
+  inventoryTableItems: [],
+  itemToRemove: ''
 };
 
 Amplify.configure(awsconfig);
-// API.configure(awsconfig);
-// Auth.configure(awsconfig);
-
-// Amplify.configure({
-//   Auth: {
-//     identityPoolId: awsconfig.aws_cognito_identity_pool_id,
-//     region: awsconfig.aws_cognito_region,
-//     userPoolId: awsconfig.aws_user_pools_id,
-//     userPoolWebClientId: awsconfig.aws_user_pools_web_client_id
-//   },
-//   API: {
-//     graphql_endpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     graphql_endpoint_iam_region: awsconfig.aws_appsync_region,
-//     aws_appsync_graphqlEndpoint: awsconfig.aws_appsync_graphqlEndpoint,
-//     aws_appsync_region: awsconfig.aws_appsync_region,
-//     aws_appsync_authenticationType: awsconfig.aws_appsync_authenticationType
-//   }
-// });
 
 ReactDOM.render(
   <AlertProvider template={AlertTemplate} {...options}>
