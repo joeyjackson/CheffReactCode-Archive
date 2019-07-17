@@ -74,9 +74,23 @@ const App = () => {
         />
         )}
         <Route
-          path="/location/:location"
+          path="/location/storageFilter/:location"
           render={linkProps => {
             console.log(linkProps);
+
+            return (
+              <StorageFilterStepper
+                location={linkProps.location.state.location}
+                franchise={linkProps.location.state.franchise}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/location/inventoryTable/:location"
+          render={linkProps => {
+            console.log(linkProps);
+
             return (
               <InventoryTableView
                 location={linkProps.location.state.location}

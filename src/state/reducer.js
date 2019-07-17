@@ -30,6 +30,12 @@ const reducer = (state, action) => {
         supplierOptions: action.state
       };
 
+    case 'storageFilter':
+      return {
+        ...state,
+        storageFilter: action.state
+      };
+
     case 'unitOptions':
       return {
         ...state,
@@ -50,6 +56,12 @@ const reducer = (state, action) => {
         ...state,
         inventoryTableItems: action.state
       };
+    case 'inventoryItemToUpdate':
+      return {
+        ...state,
+        inventoryItemToUpdate: action.state
+      };
+
     case 'inventoryTableLoading':
       return {
         ...state,

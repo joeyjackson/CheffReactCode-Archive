@@ -5,7 +5,7 @@ const StaticMap = props => {
   return (
     <div>
       <StaticGoogleMap
-        size="352x500"
+        size="400x450"
         apiKey="AIzaSyAojclCkVnINxiSN0uKSLG1Q5RPBvtX9HI"
         zoom={17}
       >

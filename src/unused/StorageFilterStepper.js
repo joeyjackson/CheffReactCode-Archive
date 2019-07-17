@@ -1,146 +1,299 @@
-import React, { useState } from 'react';
-import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBAnimation } from 'mdbreact';
+import React from 'react';
+import {Link } from 'react-router-dom';
 import { useStateValue } from '../state/StateManagement';
+import {
+  MDBBtn,
+  MDBAnimation,
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage
+} from 'mdbreact';
 
-const StorageFilterStepper = () => {
-  const [storage, dispatch] = useStateValue();
+import dryGoods from './dryGoods.jpg';
+import cleaningSupplies from './packagingCleaning.jpg';
+import produce from './produce.jpg';
+import dairy from './dairy.jpg';
+import protein from './protein.jpg';
 
+const StorageFilterStepper = props => {
+  const [globalStore, dispatch] = useStateValue();
+  console.log(globalStore.storageFilter);
   return (
-    <MDBContainer style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-      <MDBRow>
-        <MDBCol className="text-center">
-          {storage.dryStorage ? (
-            <MDBAnimation type="pulse" infinite>
-              <MDBBtn
-                size="lg"
-                color="primary"
-                onClick={() =>
-                  dispatch({
-                    type: 'dryStorage',
-                    state: false
-                  })
-                }
-              >
-                Dry Storage
-              </MDBBtn>
-            </MDBAnimation>
-          ) : (
+    <>
+      <div
+        className="d-flex justify-content-around flex-wrap bd-highlight example-parent"
+        style={{ paddingBottom: '50px' }}
+      >
+        {globalStore.storageFilter.dryGoods ? (
+          <MDBAnimation type="pulse" infinite duration="2s">
             <MDBBtn
               size="lg"
-              outline
               color="primary"
-              onClick={() =>
+              flat
+              onClick={() => {
+                let currentStorageFilter = globalStore.storageFilter;
+                currentStorageFilter.dryGoods = false;
                 dispatch({
-                  type: 'dryStorage',
-                  state: true
-                })
-              }
+                  type: 'storageFilter',
+                  state: currentStorageFilter
+                });
+              }}
             >
-              Dry Storage
+              <MDBCard style={{ width: '22rem' }}>
+                <MDBCardImage className="img-fluid" src={dryGoods} waves />
+                <MDBCardBody>
+                  <h5>Dry Goods</h5>
+                </MDBCardBody>
+              </MDBCard>
             </MDBBtn>
-          )}
-        </MDBCol>
+          </MDBAnimation>
+        ) : (
+          <MDBBtn
+            size="lg"
+            outline
+            flat
+            color="primary"
+            onClick={() => {
+              let currentStorageFilter = globalStore.storageFilter;
+              currentStorageFilter.dryGoods = true;
+              dispatch({
+                type: 'storageFilter',
+                state: currentStorageFilter
+              });
+            }}
+          >
+            <MDBCard style={{ width: '22rem' }}>
+              <MDBCardImage className="img-fluid" src={dryGoods} waves />
+              <MDBCardBody>
+                <h5>Dry Goods</h5>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBBtn>
+        )}
 
-        <MDBCol className="text-center">
-          {storage.coldStorage ? (
-            <MDBAnimation type="pulse" infinite>
-              <MDBBtn
-                size="lg"
-                color="primary"
-                onClick={() =>
-                  dispatch({
-                    type: 'coldStorage',
-                    state: false
-                  })
-                }
-              >
-                Cold Storage
-              </MDBBtn>
-            </MDBAnimation>
-          ) : (
+        {globalStore.storageFilter.packagingPaperCleaning ? (
+          <MDBAnimation type="pulse" infinite duration="2s">
             <MDBBtn
               size="lg"
-              outline
               color="primary"
-              onClick={() =>
+              flat
+              onClick={() => {
+                let currentStorageFilter = globalStore.storageFilter;
+                currentStorageFilter.packagingPaperCleaning = false;
                 dispatch({
-                  type: 'coldStorage',
-                  state: true
-                })
-              }
+                  type: 'storageFilter',
+                  state: currentStorageFilter
+                });
+              }}
             >
-              Cold Storage
+              <MDBCard style={{ width: '22rem' }}>
+                <MDBCardImage
+                  className="img-fluid"
+                  src={cleaningSupplies}
+                  waves
+                />
+                <MDBCardBody>
+                  <h5>Packaging/Paper/Cleaning</h5>
+                </MDBCardBody>
+              </MDBCard>
             </MDBBtn>
-          )}
-        </MDBCol>
-      </MDBRow>
-      <MDBRow>
-        <MDBCol className="text-center">
-          {storage.freezer ? (
-            <MDBAnimation type="pulse" infinite>
-              <MDBBtn
-                size="lg"
-                color="primary"
-                onClick={() =>
-                  dispatch({
-                    type: 'freezer',
-                    state: false
-                  })
-                }
-              >
-                Freezer
-              </MDBBtn>
-            </MDBAnimation>
-          ) : (
+          </MDBAnimation>
+        ) : (
+          <MDBBtn
+            size="lg"
+            outline
+            flat
+            color="primary"
+            onClick={() => {
+              let currentStorageFilter = globalStore.storageFilter;
+              currentStorageFilter.packagingPaperCleaning = true;
+              dispatch({
+                type: 'storageFilter',
+                state: currentStorageFilter
+              });
+            }}
+          >
+            <MDBCard style={{ width: '22rem' }}>
+              <MDBCardImage
+                className="img-fluid"
+                src={cleaningSupplies}
+                waves
+              />
+              <MDBCardBody>
+                <h5>Packaging/Paper/Cleaning</h5>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBBtn>
+        )}
+
+        {globalStore.storageFilter.produce ? (
+          <MDBAnimation type="pulse" infinite duration="2s">
             <MDBBtn
               size="lg"
-              outline
               color="primary"
-              onClick={() =>
+              flat
+              onClick={() => {
+                let currentStorageFilter = globalStore.storageFilter;
+                currentStorageFilter.produce = false;
                 dispatch({
-                  type: 'freezer',
-                  state: true
-                })
-              }
+                  type: 'storageFilter',
+                  state: currentStorageFilter
+                });
+              }}
             >
-              Freezer
+              <MDBCard style={{ width: '22rem' }}>
+                <MDBCardImage className="img-fluid" src={produce} waves />
+                <MDBCardBody>
+                  <h5>Produce</h5>
+                </MDBCardBody>
+              </MDBCard>
             </MDBBtn>
-          )}
-        </MDBCol>
-        <MDBCol className="text-center">
-          {storage.lowVelocity ? (
-            <MDBAnimation type="pulse" infinite>
-              <MDBBtn
-                size="lg"
-                color="primary"
-                onClick={() =>
-                  dispatch({
-                    type: 'lowVelocity',
-                    state: false
-                  })
-                }
-              >
-                Low Velocity
-              </MDBBtn>
-            </MDBAnimation>
-          ) : (
+          </MDBAnimation>
+        ) : (
+          <MDBBtn
+            size="lg"
+            outline
+            flat
+            color="primary"
+            onClick={() => {
+              let currentStorageFilter = globalStore.storageFilter;
+              currentStorageFilter.produce = true;
+              dispatch({
+                type: 'storageFilter',
+                state: currentStorageFilter
+              });
+            }}
+          >
+            <MDBCard style={{ width: '22rem' }}>
+              <MDBCardImage className="img-fluid" src={produce} waves />
+              <MDBCardBody>
+                <h5>Produce</h5>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBBtn>
+        )}
+
+        {globalStore.storageFilter.dairy ? (
+          <MDBAnimation type="pulse" infinite duration="2s">
             <MDBBtn
               size="lg"
-              outline
               color="primary"
-              onClick={() =>
+              flat
+              onClick={() => {
+                let currentStorageFilter = globalStore.storageFilter;
+                currentStorageFilter.dairy = false;
                 dispatch({
-                  type: 'lowVelocity',
-                  state: true
-                })
-              }
+                  type: 'storageFilter',
+                  state: currentStorageFilter
+                });
+              }}
             >
-              Low Velocity
+              <MDBCard style={{ width: '22rem' }}>
+                <MDBCardImage className="img-fluid" src={dairy} waves />
+                <MDBCardBody>
+                  <h5>Dairy</h5>
+                </MDBCardBody>
+              </MDBCard>
             </MDBBtn>
-          )}
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
+          </MDBAnimation>
+        ) : (
+          <MDBBtn
+            size="lg"
+            flat
+            color="primary"
+            onClick={() => {
+              let currentStorageFilter = globalStore.storageFilter;
+              currentStorageFilter.dairy = true;
+              dispatch({
+                type: 'storageFilter',
+                state: currentStorageFilter
+              });
+            }}
+          >
+            <MDBCard style={{ width: '22rem' }}>
+              <MDBCardImage className="img-fluid" src={dairy} waves />
+              <MDBCardBody>
+                <h5>Dairy</h5>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBBtn>
+        )}
+
+        {globalStore.storageFilter.protein ? (
+          <MDBAnimation type="pulse" infinite duration="2s">
+            <MDBBtn
+              size="lg"
+              color="primary"
+              flat
+              onClick={() => {
+                let currentStorageFilter = globalStore.storageFilter;
+                currentStorageFilter.protein = false;
+                dispatch({
+                  type: 'storageFilter',
+                  state: currentStorageFilter
+                });
+              }}
+            >
+              <MDBCard style={{ width: '22rem' }}>
+                <MDBCardImage className="img-fluid" src={protein} waves />
+                <MDBCardBody>
+                  <h5>Protein</h5>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBBtn>
+          </MDBAnimation>
+        ) : (
+          <MDBBtn
+            size="lg"
+            flat
+            color="primary"
+            onClick={() => {
+              let currentStorageFilter = globalStore.storageFilter;
+              currentStorageFilter.protein = true;
+              dispatch({
+                type: 'storageFilter',
+                state: currentStorageFilter
+              });
+            }}
+          >
+            <MDBCard style={{ width: '22rem' }}>
+              <MDBCardImage className="img-fluid" src={protein} waves />
+              <MDBCardBody>
+                <h5>Protein</h5>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBBtn>
+        )}
+      </div>
+
+      <div
+        className="d-flex justify-content-around"
+        style={{ paddingBottom: '50px' }}
+      >
+        <Link
+          to={{
+            pathname: '/'
+          }}
+        >
+          <MDBBtn color="primary" rounded>
+            <i class="material-icons">navigate_before</i>
+          </MDBBtn>
+        </Link>
+        <Link
+          to={{
+            pathname: `/location/inventoryTable/${props.location}`,
+            state: {
+              location: props.location,
+              franchise: props.franchise
+            }
+          }}
+        >
+          <MDBBtn color="primary" rounded>
+            <i className="material-icons">navigate_next</i>
+          </MDBBtn>
+        </Link>
+      </div>
+    </>
   );
 };
 

@@ -8,11 +8,11 @@ import {
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
-  MDBModalFooter,
-  MDBSelect
+  MDBModalFooter
 } from 'mdbreact';
 import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
+import { minHeight } from '@material-ui/system';
 import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import * as queries from '../api/graphql/queries';
@@ -20,15 +20,21 @@ import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';
 import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
 import CircularIndeterminateLoading from '../components/CircularIndeterminate';
+import EditInventoryItem from './EditInventoryItem';
+import './Custom.css';
 
-const useForceUpdate = () => useState()[1];
+var jsPDF = require('jspdf');
+require('jspdf-autotable');
+
+const uuidv1 = require('uuid/v1');
 
 const InventoryTable = props => {
   const [originalData, setOriginalData] = useState([]);
-
-  const [modalOpen, setModalOpen] = useState(false);
+  const [editInventoryModal, setEditInventoryModal] = useState(false);
+  const [createInventoryModal, setCreateInventoryModalModal] = useState(false);
   const [globalStore, dispatch] = useStateValue();
-  const forceUpdate = useForceUpdate();
+  const [, updateState] = React.useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
 
   useEffect(() => {
     console.log('mounted');
@@ -40,26 +46,90 @@ const InventoryTable = props => {
       type: 'currentFranchise',
       state: props.franchise
     });
+    dispatch({
+      type: 'inventoryTableLoading',
+      state: true
+    });
     listInventoryItems();
   });
+
+  const generateSupplyOrder = () => {
+    if (globalStore.inventoryTableItems.length > 0) {
+      const doc = new jsPDF('l', 'mm', 'a3');
+      doc.setFontSize(25);
+      doc.text(65, 20, 'Supply Order Form'); //title
+      doc.setFontSize(20);
+      doc.text(20, 40, props.franchise);
+      doc.setFontSize(15);
+      doc.text(20, 50, props.location);
+
+      let body = [];
+      globalStore.inventoryTableItems.map(eachData => {
+        body.push([
+          eachData.itemNumber,
+          eachData.item,
+          eachData.price,
+          eachData.quantity,
+          eachData.parValue,
+          eachData.parValue - eachData.quantity,
+          eachData.units,
+          eachData.storage,
+          eachData.brand,
+          eachData.supplier
+        ]);
+      });
+
+      doc.autoTable({
+        startY: 70,
+        theme: 'grid',
+        head: [
+          [
+            'Item #',
+            'Item',
+            'Price',
+            'Quantity',
+            'Par Value',
+            'R.O.Q',
+            'Units',
+            'Storage',
+            'Brand',
+            'Supplier'
+          ]
+        ],
+        body: body
+      });
+
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = today.getFullYear();
+
+      today = mm + '/' + dd + '/' + yyyy;
+
+      var strippedFranchise = props.franchise.split(' ').join('_');
+
+      doc.save(`${strippedFranchise}_SupplyOrder_${today}.pdf`);
+    }
+  };
 
   const refreshInventoryItems = () => {
     dispatch({
       type: 'inventoryTableLoading',
       state: true
     });
-    setTimeout(listInventoryItems(), 250);
+    setTimeout(listInventoryItems(), 100);
   };
 
-  const addNextTokenData = (currentData, nextToken) => {
+  const addNextTokenData = (currentData, nextToken, filter) => {
     API.graphql(
       graphqlOperation(queries.listInventoryItems, {
+        nextToken: nextToken,
         filter: {
           location: {
             eq: props.location
-          }
-        },
-        nextToken: nextToken
+          },
+          and: { or: filter }
+        }
       })
     )
     .then(result => {
@@ -87,13 +157,65 @@ const InventoryTable = props => {
   };
 
   const listInventoryItems = () => {
+    let storageKeys = Object.keys(globalStore.storageFilter);
+    console.log(globalStore.storageFilter);
+    let tempStorageFilter = [];
+    storageKeys.map(eachKey => {
+      switch (eachKey) {
+        case 'dryGoods':
+          if (globalStore.storageFilter[eachKey]) {
+            tempStorageFilter.push({ storage: { eq: 'Dry Goods' } });
+          }
+
+          break;
+        case 'packagingPaperCleaning':
+          if (globalStore.storageFilter[eachKey]) {
+            tempStorageFilter.push({
+              storage: { eq: 'Packaging/Paper/Cleaning' }
+            });
+          }
+          break;
+        case 'produce':
+          if (globalStore.storageFilter[eachKey]) {
+            tempStorageFilter.push({ storage: { eq: 'Produce' } });
+          }
+          break;
+        case 'protein':
+          if (globalStore.storageFilter[eachKey]) {
+            tempStorageFilter.push({ storage: { eq: 'Protein' } });
+          }
+          break;
+        case 'dairy':
+          if (globalStore.storageFilter[eachKey]) {
+            tempStorageFilter.push({ storage: { eq: 'Dairy' } });
+          }
+          break;
+        default:
+          break;
+      }
+    });
+
+    console.log(tempStorageFilter);
+
+    if (tempStorageFilter.length === 0) {
+      tempStorageFilter = [
+        { storage: { eq: 'Dry Goods' } },
+        { storage: { eq: 'Packaging/Paper/Cleaning' } },
+        { storage: { eq: 'Produce' } },
+        { storage: { eq: 'Protein' } },
+        { storage: { eq: 'Dairy' } }
+      ];
+    }
+
     API.graphql(
       graphqlOperation(queries.listInventoryItems, {
         filter: {
           location: {
             eq: props.location
-          }
-        }
+          },
+          and: { or: tempStorageFilter }
+        },
+        limit: 2147483647
       })
     )
     .then(result => {
@@ -119,6 +241,7 @@ const InventoryTable = props => {
   };
 
   const updateInventoryItem = item => {
+    console.log(item);
     if ('__typename' in item) {
       delete item.__typename;
     }
@@ -128,7 +251,8 @@ const InventoryTable = props => {
       })
     )
       .then(result => {
-        refreshInventoryItems();
+        console.log(result);
+        // refreshInventoryItems();
       })
       .catch(error => {
         console.log(error);
@@ -143,6 +267,7 @@ const InventoryTable = props => {
       })
     )
       .then(result => {
+        console.log(result);
         refreshInventoryItems();
       })
       .catch(error => {
@@ -153,19 +278,14 @@ const InventoryTable = props => {
   const renderEditable = cellInfo => {
     const newData = [...globalStore.inventoryTableItems];
     switch (cellInfo.column.Header) {
-      case 'Item Description':
+      case 'Action':
         return (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <span style={{ width: '50px' }}>
+          <div className="d-flex justify-content-around">
+            <span>
               <MDBBtn
                 className="position-relative"
-                flat
+                color="primary"
+                floating
                 onClick={() => {
                   deleteInventoryItem(cellInfo.original.id);
                 }}
@@ -173,32 +293,29 @@ const InventoryTable = props => {
                 <i className="material-icons">clear</i>
               </MDBBtn>
             </span>
-            <span style={{ width: '50px', paddingRight: '100px' }}>
+            <span>
               <MDBBtn
                 className="position-relative"
-                flat
+                color="primary"
+                floating
                 onClick={() => {
-                  deleteInventoryItem(cellInfo.original.id);
+                  dispatch({
+                    type: 'inventoryItemToUpdate',
+                    state: cellInfo.original
+                  });
+                  setEditInventoryModal(true);
                 }}
               >
                 <i className="material-icons">edit</i>
               </MDBBtn>
             </span>
-
-            <span>
-              <MDBInput
-                style={{ textAlign: 'center' }}
-                size="md"
-                valueDefault={cellInfo.original[cellInfo.column.id]}
-                getValue={value => {
-                  newData[cellInfo.index][cellInfo.column.id] = value;
-                }}
-                onBlur={() => {
-                  updateInventoryItem(cellInfo.original);
-                }}
-              />
-            </span>
           </div>
+        );
+      case 'Item Description':
+        return (
+          <MDBContainer style={{ paddingTop: '30px' }}>
+            <strong>{cellInfo.original[cellInfo.column.id]}</strong>
+          </MDBContainer>
         );
       case 'Quantity':
         return (
@@ -217,27 +334,20 @@ const InventoryTable = props => {
         );
       case 'Units':
         return (
-          <MDBSelect
-            style={{ textAlign: 'center' }}
-            options={globalStore.unitOptions}
-            selected={cellInfo.original.units}
-            getValue={value => {
-              newData[cellInfo.index][cellInfo.column.id] = value[0];
-              updateInventoryItem(cellInfo.original);
-            }}
-          />
+          <MDBContainer style={{ paddingTop: '30px' }}>
+            <span className="align-middle">
+              <strong>{cellInfo.original[cellInfo.column.id]}</strong>
+            </span>
+          </MDBContainer>
         );
 
       case 'Storage':
         return (
-          <MDBSelect
-            options={globalStore.storageOptions}
-            selected={cellInfo.original.storage}
-            getValue={value => {
-              newData[cellInfo.index][cellInfo.column.id] = value[0];
-              updateInventoryItem(cellInfo.original);
-            }}
-          />
+          <MDBContainer style={{ paddingTop: '30px' }}>
+            <span className="align-middle">
+              <strong>{cellInfo.original[cellInfo.column.id]}</strong>
+            </span>
+          </MDBContainer>
         );
 
       default:
@@ -251,6 +361,12 @@ const InventoryTable = props => {
 
   const columns = [
     {
+      Header: 'Action',
+      accessor: 'action',
+      Cell: renderEditable,
+      width: 200
+    },
+    {
       Header: 'Item Description',
       accessor: 'item',
       Cell: renderEditable
@@ -258,25 +374,25 @@ const InventoryTable = props => {
     {
       Header: 'Quantity',
       accessor: 'quantity',
-      Cell: renderEditable
+      Cell: renderEditable,
+      width: 125
     },
     {
       Header: 'Units',
       accessor: 'units',
-      Cell: renderEditable
+      Cell: renderEditable,
+      width: 125
     },
     {
       Header: 'Storage',
       accessor: 'storage',
-      Cell: renderEditable
+      Cell: renderEditable,
+      width: 300
     }
   ];
 
   return (
-    <MDBContainer
-      className="mt-5 text-center"
-      style={{ paddingBottom: '50px' }}
-    >
+    <>
       <div style={{ paddingTop: '50px', paddingBottom: '80px' }}>
         <SearchBar
           hintText="Search by item number/description, quantity, storage type, price, brand, or supplier"
@@ -330,7 +446,9 @@ const InventoryTable = props => {
         getTdProps={() => {
           return {
             style: {
-              overflow: 'visible'
+              overflow: 'visible',
+              verticalAlign: 'middle',
+              textAlign: 'center'
             }
           };
         }}
@@ -380,22 +498,60 @@ const InventoryTable = props => {
           );
         }}
       />
-
-      <MDBBtn
-        color="primary"
-        onClick={() => {
-          setModalOpen(!modalOpen);
-        }}
-      >
-        Create New Inventory Item
-      </MDBBtn>
+      <div className="d-flex justify-content-around">
+        <MDBBtn
+          color="primary"
+          rounded
+          onClick={() => {
+            setCreateInventoryModalModal(!createInventoryModal);
+          }}
+        >
+          Create New Inventory Item
+        </MDBBtn>
+        <MDBBtn
+          color="info"
+          rounded
+          onClick={() => {
+            generateSupplyOrder();
+          }}
+        >
+          Generate Supply Order
+        </MDBBtn>
+      </div>
+      <div className="d-flex justify-content-around">
+        <Link
+          to={{
+            pathname: `/location/storageFilter/${props.location}`,
+            state: {
+              location: props.location,
+              franchise: props.franchise
+            }
+          }}
+        >
+          <MDBBtn color="primary" rounded>
+            <i class="material-icons">navigate_before</i>
+          </MDBBtn>
+        </Link>
+        <Link
+          to={{
+            pathname: '/'
+          }}
+        >
+          <MDBBtn color="primary" rounded>
+            <i class="material-icons">home</i>
+          </MDBBtn>
+        </Link>
+      </div>
+      {/* Create Inventory Modal */}
       <MDBModal
-        isOpen={modalOpen}
-        toggle={() => setModalOpen(!modalOpen)}
+        isOpen={createInventoryModal}
+        toggle={() => setCreateInventoryModalModal(!createInventoryModal)}
         centered
         size="lg"
       >
-        <MDBModalHeader toggle={() => setModalOpen(!modalOpen)} />
+        <MDBModalHeader
+          toggle={() => setCreateInventoryModalModal(!createInventoryModal)}
+        />
         <MDBModalBody>
           <CreateInventoryItemForm />
         </MDBModalBody>
@@ -403,7 +559,7 @@ const InventoryTable = props => {
           <MDBBtn
             color="secondary"
             onClick={() => {
-              setModalOpen(!modalOpen);
+              setCreateInventoryModalModal(!createInventoryModal);
               refreshInventoryItems();
             }}
           >
@@ -411,7 +567,35 @@ const InventoryTable = props => {
           </MDBBtn>
         </MDBModalFooter>
       </MDBModal>
-    </MDBContainer>
+      {/* Edit Inventory Modal */}
+      <MDBModal
+        isOpen={editInventoryModal}
+        toggle={() => setEditInventoryModal(!editInventoryModal)}
+        centered
+        size="lg"
+      >
+        <MDBModalHeader
+          toggle={() => {
+            setEditInventoryModal(!editInventoryModal);
+            refreshInventoryItems();
+          }}
+        />
+        <MDBModalBody>
+          <EditInventoryItem />
+        </MDBModalBody>
+        <MDBModalFooter>
+          <MDBBtn
+            color="secondary"
+            onClick={() => {
+              setEditInventoryModal(!editInventoryModal);
+              refreshInventoryItems();
+            }}
+          >
+            Close
+          </MDBBtn>
+        </MDBModalFooter>
+      </MDBModal>
+    </>
   );
 };
 

@@ -6,10 +6,8 @@ import { useStateValue } from '../state/StateManagement';
 
 const LocationMapList = () => {
   const globalStore = useStateValue()[0];
-  const zoneInfoObject = globalStore.franchiseLocations;
-  console.log(zoneInfoObject);
 
-  const cardList = zoneInfoObject.map(eachLocation => (
+  const cardList = globalStore.franchiseLocations.map(eachLocation => (
     <MDBCol
       key={eachLocation.location}
       lg="4"
@@ -18,7 +16,7 @@ const LocationMapList = () => {
     >
       <Link
         to={{
-          pathname: `/location/${eachLocation.location}`,
+          pathname: `/location/storageFilter/${eachLocation.location}`,
           state: {
             location: eachLocation.location,
             franchise: eachLocation.franchise
