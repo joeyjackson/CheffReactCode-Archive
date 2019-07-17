@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBInput
 } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import { useStateValue } from '../StateManagement';
+import * as mutations from '../../api/graphql/mutations';
+import { useStateValue } from '../../state/StateManagement';
 
-const EditInventoryItem = () => {
+const EditInventoryItemForm = () => {
   const [globalStore, dispatch] = useStateValue();
   const [newInventoryItem, setNewInventoryItem] = useState({
     franchise: globalStore.inventoryItemToUpdate.franchise,
@@ -260,4 +258,4 @@ const EditInventoryItem = () => {
   );
 };
 
-export default EditInventoryItem;
+export default EditInventoryItemForm;

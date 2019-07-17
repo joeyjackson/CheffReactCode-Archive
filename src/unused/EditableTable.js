@@ -7,7 +7,7 @@ import {
   MDBBtn,
   MDBSelect
 } from 'mdbreact';
-import './Custom.css';
+import '../styles.css';
 import * as queries from '../api/graphql/queries';
 import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';

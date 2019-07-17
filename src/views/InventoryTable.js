@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import ReactTable from 'react-table';
 import {
@@ -12,16 +13,15 @@ import {
 } from 'mdbreact';
 import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
-import { minHeight } from '@material-ui/system';
 import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
+import '../styles.css';
 import * as queries from '../api/graphql/queries';
 import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';
 import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
+import EditInventoryItemForm from '../components/inventory/EditInventoryItemForm';
 import CircularIndeterminateLoading from '../components/CircularIndeterminate';
-import EditInventoryItem from './EditInventoryItem';
-import './Custom.css';
 
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
@@ -581,7 +581,7 @@ const InventoryTable = props => {
           }}
         />
         <MDBModalBody>
-          <EditInventoryItem />
+          <EditInventoryItemForm />
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn

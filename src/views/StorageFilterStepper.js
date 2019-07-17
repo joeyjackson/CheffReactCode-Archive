@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link } from 'react-router-dom';
-import { useStateValue } from '../state/StateManagement';
+import { Link } from 'react-router-dom';
 import {
   MDBBtn,
   MDBAnimation,
@@ -8,12 +7,13 @@ import {
   MDBCardBody,
   MDBCardImage
 } from 'mdbreact';
+import { useStateValue } from '../state/StateManagement';
 
-import dryGoods from './dryGoods.jpg';
-import cleaningSupplies from './packagingCleaning.jpg';
-import produce from './produce.jpg';
-import dairy from './dairy.jpg';
-import protein from './protein.jpg';
+import dryGoods from '../assets/img/food/dryGoods.jpg';
+import cleaningSupplies from '../assets/img/food/packagingCleaning.jpg';
+import produce from '../assets/img/food/produce.jpg';
+import dairy from '../assets/img/food/dairy.jpg';
+import protein from '../assets/img/food/protein.jpg';
 
 const StorageFilterStepper = props => {
   const [globalStore, dispatch] = useStateValue();
@@ -281,7 +281,7 @@ const StorageFilterStepper = props => {
         </Link>
         <Link
           to={{
-            pathname: `/location/inventoryTable/${props.location}`,
+            pathname: `/location/inventory/${props.location}`,
             state: {
               location: props.location,
               franchise: props.franchise

@@ -15,6 +15,7 @@ import {
 import './App.css';
 import * as queries from './api/graphql/queries';
 import { useStateValue } from './state/StateManagement';
+import StorageFilterStepperView from './views/StorageFilterStepper'
 import NavBar from './components/navigation/NavBar'
 import SettingsView from './views/Settings';
 import LocationMapListView from './views/LocationMapList';
@@ -75,29 +76,21 @@ const App = () => {
         )}
         <Route
           path="/location/storageFilter/:location"
-          render={linkProps => {
-            console.log(linkProps);
-
-            return (
-              <StorageFilterStepper
+          render={linkProps =>
+              <StorageFilterStepperView
                 location={linkProps.location.state.location}
                 franchise={linkProps.location.state.franchise}
               />
-            );
-          }}
+          }
         />
         <Route
-          path="/location/inventoryTable/:location"
-          render={linkProps => {
-            console.log(linkProps);
-
-            return (
+          path="/location/inventory/:location"
+          render={linkProps =>
               <InventoryTableView
                 location={linkProps.location.state.location}
                 franchise={linkProps.location.state.franchise}
               />
-            );
-          }}
+          }
         />
         <Route
           path="/settings"
