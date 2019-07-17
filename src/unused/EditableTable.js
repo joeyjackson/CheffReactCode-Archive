@@ -1,36 +1,20 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import MaterialTable from 'material-table';
-import Loader from 'react-loader-spinner';
-import useIsMounted from 'ismounted';
-import awsconfig from '../aws-exports.js';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import {
-  MDBContainer,
-  MDBBtn,
-  MDBModal,
-  MDBModalBody,
-  MDBModalHeader,
-  MDBModalFooter,
-  MDBSelect,
-  MDBSelectInput,
-  MDBSelectOptions,
-  MDBSelectOption,
-  MDBFormInline,
-  MDBRow,
-  MDBCol
-} from 'mdbreact';
-
-import { useStateValue } from '../StateManagement';
-
 import { useAlert } from 'react-alert';
-
+import { API, graphqlOperation } from 'aws-amplify';
+import MaterialTable from 'material-table';
+import useIsMounted from 'ismounted';
+import {
+  MDBBtn,
+  MDBSelect
+} from 'mdbreact';
 import './Custom.css';
+import * as queries from '../api/graphql/queries';
+import * as mutations from '../api/graphql/mutations';
+import { useStateValue } from '../state/StateManagement';
+
 
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
-
 const uuidv1 = require('uuid/v1');
 var _ = require('underscore');
 

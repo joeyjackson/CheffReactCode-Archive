@@ -1,43 +1,25 @@
-/* eslint-disable default-case */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
+import ReactTable from 'react-table';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBDataTable,
-  MDBTableEditable,
   MDBInput,
-  MDBAnimation,
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
   MDBModalFooter,
   MDBSelect
 } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import ReactDataGrid from 'react-data-grid';
-import { Connect } from 'aws-amplify-react';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import CreatableSelect from 'react-select/creatable';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import * as subscriptions from '../graphql/subscriptions';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
-import { useStateValue } from '../StateManagement';
 import matchSorter from 'match-sorter';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import SearchBar from 'material-ui-search-bar';
-import Select from 'react-select';
-import { minHeight } from '@material-ui/system';
-import CreateInventoryItem from './CreateInventoryItem';
-import LoadingComponent from './LoadingComponent';
-import './Custom.css';
-
-const uuidv1 = require('uuid/v1');
+import { API, graphqlOperation } from 'aws-amplify';
+import 'react-table/react-table.css';
+import * as queries from '../api/graphql/queries';
+import * as mutations from '../api/graphql/mutations';
+import { useStateValue } from '../state/StateManagement';
+import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
+import CircularIndeterminateLoading from '../components/CircularIndeterminate';
 
 const useForceUpdate = () => useState()[1];
 
@@ -59,7 +41,7 @@ const InventoryTable = props => {
       state: props.franchise
     });
     listInventoryItems();
-  }, []);
+  });
 
   const refreshInventoryItems = () => {
     dispatch({
@@ -80,28 +62,28 @@ const InventoryTable = props => {
         nextToken: nextToken
       })
     )
-      .then(result => {
-        currentData.push(...result.data.listInventoryItems.items);
+    .then(result => {
+      currentData.push(...result.data.listInventoryItems.items);
 
-        if (result.data.listInventoryItems.nextToken !== null) {
-          addNextTokenData(
-            currentData,
-            result.data.listInventoryItems.nextToken
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: currentData
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      if (result.data.listInventoryItems.nextToken !== null) {
+        addNextTokenData(
+          currentData,
+          result.data.listInventoryItems.nextToken
+        );
+      } else {
+        dispatch({
+          type: 'inventoryTableItems',
+          state: currentData
+        });
+        dispatch({
+          type: 'inventoryTableLoading',
+          state: false
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   };
 
   const listInventoryItems = () => {
@@ -114,26 +96,26 @@ const InventoryTable = props => {
         }
       })
     )
-      .then(result => {
-        if (result.data.listInventoryItems.nextToken !== null) {
-          addNextTokenData(
-            result.data.listInventoryItems.items,
-            result.data.listInventoryItems.nextToken
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: result.data.listInventoryItems.items
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    .then(result => {
+      if (result.data.listInventoryItems.nextToken !== null) {
+        addNextTokenData(
+          result.data.listInventoryItems.items,
+          result.data.listInventoryItems.nextToken
+        );
+      } else {
+        dispatch({
+          type: 'inventoryTableItems',
+          state: result.data.listInventoryItems.items
+        });
+        dispatch({
+          type: 'inventoryTableLoading',
+          state: false
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   };
 
   const updateInventoryItem = item => {
@@ -257,6 +239,13 @@ const InventoryTable = props => {
             }}
           />
         );
+
+      default:
+        return (
+          <div>
+            Type not supported
+          </div>
+        )
     }
   };
 
@@ -346,7 +335,7 @@ const InventoryTable = props => {
           };
         }}
         loading={globalStore.inventoryTableLoading}
-        LoadingComponent={LoadingComponent}
+        LoadingComponent={CircularIndeterminateLoading}
         defaultPageSize={10}
         pageSizeOptions={[5, 10, 20, 50, 100]}
         onPageChange={pageIndex => {
@@ -408,7 +397,7 @@ const InventoryTable = props => {
       >
         <MDBModalHeader toggle={() => setModalOpen(!modalOpen)} />
         <MDBModalBody>
-          <CreateInventoryItem />
+          <CreateInventoryItemForm />
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn

@@ -1,19 +1,12 @@
-import {
-    Greetings,
-    NavBar,
-    Nav,
-    NavRight,
-    NavItem,
-    AmplifyTheme
-} from 'aws-amplify-react';
 import React from 'react';
-import { Settings } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
+import { Greetings, AmplifyTheme } from 'aws-amplify-react';
+import { Hub } from '@aws-amplify/core';
+import { Settings } from '@material-ui/icons';
 import {
     MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse, MDBFormInline,
     MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from "mdbreact";
-import { Hub } from '@aws-amplify/core';
 
 
 class CustomNavBar extends Greetings {

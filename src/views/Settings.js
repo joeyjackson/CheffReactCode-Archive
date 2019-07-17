@@ -1,11 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { MDBContainer, MDBRow, MDBCol, MDBBtn } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import { useStateValue } from '../StateManagement';
+import { useStateValue } from '../state/StateManagement';
 
 const Settings = (props) => {
-    const [globalStore, dispatch] = useStateValue();
+    const globalStore = useStateValue()[0];
 
     const locations = globalStore.franchiseLocations.length > 0 ?
         globalStore.franchiseLocations.map(eachLocation =>

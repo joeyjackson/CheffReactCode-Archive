@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
-import { MDBContainer, MDBRow, MDBCol } from 'mdbreact';
-import Card from './Card';
-import Loader from 'react-loader-spinner';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { useStateValue } from '../StateManagement';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { MDBRow, MDBCol } from 'mdbreact';
+import MapCard from '../components/maps/MapCard';
+import { useStateValue } from '../state/StateManagement';
 
-const CardList = () => {
-  const [globalStore, dispatch] = useStateValue();
+const LocationMapList = () => {
+  const globalStore = useStateValue()[0];
   const zoneInfoObject = globalStore.franchiseLocations;
   console.log(zoneInfoObject);
 
@@ -27,7 +26,7 @@ const CardList = () => {
         }}
       >
         <div className="d-flex justify-content-center">
-          <Card
+          <MapCard
             location={eachLocation.location}
             name={eachLocation.franchise}
             latitude={eachLocation.latitude}
@@ -41,4 +40,4 @@ const CardList = () => {
   return <MDBRow>{cardList}</MDBRow>;
 };
 
-export default CardList;
+export default LocationMapList;

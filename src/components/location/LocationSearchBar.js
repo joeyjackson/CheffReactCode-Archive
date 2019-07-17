@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete';
-import { classnames } from './helpers';
+import { classnames } from './utils';
 
-class SearchBar extends React.Component {
+class LocationSearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -137,6 +137,7 @@ class SearchBar extends React.Component {
                     </button>
                   )}
                 </div>
+                {/*TODO: Clean this up*/}
                 {suggestions.length > 0 && (
                   <div className="Demo__autocomplete-container">
                     {suggestions.map(suggestion => {
@@ -178,4 +179,4 @@ class SearchBar extends React.Component {
   }
 }
 
-export default SearchBar;
+export default LocationSearchBar;

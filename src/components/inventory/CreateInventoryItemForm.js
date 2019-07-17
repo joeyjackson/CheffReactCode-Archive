@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBInput
 } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import { useStateValue } from '../StateManagement';
+import * as mutations from '../../api/graphql/mutations';
+import { useStateValue } from '../../state/StateManagement';
 
-const CreateInventoryItem = () => {
+const CreateInventoryItemForm = () => {
   const [globalStore, dispatch] = useStateValue();
   const [newInventoryItem, setNewInventoryItem] = useState({
     franchise: globalStore.currentFranchise,
@@ -42,7 +40,8 @@ const CreateInventoryItem = () => {
       .catch(error => {
         console.log(error);
       });
-  };
+    };
+
   const handleNewStorageOption = event => {
     // if valid event (event will return NULL if selection box is closed)
     if (event) {
@@ -63,6 +62,7 @@ const CreateInventoryItem = () => {
       setNewInventoryItem(newInventoryItemCopy);
     }
   };
+
   const handleNewUnitOption = event => {
     if (event) {
       // if new one is to be created
@@ -81,6 +81,7 @@ const CreateInventoryItem = () => {
       setNewInventoryItem(newInventoryItemCopy);
     }
   };
+
   const handleNewBrandOption = event => {
     if (event) {
       // if new one is to be created
@@ -99,6 +100,7 @@ const CreateInventoryItem = () => {
       setNewInventoryItem(newInventoryItemCopy);
     }
   };
+
   const handleNewSupplierOption = event => {
     if (event) {
       // if new one is to be created
@@ -229,4 +231,4 @@ const CreateInventoryItem = () => {
   );
 };
 
-export default CreateInventoryItem;
+export default CreateInventoryItemForm;

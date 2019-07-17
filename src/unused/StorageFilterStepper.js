@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBAnimation } from 'mdbreact';
-import { useStateValue } from '../StateManagement';
+import { useStateValue } from '../state/StateManagement';
 
 const StorageFilterStepper = () => {
   const [storage, dispatch] = useStateValue();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StaticGoogleMap, Marker, Path } from 'react-static-google-map';
+import { StaticGoogleMap, Marker } from 'react-static-google-map';
 
 const StaticMap = props => {
   return (
