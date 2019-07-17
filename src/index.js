@@ -27,20 +27,24 @@ const initialState = {
   franchiseLocations: [], // stores our user's franchise and locations
   storageOptions: [
     {
-      value: 'Dry Storage',
-      label: 'Dry Storage'
+      value: 'Dry Goods',
+      label: 'Dry Goods'
     },
     {
-      value: 'Cold Storage',
-      label: 'Cold Storage'
+      value: 'Packaging/Paper/Cleaning',
+      label: 'Packaging/Paper/Cleaning'
     },
     {
-      value: 'Freezer',
-      label: 'Freezer'
+      value: 'Produce',
+      label: 'Produce'
     },
     {
-      value: 'Low Velocity',
-      label: 'Low Velocity'
+      value: 'Dairy',
+      label: 'Dairy'
+    },
+    {
+      value: 'Protein',
+      label: 'Protein'
     }
   ],
   unitOptions: [
@@ -71,24 +75,13 @@ const initialState = {
   ],
   supplierOptions: [],
   brandOptions: [],
-  storageFilter: [
-    {
-      type: 'Dry Storage',
-      filtered: false
-    },
-    {
-      type: 'Cold Storage',
-      filtered: false
-    },
-    {
-      type: 'Freezer',
-      filtered: false
-    },
-    {
-      type: 'Low  Velocity',
-      filtered: false
-    }
-  ],
+  storageFilter: {
+    dryGoods: false,
+    packagingPaperCleaning: false,
+    produce: false,
+    dairy: false,
+    protein: false
+  },
   tempSearchAddress: '', // for Google API Search Bar
   selectedFranchise: '',
   selectedAddress: '',
@@ -96,7 +89,7 @@ const initialState = {
   currentFranchise: '',
   inventoryTableLoading: true,
   inventoryTableItems: [],
-  itemToRemove: ''
+  inventoryItemHasUpdated: false
 };
 
 Amplify.configure(awsconfig);

@@ -167,7 +167,7 @@
 			"Properties": {
 				"TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/hosting/template.json",
 				"Parameters": {
-					"bucketName": "cheff-20190708000459-hostingbucket",
+					"bucketName": "cheff-20190711013840-hostingbucket",
 					"env": "cheff"
 				}
 			}

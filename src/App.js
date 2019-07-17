@@ -22,6 +22,7 @@ import './App.css';
 import UserCompletionPage from './components/UserCompletionPage';
 import * as queries from './graphql/queries';
 import { useStateValue } from './StateManagement';
+import StorageFilterStepper from './components/StorageFilterStepper';
 
 // var scrollIntoView = require('scroll-into-view');
 
@@ -106,9 +107,23 @@ const App = () => {
           />
         )}
         <Route
-          path="/location/:location"
+          path="/location/storageFilter/:location"
           render={linkProps => {
             console.log(linkProps);
+
+            return (
+              <StorageFilterStepper
+                location={linkProps.location.state.location}
+                franchise={linkProps.location.state.franchise}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/location/inventoryTable/:location"
+          render={linkProps => {
+            console.log(linkProps);
+
             return (
               <InventoryTable
                 location={linkProps.location.state.location}

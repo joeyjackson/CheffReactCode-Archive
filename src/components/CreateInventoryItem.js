@@ -20,7 +20,7 @@ const CreateInventoryItem = () => {
     franchise: globalStore.currentFranchise,
     location: globalStore.currentLocation,
     item: null,
-    itemNumber: null,
+    itemNumber: Math.floor(Math.random() * 6000000 + 1000000),
     price: null,
     storage: null,
     quantity: null,
@@ -135,6 +135,7 @@ const CreateInventoryItem = () => {
             label="Item Number"
             outline
             type="number"
+            valueDefault={newInventoryItem.itemNumber}
             getValue={input => {
               let newInventoryItemCopy = { ...newInventoryItem };
               newInventoryItemCopy.itemNumber = input;
