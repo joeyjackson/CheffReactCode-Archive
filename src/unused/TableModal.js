@@ -10,8 +10,7 @@ import {
 
 import EditableTable from './EditableTable';
 import StorageFilterStepper from './StorageFilterStepper';
-import CategoryFilterStepper from './CategoryFilterStepper';
-import { useStateValue } from './StateManagement';
+import { useStateValue } from '../state/StateManagement';
 import { useAlert } from 'react-alert';
 
 const TableModal = props => {

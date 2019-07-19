@@ -1,48 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBInput
 } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import { useStateValue } from '../StateManagement';
+import * as mutations from '../../api/graphql/mutations';
+import { useStateValue } from '../../state/StateManagement';
 
-const CreateInventoryItem = () => {
+const EditInventoryItemForm = () => {
   const [globalStore, dispatch] = useStateValue();
   const [newInventoryItem, setNewInventoryItem] = useState({
-    franchise: globalStore.currentFranchise,
-    location: globalStore.currentLocation,
-    item: null,
-    itemNumber: Math.floor(Math.random() * 6000000 + 1000000),
-    price: null,
-    storage: null,
-    quantity: null,
-    units: 'OZ',
-    brand: null,
-    supplier: null,
-    parValue: null
+    franchise: globalStore.inventoryItemToUpdate.franchise,
+    id: globalStore.inventoryItemToUpdate.id,
+    location: globalStore.inventoryItemToUpdate.location,
+    item: globalStore.inventoryItemToUpdate.item,
+    itemNumber: globalStore.inventoryItemToUpdate.itemNumber,
+    price: globalStore.inventoryItemToUpdate.price,
+    storage: globalStore.inventoryItemToUpdate.storage,
+    quantity: globalStore.inventoryItemToUpdate.quantity,
+    units: globalStore.inventoryItemToUpdate.units,
+    brand: globalStore.inventoryItemToUpdate.brand,
+    supplier: globalStore.inventoryItemToUpdate.supplier,
+    parValue: globalStore.inventoryItemToUpdate.parValue
   });
 
-  const addNewInventoryItem = () => {
+  console.log(globalStore.inventoryItemToUpdate);
+
+  const updateInventoryItem = item => {
+    console.log(item);
+    if ('__typename' in item) {
+      delete item.__typename;
+    }
     API.graphql(
-      graphqlOperation(mutations.createInventoryItem, {
-        input: newInventoryItem
+      graphqlOperation(mutations.updateInventoryItem, {
+        input: item
       })
     )
       .then(result => {
         console.log(result);
+        // refreshInventoryItems();
       })
       .catch(error => {
         console.log(error);
       });
   };
+
   const handleNewStorageOption = event => {
     // if valid event (event will return NULL if selection box is closed)
     if (event) {
@@ -145,6 +152,7 @@ const CreateInventoryItem = () => {
           <MDBInput
             label="Item Description"
             outline
+            valueDefault={newInventoryItem.item}
             getValue={input => {
               let newInventoryItemCopy = { ...newInventoryItem };
               newInventoryItemCopy.item = input;
@@ -155,6 +163,7 @@ const CreateInventoryItem = () => {
             label="Price"
             outline
             type="number"
+            valueDefault={newInventoryItem.price}
             getValue={input => {
               let newInventoryItemCopy = { ...newInventoryItem };
               newInventoryItemCopy.price = input;
@@ -167,6 +176,7 @@ const CreateInventoryItem = () => {
                 label="Quantity"
                 outline
                 type="number"
+                valueDefault={newInventoryItem.quantity}
                 getValue={input => {
                   let newInventoryItemCopy = { ...newInventoryItem };
                   newInventoryItemCopy.quantity = input;
@@ -177,6 +187,7 @@ const CreateInventoryItem = () => {
                 label="Par Value"
                 outline
                 type="number"
+                valueDefault={newInventoryItem.parValue}
                 getValue={input => {
                   let newInventoryItemCopy = { ...newInventoryItem };
                   newInventoryItemCopy.parValue = input;
@@ -185,43 +196,60 @@ const CreateInventoryItem = () => {
               />
             </MDBCol>
             <MDBCol sm="5">
-              <label className="grey-text">Units</label>
+              <label className="grey-text">
+                <strong>Units</strong>
+              </label>
               <CreatableSelect
                 isClearable
+                isSearchable
+                placeholder={newInventoryItem.units}
                 onChange={e => handleNewUnitOption(e)}
                 options={globalStore.unitOptions}
-                placeholder={'OZ'}
               />
             </MDBCol>
           </MDBRow>
           <br />
-          <label className="grey-text">Storage</label>
+          <label className="grey-text">
+            <strong>Storage</strong>
+          </label>
           <CreatableSelect
             isClearable
+            isSearchable
+            placeholder={newInventoryItem.storage}
             onChange={e => handleNewStorageOption(e)}
             options={globalStore.storageOptions}
-            placeholder={'Select/Type Storage'}
           />
           <br />
-          <label className="grey-text">Brand</label>
+          <label className="grey-text">
+            <strong>Brand</strong>
+          </label>
           <CreatableSelect
             isClearable
+            isSearchable
+            placeholder={newInventoryItem.brand}
             onChange={e => handleNewBrandOption(e)}
             options={globalStore.brandOptions}
-            placeholder={'Select/Type Brand'}
           />
           <br />
-          <label className="grey-text">Supplier</label>
+          <label className="grey-text">
+            <strong>Supplier</strong>
+          </label>
           <CreatableSelect
             isClearable
+            isSearchable
+            placeholder={newInventoryItem.supplier}
             onChange={e => handleNewSupplierOption(e)}
             options={globalStore.supplierOptions}
-            placeholder={'Select/Type Supplier'}
           />
 
           <div className="text-center mt-4">
-            <MDBBtn color="primary" onClick={() => addNewInventoryItem()}>
-              Create Item
+            <MDBBtn
+              color="primary"
+              onClick={() => {
+                updateInventoryItem(newInventoryItem);
+              }}
+            >
+              Update Item
             </MDBBtn>
           </div>
         </form>
@@ -230,4 +258,4 @@ const CreateInventoryItem = () => {
   );
 };
 
-export default CreateInventoryItem;
+export default EditInventoryItemForm;

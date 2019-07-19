@@ -1,17 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import {
-  MDBBtn,
   MDBCard,
   MDBCardBody,
-  MDBCardImage,
   MDBCardTitle,
-  MDBCardText,
-  MDBCol
+  MDBCardText
 } from 'mdbreact';
-import StoreLocater from './StoreLocator';
 import StaticMap from './StaticMap';
 
-const Card = props => {
+const MapCard = props => {
   console.log(props);
   return (
     <MDBCard style={{ width: '22rem' }}>
@@ -25,4 +21,4 @@ const Card = props => {
   );
 };
 
-export default Card;
+export default MapCard;

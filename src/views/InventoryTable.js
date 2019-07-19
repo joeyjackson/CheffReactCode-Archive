@@ -1,43 +1,27 @@
-/* eslint-disable default-case */
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import Select from 'react-select';
+import ReactTable from 'react-table';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBDataTable,
-  MDBTableEditable,
   MDBInput,
-  MDBAnimation,
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
-  MDBModalFooter,
-  MDBSelect
+  MDBModalFooter
 } from 'mdbreact';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import ReactDataGrid from 'react-data-grid';
-import { Connect } from 'aws-amplify-react';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import CreatableSelect from 'react-select/creatable';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import * as subscriptions from '../graphql/subscriptions';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
-import { useStateValue } from '../StateManagement';
 import matchSorter from 'match-sorter';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import SearchBar from 'material-ui-search-bar';
-import Select from 'react-select';
-import { minHeight } from '@material-ui/system';
-import CreateInventoryItem from './CreateInventoryItem';
-import EditInventoryItem from './EditInventoryItem';
-import LoadingComponent from './LoadingComponent';
-import './Custom.css';
+import { API, graphqlOperation } from 'aws-amplify';
+import 'react-table/react-table.css';
+import '../styles.css';
+import * as queries from '../api/graphql/queries';
+import * as mutations from '../api/graphql/mutations';
+import { useStateValue } from '../state/StateManagement';
+import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
+import EditInventoryItemForm from '../components/inventory/EditInventoryItemForm';
+import CircularIndeterminateLoading from '../components/CircularIndeterminate';
 
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
@@ -67,7 +51,7 @@ const InventoryTable = props => {
       state: true
     });
     listInventoryItems();
-  }, []);
+  });
 
   const generateSupplyOrder = () => {
     if (globalStore.inventoryTableItems.length > 0) {
@@ -148,28 +132,28 @@ const InventoryTable = props => {
         }
       })
     )
-      .then(result => {
-        currentData.push(...result.data.listInventoryItems.items);
+    .then(result => {
+      currentData.push(...result.data.listInventoryItems.items);
 
-        if (result.data.listInventoryItems.nextToken !== null) {
-          addNextTokenData(
-            currentData,
-            result.data.listInventoryItems.nextToken
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: currentData
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      if (result.data.listInventoryItems.nextToken !== null) {
+        addNextTokenData(
+          currentData,
+          result.data.listInventoryItems.nextToken
+        );
+      } else {
+        dispatch({
+          type: 'inventoryTableItems',
+          state: currentData
+        });
+        dispatch({
+          type: 'inventoryTableLoading',
+          state: false
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   };
 
   const listInventoryItems = () => {
@@ -234,28 +218,26 @@ const InventoryTable = props => {
         limit: 2147483647
       })
     )
-      .then(result => {
-        if (result.data.listInventoryItems.nextToken !== null) {
-          console.log(result);
-          addNextTokenData(
-            result.data.listInventoryItems.items,
-            result.data.listInventoryItems.nextToken,
-            tempStorageFilter
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: result.data.listInventoryItems.items
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    .then(result => {
+      if (result.data.listInventoryItems.nextToken !== null) {
+        addNextTokenData(
+          result.data.listInventoryItems.items,
+          result.data.listInventoryItems.nextToken
+        );
+      } else {
+        dispatch({
+          type: 'inventoryTableItems',
+          state: result.data.listInventoryItems.items
+        });
+        dispatch({
+          type: 'inventoryTableLoading',
+          state: false
+        });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
   };
 
   const updateInventoryItem = item => {
@@ -367,6 +349,13 @@ const InventoryTable = props => {
             </span>
           </MDBContainer>
         );
+
+      default:
+        return (
+          <div>
+            Type not supported
+          </div>
+        )
     }
   };
 
@@ -464,7 +453,7 @@ const InventoryTable = props => {
           };
         }}
         loading={globalStore.inventoryTableLoading}
-        LoadingComponent={LoadingComponent}
+        LoadingComponent={CircularIndeterminateLoading}
         defaultPageSize={10}
         pageSizeOptions={[5, 10, 20, 50, 100]}
         onPageChange={pageIndex => {
@@ -564,7 +553,7 @@ const InventoryTable = props => {
           toggle={() => setCreateInventoryModalModal(!createInventoryModal)}
         />
         <MDBModalBody>
-          <CreateInventoryItem />
+          <CreateInventoryItemForm />
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn
@@ -592,7 +581,7 @@ const InventoryTable = props => {
           }}
         />
         <MDBModalBody>
-          <EditInventoryItem />
+          <EditInventoryItemForm />
         </MDBModalBody>
         <MDBModalFooter>
           <MDBBtn

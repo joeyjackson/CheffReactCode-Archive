@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
   MDBBtn,
   MDBAnimation,
   MDBCard,
   MDBCardBody,
   MDBCardImage
 } from 'mdbreact';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { useStateValue } from '../StateManagement';
-import dryGoods from './dryGoods.jpg';
-import cleaningSupplies from './packagingCleaning.jpg';
-import produce from './produce.jpg';
-import dairy from './dairy.jpg';
-import protein from './protein.jpg';
+import { useStateValue } from '../state/StateManagement';
+
+import dryGoods from '../assets/img/food/dryGoods.jpg';
+import cleaningSupplies from '../assets/img/food/packagingCleaning.jpg';
+import produce from '../assets/img/food/produce.jpg';
+import dairy from '../assets/img/food/dairy.jpg';
+import protein from '../assets/img/food/protein.jpg';
+
 const StorageFilterStepper = props => {
   const [globalStore, dispatch] = useStateValue();
   console.log(globalStore.storageFilter);
@@ -57,7 +56,6 @@ const StorageFilterStepper = props => {
             onClick={() => {
               let currentStorageFilter = globalStore.storageFilter;
               currentStorageFilter.dryGoods = true;
-
               dispatch({
                 type: 'storageFilter',
                 state: currentStorageFilter
@@ -283,7 +281,7 @@ const StorageFilterStepper = props => {
         </Link>
         <Link
           to={{
-            pathname: `/location/inventoryTable/${props.location}`,
+            pathname: `/location/inventory/${props.location}`,
             state: {
               location: props.location,
               franchise: props.franchise

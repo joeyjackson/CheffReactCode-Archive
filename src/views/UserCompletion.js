@@ -1,30 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  MDBJumbotron,
   MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
-  MDBDataTable,
-  MDBTableEditable,
   MDBInput,
-  MDBSelect,
   MDBAnimation
 } from 'mdbreact';
-import Amplify, { Auth, API, graphqlOperation } from 'aws-amplify';
-import ReactDataGrid from 'react-data-grid';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import SearchBar from './SearchBar';
-import awsconfig from '../aws-exports.js';
-import * as queries from '../graphql/queries';
-import * as mutations from '../graphql/mutations';
-import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../StateManagement';
 import Select from 'react-select';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import ReactTable from 'react-table';
+import { API, graphqlOperation } from 'aws-amplify';
+import 'react-table/react-table.css';
+import * as mutations from '../api/graphql/mutations';
+import LocationSearchBar from '../components/location/LocationSearchBar';
+import { useStateValue } from '../state/StateManagement';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -35,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserCompletionPage = () => {
+const UserCompletion = () => {
   const [localFranchiseLocations, setLocalFranchiseLocations] = useState([]);
   const [globalStore, dispatch] = useStateValue();
 
@@ -234,7 +225,7 @@ const UserCompletionPage = () => {
         provided.
       </p>
 
-      <SearchBar dispatch={dispatch} address={globalStore.tempSearchAddress} />
+      <LocationSearchBar dispatch={dispatch} address={globalStore.tempSearchAddress} />
       <div className="d-flex justify-content-between">
         {globalStore.selectedFranchise !== '' ? (
           <MDBAnimation type="pulse" infinite>
@@ -264,4 +255,4 @@ const UserCompletionPage = () => {
   );
 };
 
-export default UserCompletionPage;
+export default UserCompletion;
