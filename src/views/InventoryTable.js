@@ -51,7 +51,7 @@ const InventoryTable = props => {
       state: true
     });
     listInventoryItems();
-  });
+  }, []);
 
   const generateSupplyOrder = () => {
     if (globalStore.inventoryTableItems.length > 0) {
@@ -120,7 +120,7 @@ const InventoryTable = props => {
     setTimeout(listInventoryItems(), 100);
   };
 
-  const addNextTokenData = (currentData, nextToken, filter) => {
+  const addNextTokenData = (currentData, nextToken, storageFilter) => {
     API.graphql(
       graphqlOperation(queries.listInventoryItems, {
         nextToken: nextToken,
@@ -128,32 +128,33 @@ const InventoryTable = props => {
           location: {
             eq: props.location
           },
-          and: { or: filter }
+          and: { or: storageFilter }
         }
       })
     )
-    .then(result => {
-      currentData.push(...result.data.listInventoryItems.items);
+      .then(result => {
+        currentData.push(...result.data.listInventoryItems.items);
 
-      if (result.data.listInventoryItems.nextToken !== null) {
-        addNextTokenData(
-          currentData,
-          result.data.listInventoryItems.nextToken
-        );
-      } else {
-        dispatch({
-          type: 'inventoryTableItems',
-          state: currentData
-        });
-        dispatch({
-          type: 'inventoryTableLoading',
-          state: false
-        });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+        if (result.data.listInventoryItems.nextToken !== null) {
+          addNextTokenData(
+            currentData,
+            result.data.listInventoryItems.nextToken,
+            storageFilter
+          );
+        } else {
+          dispatch({
+            type: 'inventoryTableItems',
+            state: currentData
+          });
+          dispatch({
+            type: 'inventoryTableLoading',
+            state: false
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const listInventoryItems = () => {
@@ -218,26 +219,27 @@ const InventoryTable = props => {
         limit: 2147483647
       })
     )
-    .then(result => {
-      if (result.data.listInventoryItems.nextToken !== null) {
-        addNextTokenData(
-          result.data.listInventoryItems.items,
-          result.data.listInventoryItems.nextToken
-        );
-      } else {
-        dispatch({
-          type: 'inventoryTableItems',
-          state: result.data.listInventoryItems.items
-        });
-        dispatch({
-          type: 'inventoryTableLoading',
-          state: false
-        });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      .then(result => {
+        if (result.data.listInventoryItems.nextToken !== null) {
+          addNextTokenData(
+            result.data.listInventoryItems.items,
+            result.data.listInventoryItems.nextToken,
+            tempStorageFilter
+          );
+        } else {
+          dispatch({
+            type: 'inventoryTableItems',
+            state: result.data.listInventoryItems.items
+          });
+          dispatch({
+            type: 'inventoryTableLoading',
+            state: false
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const updateInventoryItem = item => {
@@ -351,11 +353,7 @@ const InventoryTable = props => {
         );
 
       default:
-        return (
-          <div>
-            Type not supported
-          </div>
-        )
+        return <div>Type not supported</div>;
     }
   };
 

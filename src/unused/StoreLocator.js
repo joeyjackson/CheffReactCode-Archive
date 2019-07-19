@@ -6,7 +6,6 @@ import useIsMounted from 'ismounted';
 import StaticMap from './StaticMap';
 
 // set Google Maps Geocoding API for purposes of quota management. Its optional but recommended.
-Geocode.setApiKey('AIzaSyAojclCkVnINxiSN0uKSLG1Q5RPBvtX9HI');
 
 // Enable or disable logs. Its optional.
 Geocode.enableDebug();

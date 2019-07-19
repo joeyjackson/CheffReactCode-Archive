@@ -413,3 +413,7 @@ body,
     width: 50%;
   }
 }
+
+.customColor {
+  background-color: #3b91cf !important;
+}
