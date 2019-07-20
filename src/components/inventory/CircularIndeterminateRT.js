@@ -8,9 +8,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CircularIndeterminate = () => {
+const CircularIndeterminate = props => {
   const classes = useStyles();
-  return <CircularProgress className={classes.progress} />;
+  return (
+    props.loading && (
+      <div className="-loading -active">
+        <div className="-loading-inner">
+          <CircularProgress className={classes.progress} />
+        </div>
+      </div>
+    )
+  );
 };
 
 export default CircularIndeterminate;

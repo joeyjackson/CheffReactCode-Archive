@@ -21,7 +21,7 @@ import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';
 import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
 import EditInventoryItemForm from '../components/inventory/EditInventoryItemForm';
-import CircularIndeterminateLoading from '../components/CircularIndeterminate';
+import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
 
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
@@ -51,7 +51,7 @@ const InventoryTable = props => {
       state: true
     });
     listInventoryItems();
-  }, []);
+  }, []); // keep empty array so component doesn't rerender indefinetely
 
   const generateSupplyOrder = () => {
     if (globalStore.inventoryTableItems.length > 0) {
@@ -393,7 +393,7 @@ const InventoryTable = props => {
     <>
       <div style={{ paddingTop: '50px', paddingBottom: '80px' }}>
         <SearchBar
-          hintText="Search by item number/description, quantity, storage type, price, brand, or supplier"
+          hintText="Search Items"
           onChange={searchString => {
             if (searchString === '') {
               dispatch({
