@@ -10,7 +10,17 @@ const useStyles = makeStyles(theme => ({
 
 const CircularIndeterminate = () => {
   const classes = useStyles();
-  return <CircularProgress className={classes.progress} />;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <CircularProgress className={classes.progress} />
+    </div>
+  );
 };
 
 export default CircularIndeterminate;

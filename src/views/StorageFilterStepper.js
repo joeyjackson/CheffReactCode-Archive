@@ -21,7 +21,7 @@ const StorageFilterStepper = props => {
   return (
     <>
       <div
-        className="d-flex justify-content-around flex-wrap bd-highlight example-parent"
+        className="d-flex justify-content-between flex-wrap bd-highlight example-parent"
         style={{ paddingBottom: '50px' }}
       >
         {globalStore.storageFilter.dryGoods ? (
@@ -39,10 +39,10 @@ const StorageFilterStepper = props => {
                 });
               }}
             >
-              <MDBCard style={{ width: '22rem' }}>
+              <MDBCard style={{ width: '18rem' }}>
                 <MDBCardImage className="img-fluid" src={dryGoods} waves />
                 <MDBCardBody>
-                  <h5>Dry Goods</h5>
+                  <h6>Dry Goods</h6>
                 </MDBCardBody>
               </MDBCard>
             </MDBBtn>
@@ -62,10 +62,10 @@ const StorageFilterStepper = props => {
               });
             }}
           >
-            <MDBCard style={{ width: '22rem' }}>
+            <MDBCard style={{ width: '18rem' }}>
               <MDBCardImage className="img-fluid" src={dryGoods} waves />
               <MDBCardBody>
-                <h5>Dry Goods</h5>
+                <h6>Dry Goods</h6>
               </MDBCardBody>
             </MDBCard>
           </MDBBtn>
@@ -86,14 +86,14 @@ const StorageFilterStepper = props => {
                 });
               }}
             >
-              <MDBCard style={{ width: '22rem' }}>
+              <MDBCard style={{ width: '18rem' }}>
                 <MDBCardImage
                   className="img-fluid"
                   src={cleaningSupplies}
                   waves
                 />
                 <MDBCardBody>
-                  <h5>Packaging/Paper/Cleaning</h5>
+                  <h6>Packaging/Paper/Cleaning</h6>
                 </MDBCardBody>
               </MDBCard>
             </MDBBtn>
@@ -113,14 +113,14 @@ const StorageFilterStepper = props => {
               });
             }}
           >
-            <MDBCard style={{ width: '22rem' }}>
+            <MDBCard style={{ width: '18rem' }}>
               <MDBCardImage
                 className="img-fluid"
                 src={cleaningSupplies}
                 waves
               />
               <MDBCardBody>
-                <h5>Packaging/Paper/Cleaning</h5>
+                <h6>Packaging/Paper/Cleaning</h6>
               </MDBCardBody>
             </MDBCard>
           </MDBBtn>
@@ -141,10 +141,10 @@ const StorageFilterStepper = props => {
                 });
               }}
             >
-              <MDBCard style={{ width: '22rem' }}>
+              <MDBCard style={{ width: '18rem' }}>
                 <MDBCardImage className="img-fluid" src={produce} waves />
                 <MDBCardBody>
-                  <h5>Produce</h5>
+                  <h6>Produce</h6>
                 </MDBCardBody>
               </MDBCard>
             </MDBBtn>
@@ -164,10 +164,10 @@ const StorageFilterStepper = props => {
               });
             }}
           >
-            <MDBCard style={{ width: '22rem' }}>
+            <MDBCard style={{ width: '18rem' }}>
               <MDBCardImage className="img-fluid" src={produce} waves />
               <MDBCardBody>
-                <h5>Produce</h5>
+                <h6>Produce</h6>
               </MDBCardBody>
             </MDBCard>
           </MDBBtn>
@@ -188,10 +188,10 @@ const StorageFilterStepper = props => {
                 });
               }}
             >
-              <MDBCard style={{ width: '22rem' }}>
+              <MDBCard style={{ width: '18rem' }}>
                 <MDBCardImage className="img-fluid" src={dairy} waves />
                 <MDBCardBody>
-                  <h5>Dairy</h5>
+                  <h6>Dairy</h6>
                 </MDBCardBody>
               </MDBCard>
             </MDBBtn>
@@ -210,10 +210,10 @@ const StorageFilterStepper = props => {
               });
             }}
           >
-            <MDBCard style={{ width: '22rem' }}>
+            <MDBCard style={{ width: '18rem' }}>
               <MDBCardImage className="img-fluid" src={dairy} waves />
               <MDBCardBody>
-                <h5>Dairy</h5>
+                <h6>Dairy</h6>
               </MDBCardBody>
             </MDBCard>
           </MDBBtn>
@@ -234,10 +234,10 @@ const StorageFilterStepper = props => {
                 });
               }}
             >
-              <MDBCard style={{ width: '22rem' }}>
+              <MDBCard style={{ width: '18rem' }}>
                 <MDBCardImage className="img-fluid" src={protein} waves />
                 <MDBCardBody>
-                  <h5>Protein</h5>
+                  <h6>Protein</h6>
                 </MDBCardBody>
               </MDBCard>
             </MDBBtn>
@@ -256,20 +256,17 @@ const StorageFilterStepper = props => {
               });
             }}
           >
-            <MDBCard style={{ width: '22rem' }}>
+            <MDBCard style={{ width: '18rem' }}>
               <MDBCardImage className="img-fluid" src={protein} waves />
               <MDBCardBody>
-                <h5>Protein</h5>
+                <h6>Protein</h6>
               </MDBCardBody>
             </MDBCard>
           </MDBBtn>
         )}
       </div>
 
-      <div
-        className="d-flex justify-content-around"
-        style={{ paddingBottom: '50px' }}
-      >
+      <div className="d-flex justify-content-around">
         <Link
           to={{
             pathname: '/'

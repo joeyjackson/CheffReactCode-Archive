@@ -1,3 +1,10 @@
+/*
+Made code for application. Handles routes for each page. 
+1) Gets user info (email, franchise locations - that includes all info we will use)
+2) Determines if this is the first time the user logins, if so, render the User Completition page
+3) Otherwise, render the locations as cards for the Home Page
+*/
+
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
@@ -28,6 +35,63 @@ import CircularIndeterminate from './components/CircularIndeterminate';
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
 
+  const setSuppliers = franchiseLocations => {
+    let suppliers = [];
+    franchiseLocations.map(eachLocation => {
+      suppliers.push(JSON.parse(eachLocation.suppliers));
+    });
+
+    dispatch({
+      type: 'supplierOptions',
+      state: suppliers.flat()
+    });
+  };
+
+  const setBrands = franchiseLocations => {
+    let brands = [];
+    franchiseLocations.map(eachLocation => {
+      brands.push(JSON.parse(eachLocation.brands));
+    });
+
+    dispatch({
+      type: 'brandOptions',
+      state: brands.flat()
+    });
+    console.log(brands.flat());
+  };
+
+  const setUnits = franchiseLocations => {
+    let units = [];
+    franchiseLocations.map(eachLocation => {
+      JSON.parse(eachLocation.units).map(eachUnit => {
+        units.push({
+          name: eachUnit,
+          label: eachUnit
+        });
+      });
+    });
+
+    dispatch({
+      type: 'unitOptions',
+      state: units.flat()
+    });
+    console.log(units.flat());
+  };
+
+  const setStorageTypes = franchiseLocations => {
+    let storageTypes = [];
+    franchiseLocations.map(eachLocation => {
+      storageTypes.push(JSON.parse(eachLocation.storageTypes));
+    });
+
+    dispatch({
+      type: 'storageOptions',
+      state: storageTypes.flat()
+    });
+    console.log(storageTypes.flat());
+  };
+
+  // Get user info (email, franchse/locations, suppliers, brands, etc.)
   const getUserInfo = () => {
     Auth.currentUserInfo().then(data => {
       const userEmail = data.attributes.email;
@@ -41,15 +105,22 @@ const App = () => {
         })
       )
         .then(result => {
-          console.log(result);
+          let franchiseLocations = result.data.listUserLocationss.items;
+          // Set the franchiseLocation for the whole app
           dispatch({
             type: 'franchiseLocations',
-            state: result.data.listUserLocationss.items
+            state: franchiseLocations
           });
+          // Set the user email for the whole app
           dispatch({
             type: 'userEmail',
             state: userEmail
           });
+          // set initial suppliers, brands, units, storage types (for settings page and when creating a new inventory item)
+          setSuppliers(franchiseLocations);
+          setBrands(franchiseLocations);
+          setUnits(franchiseLocations);
+          setStorageTypes(franchiseLocations);
         })
         .catch(error => {
           console.log(error);
@@ -57,13 +128,17 @@ const App = () => {
     });
   };
 
+  // Query user info once the Home Page mounts, MUST keep empty array so we don't continously request on each render
   useEffect(() => {
     getUserInfo();
   }, []);
 
   return (
+    // Use Router from BrowserRouter to handle linking from/to different pages in application
     <Router>
+      <NavBar />
       <Switch>
+        {/* If user logged in and has locations, then render the locations. Otherwise, render the User Completion Page */}
         {globalStore.userEmail ? (
           <Route
             exact
@@ -72,24 +147,15 @@ const App = () => {
               globalStore.franchiseLocations.length === 0 ? (
                 <UserCompletionView />
               ) : (
-                <>
-                  <NavBar />
-                  <LocationMapListView />
-                </>
+                <LocationMapListView />
               )
             }
           />
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <CircularIndeterminate />
-          </div>
+          // Display loading icon when waiting for User Info API call
+          <CircularIndeterminate />
         )}
+        {/* This route is executed when a user clicks on a location card, it opens the storage filter page */}
         <Route
           path="/location/storageFilter/:location"
           render={linkProps => (
@@ -99,6 +165,7 @@ const App = () => {
             />
           )}
         />
+        {/* When the user is done choosing storage types for the filter, the inventory page is displayed */}
         <Route
           path="/location/inventory/:location"
           render={linkProps => (
@@ -108,6 +175,7 @@ const App = () => {
             />
           )}
         />
+        {/* This routes the Settings page that is accessed via the NavBar */}
         <Route path="/settings" component={SettingsView} />
       </Switch>
     </Router>

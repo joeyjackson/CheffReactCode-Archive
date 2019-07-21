@@ -14,15 +14,24 @@ const Settings = props => {
     ) : (
       <MDBRow>None</MDBRow>
     );
+
   const units =
     globalStore.unitOptions.length > 0 ? (
       globalStore.unitOptions.map(unit => <MDBRow>{unit.label}</MDBRow>)
     ) : (
       <MDBRow>None</MDBRow>
     );
+
   const brands =
     globalStore.brandOptions.length > 0 ? (
       globalStore.brandOptions.map(brand => <MDBRow>{brand}</MDBRow>)
+    ) : (
+      <MDBRow>None</MDBRow>
+    );
+
+  const suppliers =
+    globalStore.supplierOptions.length > 0 ? (
+      globalStore.supplierOptions.map(supplier => <MDBRow>{supplier}</MDBRow>)
     ) : (
       <MDBRow>None</MDBRow>
     );
@@ -43,6 +52,8 @@ const Settings = props => {
         <MDBCol>{brands}</MDBCol>
         <MDBRow>Units</MDBRow>
         <MDBCol>{units}</MDBCol>
+        <MDBRow>Suppliers</MDBRow>
+        <MDBCol>{suppliers}</MDBCol>
       </MDBCol>
       <MDBRow>
         <MDBBtn color="back" rounded onClick={() => props.history.goBack()}>

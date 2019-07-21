@@ -23,21 +23,25 @@ import CreateInventoryItemForm from '../components/inventory/CreateInventoryItem
 import EditInventoryItemForm from '../components/inventory/EditInventoryItemForm';
 import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
 
+// used to generate PDF supply order
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
 
-const uuidv1 = require('uuid/v1');
+// const uuidv1 = require('uuid/v1');
 
 const InventoryTable = props => {
-  const [originalData, setOriginalData] = useState([]);
-  const [editInventoryModal, setEditInventoryModal] = useState(false);
-  const [createInventoryModal, setCreateInventoryModalModal] = useState(false);
+  const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data
+  const [editInventoryModal, setEditInventoryModal] = useState(false); // opens/closes the modal to edit an inventory item
+  const [createInventoryModal, setCreateInventoryModalModal] = useState(false); // opens/closes the modal to create an inventory item
   const [globalStore, dispatch] = useStateValue();
+
+  // used to force update the react table when performing pagination of react table (workaround)
   const [, updateState] = React.useState();
   const forceUpdate = useCallback(() => updateState({}), []);
 
+  // when component first mounts
   useEffect(() => {
-    console.log('mounted');
+    // initialize states
     dispatch({
       type: 'currentLocation',
       state: props.location
@@ -50,12 +54,14 @@ const InventoryTable = props => {
       type: 'inventoryTableLoading',
       state: true
     });
+    // query inventory table for specific location using the storage filter choosen by the user
     listInventoryItems();
   }, []); // keep empty array so component doesn't rerender indefinetely
 
   const generateSupplyOrder = () => {
+    // only generate supply order if their are items in the table (user has data)
     if (globalStore.inventoryTableItems.length > 0) {
-      const doc = new jsPDF('l', 'mm', 'a3');
+      const doc = new jsPDF('l', 'mm', 'a3'); // sets landscape mode for better printing and layout
       doc.setFontSize(25);
       doc.text(65, 20, 'Supply Order Form'); //title
       doc.setFontSize(20);
@@ -64,6 +70,7 @@ const InventoryTable = props => {
       doc.text(20, 50, props.location);
 
       let body = [];
+      // inventory data
       globalStore.inventoryTableItems.map(eachData => {
         body.push([
           eachData.itemNumber,
@@ -79,6 +86,7 @@ const InventoryTable = props => {
         ]);
       });
 
+      // table columns
       doc.autoTable({
         startY: 70,
         theme: 'grid',
@@ -99,9 +107,10 @@ const InventoryTable = props => {
         body: body
       });
 
+      // just a little fancy formatting for the PDF name
       var today = new Date();
       var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
       var yyyy = today.getFullYear();
 
       today = mm + '/' + dd + '/' + yyyy;
@@ -112,6 +121,7 @@ const InventoryTable = props => {
     }
   };
 
+  // Updates the inventory table; used when data is edited, deleted, or created
   const refreshInventoryItems = () => {
     dispatch({
       type: 'inventoryTableLoading',
@@ -120,6 +130,8 @@ const InventoryTable = props => {
     setTimeout(listInventoryItems(), 100);
   };
 
+  // used to retrieve more data that is past the query limit
+  // nextToken represents the next data item to be queried from
   const addNextTokenData = (currentData, nextToken, storageFilter) => {
     API.graphql(
       graphqlOperation(queries.listInventoryItems, {
@@ -133,7 +145,7 @@ const InventoryTable = props => {
       })
     )
       .then(result => {
-        currentData.push(...result.data.listInventoryItems.items);
+        currentData.push(result.data.listInventoryItems.items);
 
         if (result.data.listInventoryItems.nextToken !== null) {
           addNextTokenData(

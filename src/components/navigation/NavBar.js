@@ -23,6 +23,7 @@ import SearchBar from 'material-ui-search-bar';
 class CustomNavBar extends Greetings {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {};
     Hub.listen('auth', this.onHubCapsule);
     this._validAuthStates = ['signedIn'];
@@ -71,6 +72,9 @@ class CustomNavBar extends Greetings {
                     hintText="Search Location"
                     onChange={searchString => {
                       console.log(searchString);
+                    }}
+                    onRequestSearch={event => {
+                      console.log(event);
                     }}
                   />
                 </div>
