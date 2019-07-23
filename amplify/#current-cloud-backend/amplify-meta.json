@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/auth/cheff2fec0ed8-cloudformation-template.yml",
 				"logicalId": "authcheff2fec0ed8"
 			},
-			"lastPushTimeStamp": "2019-07-11T07:39:57.201Z",
+			"lastPushTimeStamp": "2019-07-23T01:44:06.489Z",
 			"output": {
 				"AppClientSecret": "9300ho35rn2u1bu74atekgeff5n9p38fja6j4ouh5ilp2gct6u7",
 				"UserPoolId": "us-east-2_9AlobejmS",
@@ -45,7 +45,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apicheff"
 			},
-			"lastPushTimeStamp": "2019-07-11T07:39:57.203Z",
+			"lastPushTimeStamp": "2019-07-23T01:44:06.491Z",
 			"lastPushDirHash": "P39llMnXTbNH9QHzTBWPzSiLNQw="
 		}
 	},
@@ -57,7 +57,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2019-07-11T07:39:57.205Z",
+			"lastPushTimeStamp": "2019-07-23T01:44:06.492Z",
 			"output": {
 				"S3BucketSecureURL": "https://cheff-20190711013840-hostingbucket-cheff.s3.amazonaws.com",
 				"WebsiteURL": "http://cheff-20190711013840-hostingbucket-cheff.s3-website.us-east-2.amazonaws.com",
@@ -65,6 +65,22 @@
 				"HostingBucketName": "cheff-20190711013840-hostingbucket-cheff"
 			},
 			"lastPushDirHash": "5910wqw3cYww0YyF3vpR2VwS5KE="
+		}
+	},
+	"storage": {
+		"s3ac333a39": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/cheff-cheff-20190611210030-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storages3ac333a39"
+			},
+			"lastPushTimeStamp": "2019-07-23T01:44:06.494Z",
+			"output": {
+				"BucketName": "cheff78bb4ebfa49a46bebda45162ef0e6418-cheff",
+				"Region": "us-east-2"
+			},
+			"lastPushDirHash": "kEGNjTcw1anxfLEzv38wS3IXVug="
 		}
 	}
 }

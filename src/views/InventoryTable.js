@@ -27,6 +27,9 @@ import CircularIndeterminateLoading from '../components/inventory/CircularIndete
 var jsPDF = require('jspdf');
 require('jspdf-autotable');
 
+// used to generate hash for unique supply order
+var hash = require('object-hash');
+
 // const uuidv1 = require('uuid/v1');
 
 const InventoryTable = props => {
@@ -117,6 +120,8 @@ const InventoryTable = props => {
 
       var strippedFranchise = props.franchise.split(' ').join('_');
 
+      let PDFhash = hash(doc);
+      console.log(PDFhash);
       doc.save(`${strippedFranchise}_SupplyOrder_${today}.pdf`);
     }
   };
