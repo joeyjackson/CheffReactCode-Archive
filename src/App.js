@@ -7,7 +7,7 @@ Made code for application. Handles routes for each page.
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Auth, API, graphqlOperation } from 'aws-amplify';
+import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
   AmplifyTheme,
@@ -57,7 +57,6 @@ const App = () => {
       type: 'brandOptions',
       state: brands.flat()
     });
-    console.log(brands.flat());
   };
 
   const setUnits = franchiseLocations => {
@@ -75,7 +74,6 @@ const App = () => {
       type: 'unitOptions',
       state: units.flat()
     });
-    console.log(units.flat());
   };
 
   const setStorageTypes = franchiseLocations => {
@@ -88,7 +86,6 @@ const App = () => {
       type: 'storageOptions',
       state: storageTypes.flat()
     });
-    console.log(storageTypes.flat());
   };
 
   // Get user info (email, franchse/locations, suppliers, brands, etc.)

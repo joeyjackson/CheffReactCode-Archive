@@ -83,7 +83,7 @@ class CustomNavBar extends Greetings {
             <MDBNavItem>
               <button
                 type="button"
-                class="btn-floating btn-sm"
+                className="btn-floating btn-sm"
                 onClick={() => {
                   this.props.history.push('/settings');
                 }}

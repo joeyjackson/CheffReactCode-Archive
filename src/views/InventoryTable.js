@@ -13,7 +13,7 @@ import {
 } from 'mdbreact';
 import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import 'react-table/react-table.css';
 import '../styles.css';
 import * as queries from '../api/graphql/queries';
@@ -116,12 +116,21 @@ const InventoryTable = props => {
       var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
       var yyyy = today.getFullYear();
 
-      today = mm + '/' + dd + '/' + yyyy;
+      today = mm + '_' + dd + '_' + yyyy;
 
       var strippedFranchise = props.franchise.split(' ').join('_');
 
       let PDFhash = hash(doc);
-      console.log(PDFhash);
+
+      let s3FilePath = `SupplyOrders/${PDFhash}.pdf`;
+
+      var output = doc.output();
+      Storage.put(s3FilePath, output, {
+        contentType: 'application/pdf'
+      })
+        .then(result => console.log(result)) // {key: "test.txt"}
+        .catch(err => console.log(err));
+
       doc.save(`${strippedFranchise}_SupplyOrder_${today}.pdf`);
     }
   };
@@ -544,7 +553,7 @@ const InventoryTable = props => {
           }}
         >
           <MDBBtn color="primary" rounded>
-            <i class="material-icons">navigate_before</i>
+            <i className="material-icons">navigate_before</i>
           </MDBBtn>
         </Link>
         <Link
@@ -553,7 +562,7 @@ const InventoryTable = props => {
           }}
         >
           <MDBBtn color="primary" rounded>
-            <i class="material-icons">home</i>
+            <i className="material-icons">home</i>
           </MDBBtn>
         </Link>
       </div>
