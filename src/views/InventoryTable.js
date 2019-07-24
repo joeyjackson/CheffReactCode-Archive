@@ -122,13 +122,14 @@ const InventoryTable = props => {
 
       let PDFhash = hash(doc);
 
-      let s3FilePath = `SupplyOrders/${PDFhash}.pdf`;
+      let s3FilePath = `SupplyOrders/${PDFhash}.pdf`; // use a hash name so the same data won't get added
+      // but we need to save these hashes to a table of previous order sheets so we know what user it was from and timestamp
 
-      var output = doc.output();
+      var output = doc.output(); // so we can upload the PDF buffer instead of the javascript object
       Storage.put(s3FilePath, output, {
         contentType: 'application/pdf'
       })
-        .then(result => console.log(result)) // {key: "test.txt"}
+        .then(result => console.log(result))
         .catch(err => console.log(err));
 
       doc.save(`${strippedFranchise}_SupplyOrder_${today}.pdf`);
