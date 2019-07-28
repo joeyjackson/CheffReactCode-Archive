@@ -3,6 +3,8 @@ type FranchiseAndLocations {
   userID: ID!
   franchise: String!
   location: String!
+  latitude: Float!
+  longitude: Float!
 }
 
 type Products {
@@ -139,6 +141,8 @@ input ModelFranchiseAndLocationsFilterInput {
   userID: ModelIDFilterInput
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
+  latitude: ModelFloatFilterInput
+  longitude: ModelFloatFilterInput
   and: [ModelFranchiseAndLocationsFilterInput]
   or: [ModelFranchiseAndLocationsFilterInput]
   not: ModelFranchiseAndLocationsFilterInput
@@ -169,6 +173,8 @@ input CreateFranchiseAndLocationsInput {
   userID: ID!
   franchise: String!
   location: String!
+  latitude: Float!
+  longitude: Float!
 }
 
 input UpdateFranchiseAndLocationsInput {
@@ -176,6 +182,8 @@ input UpdateFranchiseAndLocationsInput {
   userID: ID
   franchise: String
   location: String
+  latitude: Float
+  longitude: Float
 }
 
 input DeleteFranchiseAndLocationsInput {

@@ -3,6 +3,8 @@ type FranchiseAndLocations @model(subscriptions: null) {
   userID: ID! # sub from cognito
   franchise: String!
   location: String!
+  latitude: Float!
+  longitude: Float!
 }
 
 type Products @model(subscriptions: null) @searchable {

@@ -33,26 +33,23 @@ const UserCompletion = () => {
   const classes = useStyles();
 
   const createUserFranchiseLocations = Item => {
-    API.graphql(
-      graphqlOperation(mutations.createUserLocations, {
-        input: Item
-      })
-    )
-      .then(result => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(mutations.createUserLocations, {
+    //     input: Item
+    //   })
+    // )
+    //   .then(result => {
+    //     console.log(result);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const pushChanges = () => {
     new Promise(resolve => {
       localFranchiseLocations.map(eachItem => {
-        let eachItemCopy = { ...eachItem };
-        eachItemCopy['user'] = globalStore.userEmail;
-        console.log(eachItemCopy);
-        createUserFranchiseLocations(eachItemCopy);
+        createUserFranchiseLocations(eachItem);
       });
       dispatch({
         type: 'franchiseLocations',
@@ -66,11 +63,13 @@ const UserCompletion = () => {
     let newData = [...localFranchiseLocations];
     console.log(localFranchiseLocations);
     newData.push({
+      userID: globalStore.userID,
       franchise: globalStore.selectedFranchise,
       location: globalStore.selectedAddress,
       latitude: globalStore.latitude,
       longitude: globalStore.longitude
     });
+    // reset search bar parameters
     dispatch({
       type: 'selectedFranchise',
       state: ''
@@ -88,7 +87,7 @@ const UserCompletion = () => {
 
   const renderEditable = cellInfo => {
     const newData = [...localFranchiseLocations];
-    console.log(cellInfo);
+
     if (cellInfo.column.Header === 'Franchise') {
       return (
         <MDBRow
@@ -104,9 +103,9 @@ const UserCompletion = () => {
               className={classes.margin}
               onClick={() => {
                 let newData = [...localFranchiseLocations];
-                console.log(newData);
+
                 newData.splice(cellInfo.index, 1);
-                console.log(newData);
+
                 setLocalFranchiseLocations(newData);
               }}
             >
@@ -225,7 +224,10 @@ const UserCompletion = () => {
         provided.
       </p>
 
-      <LocationSearchBar dispatch={dispatch} address={globalStore.tempSearchAddress} />
+      <LocationSearchBar
+        dispatch={dispatch}
+        address={globalStore.tempSearchAddress}
+      />
       <div className="d-flex justify-content-between">
         {globalStore.selectedFranchise !== '' ? (
           <MDBAnimation type="pulse" infinite>

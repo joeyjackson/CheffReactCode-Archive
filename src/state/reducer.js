@@ -83,10 +83,10 @@ const reducer = (state, action) => {
         ...state,
         tempSearchAddress: action.state
       };
-    case 'userEmail':
+    case 'userID':
       return {
         ...state,
-        userEmail: action.state
+        userID: action.state
       };
     case 'selectedCoordinates':
       return {

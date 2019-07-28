@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput
-} from 'mdbreact';
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBInput } from 'mdbreact';
 import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
@@ -29,18 +23,18 @@ const CreateInventoryItemForm = () => {
   });
 
   const addNewInventoryItem = () => {
-    API.graphql(
-      graphqlOperation(mutations.createInventoryItem, {
-        input: newInventoryItem
-      })
-    )
-      .then(result => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    };
+    // API.graphql(
+    //   graphqlOperation(mutations.createInventoryItem, {
+    //     input: newInventoryItem
+    //   })
+    // )
+    //   .then(result => {
+    //     console.log(result);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+  };
 
   const handleNewStorageOption = event => {
     // if valid event (event will return NULL if selection box is closed)

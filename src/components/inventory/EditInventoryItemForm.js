@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput
-} from 'mdbreact';
+import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBInput } from 'mdbreact';
 import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
 import CreatableSelect from 'react-select/creatable';
@@ -36,18 +30,18 @@ const EditInventoryItemForm = () => {
     if ('__typename' in item) {
       delete item.__typename;
     }
-    API.graphql(
-      graphqlOperation(mutations.updateInventoryItem, {
-        input: item
-      })
-    )
-      .then(result => {
-        console.log(result);
-        // refreshInventoryItems();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(mutations.updateInventoryItem, {
+    //     input: item
+    //   })
+    // )
+    //   .then(result => {
+    //     console.log(result);
+    //     // refreshInventoryItems();
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const handleNewStorageOption = event => {

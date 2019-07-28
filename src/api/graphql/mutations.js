@@ -9,6 +9,8 @@ export const createFranchiseAndLocations = `mutation CreateFranchiseAndLocations
     userID
     franchise
     location
+    latitude
+    longitude
   }
 }
 `;
@@ -20,6 +22,8 @@ export const updateFranchiseAndLocations = `mutation UpdateFranchiseAndLocations
     userID
     franchise
     location
+    latitude
+    longitude
   }
 }
 `;
@@ -31,6 +35,8 @@ export const deleteFranchiseAndLocations = `mutation DeleteFranchiseAndLocations
     userID
     franchise
     location
+    latitude
+    longitude
   }
 }
 `;

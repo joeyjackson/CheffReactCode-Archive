@@ -92,34 +92,34 @@ const App = () => {
   const getUserInfo = () => {
     Auth.currentUserInfo().then(data => {
       console.log(data);
-      const userEmail = data.attributes.email;
+      const userID = data.attributes.sub;
       API.graphql(
-        graphqlOperation(queries.listUserLocationss, {
+        graphqlOperation(queries.listFranchiseAndLocationss, {
           filter: {
-            user: {
-              eq: userEmail
+            userID: {
+              eq: userID
             }
           }
         })
       )
         .then(result => {
-          console.log(result);
-          let franchiseLocations = result.data.listUserLocationss.items;
+          let franchiseLocations = result.data.listFranchiseAndLocationss.items;
+          console.log(franchiseLocations);
           // Set the franchiseLocation for the whole app
           dispatch({
             type: 'franchiseLocations',
             state: franchiseLocations
           });
-          // Set the user email for the whole app
+          // Set the userID for the whole app
           dispatch({
-            type: 'userEmail',
-            state: userEmail
+            type: 'userID',
+            state: userID
           });
           // set initial suppliers, brands, units, storage types (for settings page and when creating a new inventory item)
-          setSuppliers(franchiseLocations);
-          setBrands(franchiseLocations);
-          setUnits(franchiseLocations);
-          setStorageTypes(franchiseLocations);
+          // setSuppliers(franchiseLocations);
+          // setBrands(franchiseLocations);
+          // setUnits(franchiseLocations);
+          // setStorageTypes(franchiseLocations);
         })
         .catch(error => {
           console.log(error);
@@ -138,7 +138,7 @@ const App = () => {
       <NavBar />
       <Switch>
         {/* If user logged in and has locations, then render the locations. Otherwise, render the User Completion Page */}
-        {globalStore.userEmail ? (
+        {globalStore.userID ? (
           <Route
             exact
             path="/"
@@ -154,6 +154,7 @@ const App = () => {
           // Display loading icon when waiting for User Info API call
           <CircularIndeterminate />
         )}
+
         {/* This route is executed when a user clicks on a location card, it opens the storage filter page */}
         <Route
           path="/location/storageFilter/:location"

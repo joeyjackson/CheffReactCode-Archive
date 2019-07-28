@@ -148,40 +148,39 @@ const InventoryTable = props => {
   // used to retrieve more data that is past the query limit
   // nextToken represents the next data item to be queried from
   const addNextTokenData = (currentData, nextToken, storageFilter) => {
-    API.graphql(
-      graphqlOperation(queries.listInventoryItems, {
-        nextToken: nextToken,
-        filter: {
-          location: {
-            eq: props.location
-          },
-          and: { or: storageFilter }
-        }
-      })
-    )
-      .then(result => {
-        currentData.push(result.data.listInventoryItems.items);
-
-        if (result.data.listInventoryItems.nextToken !== null) {
-          addNextTokenData(
-            currentData,
-            result.data.listInventoryItems.nextToken,
-            storageFilter
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: currentData
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(queries.listInventoryItems, {
+    //     nextToken: nextToken,
+    //     filter: {
+    //       location: {
+    //         eq: props.location
+    //       },
+    //       and: { or: storageFilter }
+    //     }
+    //   })
+    // )
+    //   .then(result => {
+    //     currentData.push(result.data.listInventoryItems.items);
+    //     if (result.data.listInventoryItems.nextToken !== null) {
+    //       addNextTokenData(
+    //         currentData,
+    //         result.data.listInventoryItems.nextToken,
+    //         storageFilter
+    //       );
+    //     } else {
+    //       dispatch({
+    //         type: 'inventoryTableItems',
+    //         state: currentData
+    //       });
+    //       dispatch({
+    //         type: 'inventoryTableLoading',
+    //         state: false
+    //       });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const listInventoryItems = () => {
@@ -235,38 +234,38 @@ const InventoryTable = props => {
       ];
     }
 
-    API.graphql(
-      graphqlOperation(queries.listInventoryItems, {
-        filter: {
-          location: {
-            eq: props.location
-          },
-          and: { or: tempStorageFilter }
-        },
-        limit: 2147483647
-      })
-    )
-      .then(result => {
-        if (result.data.listInventoryItems.nextToken !== null) {
-          addNextTokenData(
-            result.data.listInventoryItems.items,
-            result.data.listInventoryItems.nextToken,
-            tempStorageFilter
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: result.data.listInventoryItems.items
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(queries.listInventoryItems, {
+    //     filter: {
+    //       location: {
+    //         eq: props.location
+    //       },
+    //       and: { or: tempStorageFilter }
+    //     },
+    //     limit: 2147483647
+    //   })
+    // )
+    //   .then(result => {
+    //     if (result.data.listInventoryItems.nextToken !== null) {
+    //       addNextTokenData(
+    //         result.data.listInventoryItems.items,
+    //         result.data.listInventoryItems.nextToken,
+    //         tempStorageFilter
+    //       );
+    //     } else {
+    //       dispatch({
+    //         type: 'inventoryTableItems',
+    //         state: result.data.listInventoryItems.items
+    //       });
+    //       dispatch({
+    //         type: 'inventoryTableLoading',
+    //         state: false
+    //       });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const updateInventoryItem = item => {
@@ -274,34 +273,34 @@ const InventoryTable = props => {
     if ('__typename' in item) {
       delete item.__typename;
     }
-    API.graphql(
-      graphqlOperation(mutations.updateInventoryItem, {
-        input: item
-      })
-    )
-      .then(result => {
-        console.log(result);
-        // refreshInventoryItems();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(mutations.updateInventoryItem, {
+    //     input: item
+    //   })
+    // )
+    //   .then(result => {
+    //     console.log(result);
+    //     // refreshInventoryItems();
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const deleteInventoryItem = ItemID => {
     console.log(ItemID);
-    API.graphql(
-      graphqlOperation(mutations.deleteInventoryItem, {
-        input: { id: ItemID }
-      })
-    )
-      .then(result => {
-        console.log(result);
-        refreshInventoryItems();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // API.graphql(
+    //   graphqlOperation(mutations.deleteInventoryItem, {
+    //     input: { id: ItemID }
+    //   })
+    // )
+    //   .then(result => {
+    //     console.log(result);
+    //     refreshInventoryItems();
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   const renderEditable = cellInfo => {

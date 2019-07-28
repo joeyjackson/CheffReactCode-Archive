@@ -7,6 +7,8 @@ export const getFranchiseAndLocations = `query GetFranchiseAndLocations($id: ID!
     userID
     franchise
     location
+    latitude
+    longitude
   }
 }
 `;
@@ -25,6 +27,8 @@ export const listFranchiseAndLocationss = `query ListFranchiseAndLocationss(
       userID
       franchise
       location
+      latitude
+      longitude
     }
     nextToken
   }
