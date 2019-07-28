@@ -1,29 +1,70 @@
-type InventoryItem @model {
+type FranchiseAndLocations @model(subscriptions: null) {
+  id: ID
+  userID: ID! # sub from cognito
   franchise: String!
   location: String!
-  item: String!
-  itemNumber: Int!
-  storage: String!
-  category: String
-  price: Float!
-  quantity: String!
-  packSize: String
-  units: String!
-  brand: String!
-  supplier: String!
-  parValue: String!
-  id: String
 }
 
-type UserLocations @model {
-  user: String!
-  franchise: String!
-  location: String!
-  longitude: Float
-  latitude: Float
-  units: AWSJSON
-  storageTypes: AWSJSON
-  brands: AWSJSON
-  suppliers: AWSJSON
-  id: String
+type Products @model(subscriptions: null) @searchable {
+  id: ID
+  location: String! # FK
+  price: Float!
+  parValue: Float
+  packSize: Int
+  storageType: String!
+  supplier: String!
+  brand: String
+  itemNumber: Int!
+  description: String!
+  commonField: String
+}
+
+type RecipeMix @model(subscriptions: null) {
+  id: ID
+  menuID: ID! # FK
+  productID: ID! # FK
+  quantityUsed: Float!
+}
+
+type MenuItems @model(subscriptions: null) {
+  id: ID
+  price: Float
+  location: String! # FK
+  menuName: String!
+}
+
+type OrderCartItems @model(subscriptions: null) {
+  id: ID
+  productID: ID! # FK
+  quantityToBuy: Float!
+  packSizeToBuy: Int!
+  subtotalCost: Float!
+}
+
+type OrderCarts @model(subscriptions: null) {
+  id: ID
+  location: String! # FK
+  supplyOrderID: ID
+  supplyOrderTimestamp: AWSTimestamp
+  orderType: String
+  totalCost: Float
+  sent: Boolean
+  acknowledged: Boolean
+  shipped: Boolean
+  received: Boolean
+  paid: Boolean
+}
+
+type InventoryCarts @model(subscriptions: null) {
+  id: ID
+  location: String! # FK
+  completed: Boolean!
+}
+
+type InventoryCountItems @model(subscriptions: null) @versioned {
+  id: ID
+  inventoryCartID: ID! # FK
+  productID: ID! # FK
+  quantityLeft: [Float!]
+  version: Int!
 }

@@ -1,31 +1,72 @@
-type InventoryItem {
+type FranchiseAndLocations {
+  id: ID
+  userID: ID!
   franchise: String!
   location: String!
-  item: String!
-  itemNumber: Int!
-  storage: String!
-  category: String
-  price: Float!
-  quantity: String!
-  packSize: String
-  units: String!
-  brand: String!
-  supplier: String!
-  parValue: String!
-  id: String
 }
 
-type UserLocations {
-  user: String!
-  franchise: String!
+type Products {
+  id: ID
   location: String!
-  longitude: Float
-  latitude: Float
-  units: AWSJSON
-  storageTypes: AWSJSON
-  brands: AWSJSON
-  suppliers: AWSJSON
-  id: String
+  price: Float!
+  parValue: Float
+  packSize: Int
+  storageType: String!
+  supplier: String!
+  brand: String
+  itemNumber: Int!
+  description: String!
+  commonField: String
+}
+
+type RecipeMix {
+  id: ID
+  menuID: ID!
+  productID: ID!
+  quantityUsed: Float!
+}
+
+type MenuItems {
+  id: ID
+  price: Float
+  location: String!
+  menuName: String!
+}
+
+type OrderCartItems {
+  id: ID
+  productID: ID!
+  quantityToBuy: Float!
+  packSizeToBuy: Int!
+  subtotalCost: Float!
+}
+
+type OrderCarts {
+  id: ID
+  location: String!
+  supplyOrderID: ID
+  supplyOrderTimestamp: AWSTimestamp
+  orderType: String
+  totalCost: Float
+  sent: Boolean
+  acknowledged: Boolean
+  shipped: Boolean
+  received: Boolean
+  paid: Boolean
+}
+
+type InventoryCarts {
+  id: ID
+  location: String!
+  completed: Boolean!
+}
+
+type InventoryCountItems {
+  id: ID
+  inventoryCartID: ID!
+  productID: ID!
+  quantityLeft: [Float!]
+  version: Int!
 }
 
 enum ModelSortDirection {
@@ -33,8 +74,8 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelInventoryItemConnection {
-  items: [InventoryItem]
+type ModelFranchiseAndLocationsConnection {
+  items: [FranchiseAndLocations]
   nextToken: String
 }
 
@@ -93,136 +134,449 @@ input ModelBooleanFilterInput {
   eq: Boolean
 }
 
-input ModelInventoryItemFilterInput {
+input ModelFranchiseAndLocationsFilterInput {
+  id: ModelIDFilterInput
+  userID: ModelIDFilterInput
   franchise: ModelStringFilterInput
   location: ModelStringFilterInput
-  item: ModelStringFilterInput
-  itemNumber: ModelIntFilterInput
-  storage: ModelStringFilterInput
-  category: ModelStringFilterInput
-  price: ModelFloatFilterInput
-  quantity: ModelStringFilterInput
-  packSize: ModelStringFilterInput
-  units: ModelStringFilterInput
-  brand: ModelStringFilterInput
-  supplier: ModelStringFilterInput
-  parValue: ModelStringFilterInput
-  id: ModelStringFilterInput
-  and: [ModelInventoryItemFilterInput]
-  or: [ModelInventoryItemFilterInput]
-  not: ModelInventoryItemFilterInput
+  and: [ModelFranchiseAndLocationsFilterInput]
+  or: [ModelFranchiseAndLocationsFilterInput]
+  not: ModelFranchiseAndLocationsFilterInput
 }
 
 type Query {
-  getInventoryItem(id: ID!): InventoryItem
-  listInventoryItems(filter: ModelInventoryItemFilterInput, limit: Int, nextToken: String): ModelInventoryItemConnection
-  getUserLocations(id: ID!): UserLocations
-  listUserLocationss(filter: ModelUserLocationsFilterInput, limit: Int, nextToken: String): ModelUserLocationsConnection
+  getFranchiseAndLocations(id: ID!): FranchiseAndLocations
+  listFranchiseAndLocationss(filter: ModelFranchiseAndLocationsFilterInput, limit: Int, nextToken: String): ModelFranchiseAndLocationsConnection
+  getProducts(id: ID!): Products
+  listProductss(filter: ModelProductsFilterInput, limit: Int, nextToken: String): ModelProductsConnection
+  getRecipeMix(id: ID!): RecipeMix
+  listRecipeMixs(filter: ModelRecipeMixFilterInput, limit: Int, nextToken: String): ModelRecipeMixConnection
+  getMenuItems(id: ID!): MenuItems
+  listMenuItemss(filter: ModelMenuItemsFilterInput, limit: Int, nextToken: String): ModelMenuItemsConnection
+  getOrderCartItems(id: ID!): OrderCartItems
+  listOrderCartItemss(filter: ModelOrderCartItemsFilterInput, limit: Int, nextToken: String): ModelOrderCartItemsConnection
+  getOrderCarts(id: ID!): OrderCarts
+  listOrderCartss(filter: ModelOrderCartsFilterInput, limit: Int, nextToken: String): ModelOrderCartsConnection
+  getInventoryCarts(id: ID!): InventoryCarts
+  listInventoryCartss(filter: ModelInventoryCartsFilterInput, limit: Int, nextToken: String): ModelInventoryCartsConnection
+  getInventoryCountItems(id: ID!): InventoryCountItems
+  listInventoryCountItemss(filter: ModelInventoryCountItemsFilterInput, limit: Int, nextToken: String): ModelInventoryCountItemsConnection
+  searchProductss(filter: SearchableProductsFilterInput, sort: SearchableProductsSortInput, limit: Int, nextToken: Int): SearchableProductsConnection
 }
 
-input CreateInventoryItemInput {
+input CreateFranchiseAndLocationsInput {
+  id: ID
+  userID: ID!
   franchise: String!
   location: String!
-  item: String!
-  itemNumber: Int!
-  storage: String!
-  category: String
-  price: Float!
-  quantity: String!
-  packSize: String
-  units: String!
-  brand: String!
-  supplier: String!
-  parValue: String!
-  id: ID
 }
 
-input UpdateInventoryItemInput {
+input UpdateFranchiseAndLocationsInput {
+  id: ID!
+  userID: ID
   franchise: String
   location: String
-  item: String
-  itemNumber: Int
-  storage: String
-  category: String
-  price: Float
-  quantity: String
-  packSize: String
-  units: String
-  brand: String
-  supplier: String
-  parValue: String
-  id: String!
 }
 
-input DeleteInventoryItemInput {
+input DeleteFranchiseAndLocationsInput {
   id: ID
 }
 
 type Mutation {
-  createInventoryItem(input: CreateInventoryItemInput!): InventoryItem
-  updateInventoryItem(input: UpdateInventoryItemInput!): InventoryItem
-  deleteInventoryItem(input: DeleteInventoryItemInput!): InventoryItem
-  createUserLocations(input: CreateUserLocationsInput!): UserLocations
-  updateUserLocations(input: UpdateUserLocationsInput!): UserLocations
-  deleteUserLocations(input: DeleteUserLocationsInput!): UserLocations
+  createFranchiseAndLocations(input: CreateFranchiseAndLocationsInput!): FranchiseAndLocations
+  updateFranchiseAndLocations(input: UpdateFranchiseAndLocationsInput!): FranchiseAndLocations
+  deleteFranchiseAndLocations(input: DeleteFranchiseAndLocationsInput!): FranchiseAndLocations
+  createProducts(input: CreateProductsInput!): Products
+  updateProducts(input: UpdateProductsInput!): Products
+  deleteProducts(input: DeleteProductsInput!): Products
+  createRecipeMix(input: CreateRecipeMixInput!): RecipeMix
+  updateRecipeMix(input: UpdateRecipeMixInput!): RecipeMix
+  deleteRecipeMix(input: DeleteRecipeMixInput!): RecipeMix
+  createMenuItems(input: CreateMenuItemsInput!): MenuItems
+  updateMenuItems(input: UpdateMenuItemsInput!): MenuItems
+  deleteMenuItems(input: DeleteMenuItemsInput!): MenuItems
+  createOrderCartItems(input: CreateOrderCartItemsInput!): OrderCartItems
+  updateOrderCartItems(input: UpdateOrderCartItemsInput!): OrderCartItems
+  deleteOrderCartItems(input: DeleteOrderCartItemsInput!): OrderCartItems
+  createOrderCarts(input: CreateOrderCartsInput!): OrderCarts
+  updateOrderCarts(input: UpdateOrderCartsInput!): OrderCarts
+  deleteOrderCarts(input: DeleteOrderCartsInput!): OrderCarts
+  createInventoryCarts(input: CreateInventoryCartsInput!): InventoryCarts
+  updateInventoryCarts(input: UpdateInventoryCartsInput!): InventoryCarts
+  deleteInventoryCarts(input: DeleteInventoryCartsInput!): InventoryCarts
+  createInventoryCountItems(input: CreateInventoryCountItemsInput!): InventoryCountItems
+  updateInventoryCountItems(input: UpdateInventoryCountItemsInput!): InventoryCountItems
+  deleteInventoryCountItems(input: DeleteInventoryCountItemsInput!): InventoryCountItems
 }
 
-type Subscription {
-  onCreateInventoryItem: InventoryItem @aws_subscribe(mutations: ["createInventoryItem"])
-  onUpdateInventoryItem: InventoryItem @aws_subscribe(mutations: ["updateInventoryItem"])
-  onDeleteInventoryItem: InventoryItem @aws_subscribe(mutations: ["deleteInventoryItem"])
-  onCreateUserLocations: UserLocations @aws_subscribe(mutations: ["createUserLocations"])
-  onUpdateUserLocations: UserLocations @aws_subscribe(mutations: ["updateUserLocations"])
-  onDeleteUserLocations: UserLocations @aws_subscribe(mutations: ["deleteUserLocations"])
-}
-
-type ModelUserLocationsConnection {
-  items: [UserLocations]
+type ModelProductsConnection {
+  items: [Products]
   nextToken: String
 }
 
-input ModelUserLocationsFilterInput {
-  user: ModelStringFilterInput
-  franchise: ModelStringFilterInput
+input ModelProductsFilterInput {
+  id: ModelIDFilterInput
   location: ModelStringFilterInput
-  longitude: ModelFloatFilterInput
-  latitude: ModelFloatFilterInput
-  units: ModelStringFilterInput
-  storageTypes: ModelStringFilterInput
-  brands: ModelStringFilterInput
-  suppliers: ModelStringFilterInput
-  id: ModelStringFilterInput
-  and: [ModelUserLocationsFilterInput]
-  or: [ModelUserLocationsFilterInput]
-  not: ModelUserLocationsFilterInput
+  price: ModelFloatFilterInput
+  parValue: ModelFloatFilterInput
+  packSize: ModelIntFilterInput
+  storageType: ModelStringFilterInput
+  supplier: ModelStringFilterInput
+  brand: ModelStringFilterInput
+  itemNumber: ModelIntFilterInput
+  description: ModelStringFilterInput
+  commonField: ModelStringFilterInput
+  and: [ModelProductsFilterInput]
+  or: [ModelProductsFilterInput]
+  not: ModelProductsFilterInput
 }
 
-input CreateUserLocationsInput {
-  user: String!
-  franchise: String!
+input CreateProductsInput {
+  id: ID
   location: String!
-  longitude: Float
-  latitude: Float
-  units: AWSJSON
-  storageTypes: AWSJSON
-  brands: AWSJSON
-  suppliers: AWSJSON
-  id: ID
+  price: Float!
+  parValue: Float
+  packSize: Int
+  storageType: String!
+  supplier: String!
+  brand: String
+  itemNumber: Int!
+  description: String!
+  commonField: String
 }
 
-input UpdateUserLocationsInput {
-  user: String
-  franchise: String
+input UpdateProductsInput {
+  id: ID!
   location: String
-  longitude: Float
-  latitude: Float
-  units: AWSJSON
-  storageTypes: AWSJSON
-  brands: AWSJSON
-  suppliers: AWSJSON
-  id: String!
+  price: Float
+  parValue: Float
+  packSize: Int
+  storageType: String
+  supplier: String
+  brand: String
+  itemNumber: Int
+  description: String
+  commonField: String
 }
 
-input DeleteUserLocationsInput {
+input DeleteProductsInput {
   id: ID
+}
+
+type ModelRecipeMixConnection {
+  items: [RecipeMix]
+  nextToken: String
+}
+
+input ModelRecipeMixFilterInput {
+  id: ModelIDFilterInput
+  menuID: ModelIDFilterInput
+  productID: ModelIDFilterInput
+  quantityUsed: ModelFloatFilterInput
+  and: [ModelRecipeMixFilterInput]
+  or: [ModelRecipeMixFilterInput]
+  not: ModelRecipeMixFilterInput
+}
+
+input CreateRecipeMixInput {
+  id: ID
+  menuID: ID!
+  productID: ID!
+  quantityUsed: Float!
+}
+
+input UpdateRecipeMixInput {
+  id: ID!
+  menuID: ID
+  productID: ID
+  quantityUsed: Float
+}
+
+input DeleteRecipeMixInput {
+  id: ID
+}
+
+type ModelMenuItemsConnection {
+  items: [MenuItems]
+  nextToken: String
+}
+
+input ModelMenuItemsFilterInput {
+  id: ModelIDFilterInput
+  price: ModelFloatFilterInput
+  location: ModelStringFilterInput
+  menuName: ModelStringFilterInput
+  and: [ModelMenuItemsFilterInput]
+  or: [ModelMenuItemsFilterInput]
+  not: ModelMenuItemsFilterInput
+}
+
+input CreateMenuItemsInput {
+  id: ID
+  price: Float
+  location: String!
+  menuName: String!
+}
+
+input UpdateMenuItemsInput {
+  id: ID!
+  price: Float
+  location: String
+  menuName: String
+}
+
+input DeleteMenuItemsInput {
+  id: ID
+}
+
+type ModelOrderCartItemsConnection {
+  items: [OrderCartItems]
+  nextToken: String
+}
+
+input ModelOrderCartItemsFilterInput {
+  id: ModelIDFilterInput
+  productID: ModelIDFilterInput
+  quantityToBuy: ModelFloatFilterInput
+  packSizeToBuy: ModelIntFilterInput
+  subtotalCost: ModelFloatFilterInput
+  and: [ModelOrderCartItemsFilterInput]
+  or: [ModelOrderCartItemsFilterInput]
+  not: ModelOrderCartItemsFilterInput
+}
+
+input CreateOrderCartItemsInput {
+  id: ID
+  productID: ID!
+  quantityToBuy: Float!
+  packSizeToBuy: Int!
+  subtotalCost: Float!
+}
+
+input UpdateOrderCartItemsInput {
+  id: ID!
+  productID: ID
+  quantityToBuy: Float
+  packSizeToBuy: Int
+  subtotalCost: Float
+}
+
+input DeleteOrderCartItemsInput {
+  id: ID
+}
+
+type ModelOrderCartsConnection {
+  items: [OrderCarts]
+  nextToken: String
+}
+
+input ModelOrderCartsFilterInput {
+  id: ModelIDFilterInput
+  location: ModelStringFilterInput
+  supplyOrderID: ModelIDFilterInput
+  supplyOrderTimestamp: ModelIntFilterInput
+  orderType: ModelStringFilterInput
+  totalCost: ModelFloatFilterInput
+  sent: ModelBooleanFilterInput
+  acknowledged: ModelBooleanFilterInput
+  shipped: ModelBooleanFilterInput
+  received: ModelBooleanFilterInput
+  paid: ModelBooleanFilterInput
+  and: [ModelOrderCartsFilterInput]
+  or: [ModelOrderCartsFilterInput]
+  not: ModelOrderCartsFilterInput
+}
+
+input CreateOrderCartsInput {
+  id: ID
+  location: String!
+  supplyOrderID: ID
+  supplyOrderTimestamp: AWSTimestamp
+  orderType: String
+  totalCost: Float
+  sent: Boolean
+  acknowledged: Boolean
+  shipped: Boolean
+  received: Boolean
+  paid: Boolean
+}
+
+input UpdateOrderCartsInput {
+  id: ID!
+  location: String
+  supplyOrderID: ID
+  supplyOrderTimestamp: AWSTimestamp
+  orderType: String
+  totalCost: Float
+  sent: Boolean
+  acknowledged: Boolean
+  shipped: Boolean
+  received: Boolean
+  paid: Boolean
+}
+
+input DeleteOrderCartsInput {
+  id: ID
+}
+
+type ModelInventoryCartsConnection {
+  items: [InventoryCarts]
+  nextToken: String
+}
+
+input ModelInventoryCartsFilterInput {
+  id: ModelIDFilterInput
+  location: ModelStringFilterInput
+  completed: ModelBooleanFilterInput
+  and: [ModelInventoryCartsFilterInput]
+  or: [ModelInventoryCartsFilterInput]
+  not: ModelInventoryCartsFilterInput
+}
+
+input CreateInventoryCartsInput {
+  id: ID
+  location: String!
+  completed: Boolean!
+}
+
+input UpdateInventoryCartsInput {
+  id: ID!
+  location: String
+  completed: Boolean
+}
+
+input DeleteInventoryCartsInput {
+  id: ID
+}
+
+type ModelInventoryCountItemsConnection {
+  items: [InventoryCountItems]
+  nextToken: String
+}
+
+input ModelInventoryCountItemsFilterInput {
+  id: ModelIDFilterInput
+  inventoryCartID: ModelIDFilterInput
+  productID: ModelIDFilterInput
+  quantityLeft: ModelFloatFilterInput
+  version: ModelIntFilterInput
+  and: [ModelInventoryCountItemsFilterInput]
+  or: [ModelInventoryCountItemsFilterInput]
+  not: ModelInventoryCountItemsFilterInput
+}
+
+input CreateInventoryCountItemsInput {
+  id: ID
+  inventoryCartID: ID!
+  productID: ID!
+  quantityLeft: [Float!]
+}
+
+input UpdateInventoryCountItemsInput {
+  id: ID!
+  inventoryCartID: ID
+  productID: ID
+  quantityLeft: [Float!]
+  version: Int
+  expectedVersion: Int!
+}
+
+input DeleteInventoryCountItemsInput {
+  id: ID
+  expectedVersion: Int!
+}
+
+input SearchableStringFilterInput {
+  ne: String
+  eq: String
+  match: String
+  matchPhrase: String
+  matchPhrasePrefix: String
+  multiMatch: String
+  exists: Boolean
+  wildcard: String
+  regexp: String
+}
+
+input SearchableIDFilterInput {
+  ne: ID
+  eq: ID
+  match: ID
+  matchPhrase: ID
+  matchPhrasePrefix: ID
+  multiMatch: ID
+  exists: Boolean
+  wildcard: ID
+  regexp: ID
+}
+
+input SearchableIntFilterInput {
+  ne: Int
+  gt: Int
+  lt: Int
+  gte: Int
+  lte: Int
+  eq: Int
+  range: [Int]
+}
+
+input SearchableFloatFilterInput {
+  ne: Float
+  gt: Float
+  lt: Float
+  gte: Float
+  lte: Float
+  eq: Float
+  range: [Float]
+}
+
+input SearchableBooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input SearchableProductsFilterInput {
+  id: SearchableIDFilterInput
+  location: SearchableStringFilterInput
+  price: SearchableFloatFilterInput
+  parValue: SearchableFloatFilterInput
+  packSize: SearchableIntFilterInput
+  storageType: SearchableStringFilterInput
+  supplier: SearchableStringFilterInput
+  brand: SearchableStringFilterInput
+  itemNumber: SearchableIntFilterInput
+  description: SearchableStringFilterInput
+  commonField: SearchableStringFilterInput
+  and: [SearchableProductsFilterInput]
+  or: [SearchableProductsFilterInput]
+  not: SearchableProductsFilterInput
+}
+
+enum SearchableSortDirection {
+  asc
+  desc
+}
+
+enum SearchableProductsSortableFields {
+  id
+  location
+  price
+  parValue
+  packSize
+  storageType
+  supplier
+  brand
+  itemNumber
+  description
+  commonField
+}
+
+input SearchableProductsSortInput {
+  field: SearchableProductsSortableFields
+  direction: SearchableSortDirection
+}
+
+type SearchableProductsConnection {
+  items: [Products]
+  nextToken: String
 }

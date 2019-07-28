@@ -91,6 +91,7 @@ const App = () => {
   // Get user info (email, franchse/locations, suppliers, brands, etc.)
   const getUserInfo = () => {
     Auth.currentUserInfo().then(data => {
+      console.log(data);
       const userEmail = data.attributes.email;
       API.graphql(
         graphqlOperation(queries.listUserLocationss, {
@@ -102,6 +103,7 @@ const App = () => {
         })
       )
         .then(result => {
+          console.log(result);
           let franchiseLocations = result.data.listUserLocationss.items;
           // Set the franchiseLocation for the whole app
           dispatch({
