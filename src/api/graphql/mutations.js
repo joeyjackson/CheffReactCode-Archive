@@ -1,105 +1,270 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const createInventoryItem = `mutation CreateInventoryItem($input: CreateInventoryItemInput!) {
-  createInventoryItem(input: $input) {
+export const createFranchiseAndLocations = `mutation CreateFranchiseAndLocations(
+  $input: CreateFranchiseAndLocationsInput!
+) {
+  createFranchiseAndLocations(input: $input) {
+    id
+    userID
     franchise
     location
-    item
-    itemNumber
-    storage
-    category
+  }
+}
+`;
+export const updateFranchiseAndLocations = `mutation UpdateFranchiseAndLocations(
+  $input: UpdateFranchiseAndLocationsInput!
+) {
+  updateFranchiseAndLocations(input: $input) {
+    id
+    userID
+    franchise
+    location
+  }
+}
+`;
+export const deleteFranchiseAndLocations = `mutation DeleteFranchiseAndLocations(
+  $input: DeleteFranchiseAndLocationsInput!
+) {
+  deleteFranchiseAndLocations(input: $input) {
+    id
+    userID
+    franchise
+    location
+  }
+}
+`;
+export const createProducts = `mutation CreateProducts($input: CreateProductsInput!) {
+  createProducts(input: $input) {
+    id
+    location
     price
-    quantity
-    packSize
-    units
-    brand
-    supplier
     parValue
-    id
-  }
-}
-`;
-export const updateInventoryItem = `mutation UpdateInventoryItem($input: UpdateInventoryItemInput!) {
-  updateInventoryItem(input: $input) {
-    franchise
-    location
-    item
+    packSize
+    storageType
+    supplier
+    brand
     itemNumber
-    storage
-    category
-    price
-    quantity
-    packSize
-    units
-    brand
-    supplier
-    parValue
-    id
+    description
+    commonField
   }
 }
 `;
-export const deleteInventoryItem = `mutation DeleteInventoryItem($input: DeleteInventoryItemInput!) {
-  deleteInventoryItem(input: $input) {
-    franchise
+export const updateProducts = `mutation UpdateProducts($input: UpdateProductsInput!) {
+  updateProducts(input: $input) {
+    id
     location
-    item
+    price
+    parValue
+    packSize
+    storageType
+    supplier
+    brand
     itemNumber
-    storage
-    category
+    description
+    commonField
+  }
+}
+`;
+export const deleteProducts = `mutation DeleteProducts($input: DeleteProductsInput!) {
+  deleteProducts(input: $input) {
+    id
+    location
     price
-    quantity
-    packSize
-    units
-    brand
-    supplier
     parValue
-    id
+    packSize
+    storageType
+    supplier
+    brand
+    itemNumber
+    description
+    commonField
   }
 }
 `;
-export const createUserLocations = `mutation CreateUserLocations($input: CreateUserLocationsInput!) {
-  createUserLocations(input: $input) {
-    user
-    franchise
-    location
-    longitude
-    latitude
-    units
-    storageTypes
-    brands
-    suppliers
+export const createRecipeMix = `mutation CreateRecipeMix($input: CreateRecipeMixInput!) {
+  createRecipeMix(input: $input) {
     id
+    menuID
+    productID
+    quantityUsed
   }
 }
 `;
-export const updateUserLocations = `mutation UpdateUserLocations($input: UpdateUserLocationsInput!) {
-  updateUserLocations(input: $input) {
-    user
-    franchise
-    location
-    longitude
-    latitude
-    units
-    storageTypes
-    brands
-    suppliers
+export const updateRecipeMix = `mutation UpdateRecipeMix($input: UpdateRecipeMixInput!) {
+  updateRecipeMix(input: $input) {
     id
+    menuID
+    productID
+    quantityUsed
   }
 }
 `;
-export const deleteUserLocations = `mutation DeleteUserLocations($input: DeleteUserLocationsInput!) {
-  deleteUserLocations(input: $input) {
-    user
-    franchise
-    location
-    longitude
-    latitude
-    units
-    storageTypes
-    brands
-    suppliers
+export const deleteRecipeMix = `mutation DeleteRecipeMix($input: DeleteRecipeMixInput!) {
+  deleteRecipeMix(input: $input) {
     id
+    menuID
+    productID
+    quantityUsed
+  }
+}
+`;
+export const createMenuItems = `mutation CreateMenuItems($input: CreateMenuItemsInput!) {
+  createMenuItems(input: $input) {
+    id
+    price
+    location
+    menuName
+  }
+}
+`;
+export const updateMenuItems = `mutation UpdateMenuItems($input: UpdateMenuItemsInput!) {
+  updateMenuItems(input: $input) {
+    id
+    price
+    location
+    menuName
+  }
+}
+`;
+export const deleteMenuItems = `mutation DeleteMenuItems($input: DeleteMenuItemsInput!) {
+  deleteMenuItems(input: $input) {
+    id
+    price
+    location
+    menuName
+  }
+}
+`;
+export const createOrderCartItems = `mutation CreateOrderCartItems($input: CreateOrderCartItemsInput!) {
+  createOrderCartItems(input: $input) {
+    id
+    productID
+    quantityToBuy
+    packSizeToBuy
+    subtotalCost
+  }
+}
+`;
+export const updateOrderCartItems = `mutation UpdateOrderCartItems($input: UpdateOrderCartItemsInput!) {
+  updateOrderCartItems(input: $input) {
+    id
+    productID
+    quantityToBuy
+    packSizeToBuy
+    subtotalCost
+  }
+}
+`;
+export const deleteOrderCartItems = `mutation DeleteOrderCartItems($input: DeleteOrderCartItemsInput!) {
+  deleteOrderCartItems(input: $input) {
+    id
+    productID
+    quantityToBuy
+    packSizeToBuy
+    subtotalCost
+  }
+}
+`;
+export const createOrderCarts = `mutation CreateOrderCarts($input: CreateOrderCartsInput!) {
+  createOrderCarts(input: $input) {
+    id
+    location
+    supplyOrderID
+    supplyOrderTimestamp
+    orderType
+    totalCost
+    sent
+    acknowledged
+    shipped
+    received
+    paid
+  }
+}
+`;
+export const updateOrderCarts = `mutation UpdateOrderCarts($input: UpdateOrderCartsInput!) {
+  updateOrderCarts(input: $input) {
+    id
+    location
+    supplyOrderID
+    supplyOrderTimestamp
+    orderType
+    totalCost
+    sent
+    acknowledged
+    shipped
+    received
+    paid
+  }
+}
+`;
+export const deleteOrderCarts = `mutation DeleteOrderCarts($input: DeleteOrderCartsInput!) {
+  deleteOrderCarts(input: $input) {
+    id
+    location
+    supplyOrderID
+    supplyOrderTimestamp
+    orderType
+    totalCost
+    sent
+    acknowledged
+    shipped
+    received
+    paid
+  }
+}
+`;
+export const createInventoryCarts = `mutation CreateInventoryCarts($input: CreateInventoryCartsInput!) {
+  createInventoryCarts(input: $input) {
+    id
+    location
+    completed
+  }
+}
+`;
+export const updateInventoryCarts = `mutation UpdateInventoryCarts($input: UpdateInventoryCartsInput!) {
+  updateInventoryCarts(input: $input) {
+    id
+    location
+    completed
+  }
+}
+`;
+export const deleteInventoryCarts = `mutation DeleteInventoryCarts($input: DeleteInventoryCartsInput!) {
+  deleteInventoryCarts(input: $input) {
+    id
+    location
+    completed
+  }
+}
+`;
+export const createInventoryCountItems = `mutation CreateInventoryCountItems($input: CreateInventoryCountItemsInput!) {
+  createInventoryCountItems(input: $input) {
+    id
+    inventoryCartID
+    productID
+    quantityLeft
+    version
+  }
+}
+`;
+export const updateInventoryCountItems = `mutation UpdateInventoryCountItems($input: UpdateInventoryCountItemsInput!) {
+  updateInventoryCountItems(input: $input) {
+    id
+    inventoryCartID
+    productID
+    quantityLeft
+    version
+  }
+}
+`;
+export const deleteInventoryCountItems = `mutation DeleteInventoryCountItems($input: DeleteInventoryCountItemsInput!) {
+  deleteInventoryCountItems(input: $input) {
+    id
+    inventoryCartID
+    productID
+    quantityLeft
+    version
   }
 }
 `;
