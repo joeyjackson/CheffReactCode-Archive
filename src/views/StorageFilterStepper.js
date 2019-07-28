@@ -273,7 +273,7 @@ const StorageFilterStepper = props => {
           }}
         >
           <MDBBtn color="primary" rounded>
-            <i class="material-icons">navigate_before</i>
+            <i className="material-icons">navigate_before</i>
           </MDBBtn>
         </Link>
         <Link

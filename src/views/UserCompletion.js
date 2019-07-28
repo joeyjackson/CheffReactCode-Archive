@@ -33,17 +33,17 @@ const UserCompletion = () => {
   const classes = useStyles();
 
   const createUserFranchiseLocations = Item => {
-    // API.graphql(
-    //   graphqlOperation(mutations.createUserLocations, {
-    //     input: Item
-    //   })
-    // )
-    //   .then(result => {
-    //     console.log(result);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    API.graphql(
+      graphqlOperation(mutations.createFranchiseAndLocations, {
+        input: Item
+      })
+    )
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const pushChanges = () => {
@@ -61,7 +61,6 @@ const UserCompletion = () => {
 
   const addRestaurant = () => {
     let newData = [...localFranchiseLocations];
-    console.log(localFranchiseLocations);
     newData.push({
       userID: globalStore.userID,
       franchise: globalStore.selectedFranchise,
