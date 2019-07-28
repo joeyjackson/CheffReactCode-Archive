@@ -44,6 +44,7 @@ export const getProducts = `query GetProducts($id: ID!) {
     storageType
     supplier
     brand
+    unit
     itemNumber
     description
     commonField
@@ -65,6 +66,7 @@ export const listProductss = `query ListProductss(
       storageType
       supplier
       brand
+      unit
       itemNumber
       description
       commonField
@@ -264,6 +266,7 @@ export const searchProductss = `query SearchProductss(
       storageType
       supplier
       brand
+      unit
       itemNumber
       description
       commonField

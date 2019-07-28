@@ -11,11 +11,12 @@ type Products @model(subscriptions: null) @searchable {
   id: ID
   location: String! # FK
   price: Float!
-  parValue: Float
-  packSize: Int
+  parValue: Float!
+  packSize: String!
   storageType: String!
   supplier: String!
   brand: String
+  unit: String!
   itemNumber: Int!
   description: String!
   commonField: String

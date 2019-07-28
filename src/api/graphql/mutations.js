@@ -50,6 +50,7 @@ export const createProducts = `mutation CreateProducts($input: CreateProductsInp
     storageType
     supplier
     brand
+    unit
     itemNumber
     description
     commonField
@@ -66,6 +67,7 @@ export const updateProducts = `mutation UpdateProducts($input: UpdateProductsInp
     storageType
     supplier
     brand
+    unit
     itemNumber
     description
     commonField
@@ -82,6 +84,7 @@ export const deleteProducts = `mutation DeleteProducts($input: DeleteProductsInp
     storageType
     supplier
     brand
+    unit
     itemNumber
     description
     commonField

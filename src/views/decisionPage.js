@@ -26,11 +26,7 @@ const DecisionPage = props => {
           <div className="d-flex justify-content-center">
             <MDBBtn size="lg" color="primary" flat onClick={() => {}}>
               <MDBCard style={{ width: '18rem' }}>
-                <MDBCardImage
-                  className="img-fluid"
-                  src={countInventory}
-                  waves
-                />
+                <MDBCardImage className="img-fluid" src={countInventory} />
                 <MDBCardBody>
                   <h6>Count Inventory</h6>
                 </MDBCardBody>
@@ -43,11 +39,7 @@ const DecisionPage = props => {
           <div className="d-flex justify-content-center">
             <MDBBtn size="lg" color="primary" flat onClick={() => {}}>
               <MDBCard style={{ width: '18rem' }}>
-                <MDBCardImage
-                  className="img-fluid"
-                  src={reviewInventory}
-                  waves
-                />
+                <MDBCardImage className="img-fluid" src={reviewInventory} />
                 <MDBCardBody>
                   <h6>Review Inventory</h6>
                 </MDBCardBody>
@@ -62,11 +54,7 @@ const DecisionPage = props => {
           <div className="d-flex justify-content-center">
             <MDBBtn size="lg" color="primary" flat onClick={() => {}}>
               <MDBCard style={{ width: '18rem' }}>
-                <MDBCardImage
-                  className="img-fluid"
-                  src={makeSupplyOrder}
-                  waves
-                />
+                <MDBCardImage className="img-fluid" src={makeSupplyOrder} />
                 <MDBCardBody>
                   <h6>Make Supply Order</h6>
                 </MDBCardBody>
@@ -79,11 +67,7 @@ const DecisionPage = props => {
           <div className="d-flex justify-content-center">
             <MDBBtn size="lg" color="primary" flat onClick={() => {}}>
               <MDBCard style={{ width: '18rem' }}>
-                <MDBCardImage
-                  className="img-fluid"
-                  src={receiveInventory}
-                  waves
-                />
+                <MDBCardImage className="img-fluid" src={receiveInventory} />
                 <MDBCardBody>
                   <h6>Receive Inventory</h6>
                 </MDBCardBody>

@@ -11,11 +11,12 @@ type Products {
   id: ID
   location: String!
   price: Float!
-  parValue: Float
-  packSize: Int
+  parValue: Float!
+  packSize: String!
   storageType: String!
   supplier: String!
   brand: String
+  unit: String!
   itemNumber: Int!
   description: String!
   commonField: String
@@ -227,10 +228,11 @@ input ModelProductsFilterInput {
   location: ModelStringFilterInput
   price: ModelFloatFilterInput
   parValue: ModelFloatFilterInput
-  packSize: ModelIntFilterInput
+  packSize: ModelStringFilterInput
   storageType: ModelStringFilterInput
   supplier: ModelStringFilterInput
   brand: ModelStringFilterInput
+  unit: ModelStringFilterInput
   itemNumber: ModelIntFilterInput
   description: ModelStringFilterInput
   commonField: ModelStringFilterInput
@@ -243,11 +245,12 @@ input CreateProductsInput {
   id: ID
   location: String!
   price: Float!
-  parValue: Float
-  packSize: Int
+  parValue: Float!
+  packSize: String!
   storageType: String!
   supplier: String!
   brand: String
+  unit: String!
   itemNumber: Int!
   description: String!
   commonField: String
@@ -258,10 +261,11 @@ input UpdateProductsInput {
   location: String
   price: Float
   parValue: Float
-  packSize: Int
+  packSize: String
   storageType: String
   supplier: String
   brand: String
+  unit: String
   itemNumber: Int
   description: String
   commonField: String
@@ -548,10 +552,11 @@ input SearchableProductsFilterInput {
   location: SearchableStringFilterInput
   price: SearchableFloatFilterInput
   parValue: SearchableFloatFilterInput
-  packSize: SearchableIntFilterInput
+  packSize: SearchableStringFilterInput
   storageType: SearchableStringFilterInput
   supplier: SearchableStringFilterInput
   brand: SearchableStringFilterInput
+  unit: SearchableStringFilterInput
   itemNumber: SearchableIntFilterInput
   description: SearchableStringFilterInput
   commonField: SearchableStringFilterInput
@@ -574,6 +579,7 @@ enum SearchableProductsSortableFields {
   storageType
   supplier
   brand
+  unit
   itemNumber
   description
   commonField

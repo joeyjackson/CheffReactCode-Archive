@@ -1,0 +1,16 @@
+mutation add {
+    createProducts(input: {
+      location:"Howell Mill Road, Atlanta, GA, USA",
+        price: 10.50,
+      	parValue: 10,
+        itemNumber: 1,
+        description: "Franks Red Hot",
+      supplier: "PFG",
+      storageType: "Dry Storage"
+    }
+        
+    ){
+        id
+        description
+    }
+}
