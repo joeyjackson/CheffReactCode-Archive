@@ -1,12 +1,14 @@
 mutation add {
     createProducts(input: {
       location:"Howell Mill Road, Atlanta, GA, USA",
-        price: 10.50,
+        price: 15.00,
       	parValue: 10,
-        itemNumber: 1,
-        description: "Franks Red Hot",
+        itemNumber: 3,
+        description: "Pomgranite Syrup",
       supplier: "PFG",
-      storageType: "Dry Storage"
+      storageType: "Dry Storage",
+      packSize: "EA",
+      unit: "4/CS"
     }
         
     ){

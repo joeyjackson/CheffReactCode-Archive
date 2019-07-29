@@ -158,23 +158,15 @@ const App = () => {
 
         {/* This route is executed when a user clicks on a location card, it opens the storage filter page */}
         <Route
-          path="/location/storageFilter/:location"
-          render={linkProps => (
-            <DecisionPage
-              location={linkProps.location.state.location}
-              franchise={linkProps.location.state.franchise}
-            />
-          )}
+          path="/location/options/:location"
+          exact
+          render={linkProps => <DecisionPage linkProps={linkProps} />}
         />
         {/* When the user is done choosing storage types for the filter, the inventory page is displayed */}
         <Route
-          path="/location/inventory/:location"
-          render={linkProps => (
-            <InventoryTableView
-              location={linkProps.location.state.location}
-              franchise={linkProps.location.state.franchise}
-            />
-          )}
+          path="/location/options/:location/countInventory"
+          exact
+          render={linkProps => <InventoryTableView linkProps={linkProps} />}
         />
         {/* This routes the Settings page that is accessed via the NavBar */}
         <Route path="/settings" component={SettingsView} />

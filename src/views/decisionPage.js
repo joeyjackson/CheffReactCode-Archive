@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   MDBContainer,
@@ -19,19 +19,55 @@ import receiveInventory from '../assets/img/options/receiveInventory.png';
 const DecisionPage = props => {
   const [globalStore, dispatch] = useStateValue();
 
+  useEffect(() => {
+    // when component mounts
+    dispatch({
+      type: 'currentFranchise',
+      state: props.linkProps.location.state.franchise
+    });
+    dispatch({
+      type: 'currentLocation',
+      state: props.linkProps.location.state.location
+    });
+    return () => {
+      // when component unmounts
+      dispatch({
+        type: 'currentFranchise',
+        state: null
+      });
+      dispatch({
+        type: 'currentLocation',
+        state: null
+      });
+    };
+  }, []);
+
   return (
     <MDBContainer fluid>
       <MDBRow>
         <MDBCol md="6">
           <div className="d-flex justify-content-center">
-            <MDBBtn size="lg" color="primary" flat onClick={() => {}}>
-              <MDBCard style={{ width: '18rem' }}>
-                <MDBCardImage className="img-fluid" src={countInventory} />
-                <MDBCardBody>
-                  <h6>Count Inventory</h6>
-                </MDBCardBody>
-              </MDBCard>
-            </MDBBtn>
+            <Link
+              to={{
+                pathname: `${props.linkProps.location.pathname}/countInventory`
+              }}
+            >
+              <MDBBtn
+                size="lg"
+                color="primary"
+                flat
+                onClick={() => {
+                  console.log(props);
+                }}
+              >
+                <MDBCard style={{ width: '18rem' }}>
+                  <MDBCardImage className="img-fluid" src={countInventory} />
+                  <MDBCardBody>
+                    <h6>Count Inventory</h6>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBBtn>
+            </Link>
           </div>
         </MDBCol>
 

@@ -16,7 +16,7 @@ const LocationMapList = () => {
     >
       <Link
         to={{
-          pathname: `/location/storageFilter/${eachLocation.location}`,
+          pathname: `/location/options/${eachLocation.location}`,
           state: {
             location: eachLocation.location,
             franchise: eachLocation.franchise
