@@ -29,17 +29,6 @@ const DecisionPage = props => {
       type: 'currentLocation',
       state: props.linkProps.location.state.location
     });
-    return () => {
-      // when component unmounts
-      dispatch({
-        type: 'currentFranchise',
-        state: null
-      });
-      dispatch({
-        type: 'currentLocation',
-        state: null
-      });
-    };
   }, []);
 
   return (

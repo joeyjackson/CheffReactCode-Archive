@@ -27,7 +27,7 @@ import DecisionPage from './views/DecisionPage';
 import NavBar from './components/navigation/NavBar';
 import SettingsView from './views/Settings';
 import LocationMapListView from './views/LocationMapList';
-import InventoryTableView from './views/InventoryTable';
+import CountInventory from './views/CountInventory';
 import UserCompletionView from './views/UserCompletion';
 import CircularIndeterminate from './components/CircularIndeterminate';
 
@@ -130,6 +130,15 @@ const App = () => {
 
   // Query user info once the Home Page mounts, MUST keep empty array so we don't continously request on each render
   useEffect(() => {
+    dispatch({
+      type: 'currentFranchise',
+      state: null
+    });
+    dispatch({
+      type: 'currentLocation',
+      state: null
+    });
+
     getUserInfo();
   }, []);
 
@@ -166,7 +175,7 @@ const App = () => {
         <Route
           path="/location/options/:location/countInventory"
           exact
-          render={linkProps => <InventoryTableView linkProps={linkProps} />}
+          render={linkProps => <CountInventory linkProps={linkProps} />}
         />
         {/* This routes the Settings page that is accessed via the NavBar */}
         <Route path="/settings" component={SettingsView} />
