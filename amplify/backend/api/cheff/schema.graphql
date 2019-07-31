@@ -59,15 +59,15 @@ type OrderCarts @model(subscriptions: null) {
 }
 
 type InventoryCarts @model(subscriptions: null) {
-  id: ID
+  id: InventoryCountItems @connection(name: "InventoryCartID")
   location: String! # FK
   completed: Boolean!
 }
 
 type InventoryCountItems @model(subscriptions: null) @versioned {
   id: ID
-  inventoryCartID: ID! # FK
-  productID: ID! # FK
+  inventoryCartID: InventoryCarts @connection(name: "InventoryCartID")
+  productID: Products @connection
   quantityLeft: [Float!]
   version: Int!
 }
