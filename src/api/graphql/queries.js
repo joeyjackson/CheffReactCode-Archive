@@ -193,7 +193,29 @@ export const listOrderCartss = `query ListOrderCartss(
 `;
 export const getInventoryCarts = `query GetInventoryCarts($id: ID!) {
   getInventoryCarts(id: $id) {
-    id
+    id {
+      id
+      inventoryCartID {
+        location
+        completed
+      }
+      productID {
+        id
+        location
+        price
+        parValue
+        packSize
+        storageType
+        supplier
+        brand
+        unit
+        itemNumber
+        description
+        commonField
+      }
+      quantityLeft
+      version
+    }
     location
     completed
   }
@@ -206,7 +228,11 @@ export const listInventoryCartss = `query ListInventoryCartss(
 ) {
   listInventoryCartss(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
-      id
+      id {
+        id
+        quantityLeft
+        version
+      }
       location
       completed
     }
@@ -217,8 +243,29 @@ export const listInventoryCartss = `query ListInventoryCartss(
 export const getInventoryCountItems = `query GetInventoryCountItems($id: ID!) {
   getInventoryCountItems(id: $id) {
     id
-    inventoryCartID
-    productID
+    inventoryCartID {
+      id {
+        id
+        quantityLeft
+        version
+      }
+      location
+      completed
+    }
+    productID {
+      id
+      location
+      price
+      parValue
+      packSize
+      storageType
+      supplier
+      brand
+      unit
+      itemNumber
+      description
+      commonField
+    }
     quantityLeft
     version
   }
@@ -236,8 +283,24 @@ export const listInventoryCountItemss = `query ListInventoryCountItemss(
   ) {
     items {
       id
-      inventoryCartID
-      productID
+      inventoryCartID {
+        location
+        completed
+      }
+      productID {
+        id
+        location
+        price
+        parValue
+        packSize
+        storageType
+        supplier
+        brand
+        unit
+        itemNumber
+        description
+        commonField
+      }
       quantityLeft
       version
     }

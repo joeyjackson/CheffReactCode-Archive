@@ -225,7 +225,29 @@ export const deleteOrderCarts = `mutation DeleteOrderCarts($input: DeleteOrderCa
 `;
 export const createInventoryCarts = `mutation CreateInventoryCarts($input: CreateInventoryCartsInput!) {
   createInventoryCarts(input: $input) {
-    id
+    id {
+      id
+      inventoryCartID {
+        location
+        completed
+      }
+      productID {
+        id
+        location
+        price
+        parValue
+        packSize
+        storageType
+        supplier
+        brand
+        unit
+        itemNumber
+        description
+        commonField
+      }
+      quantityLeft
+      version
+    }
     location
     completed
   }
@@ -233,7 +255,29 @@ export const createInventoryCarts = `mutation CreateInventoryCarts($input: Creat
 `;
 export const updateInventoryCarts = `mutation UpdateInventoryCarts($input: UpdateInventoryCartsInput!) {
   updateInventoryCarts(input: $input) {
-    id
+    id {
+      id
+      inventoryCartID {
+        location
+        completed
+      }
+      productID {
+        id
+        location
+        price
+        parValue
+        packSize
+        storageType
+        supplier
+        brand
+        unit
+        itemNumber
+        description
+        commonField
+      }
+      quantityLeft
+      version
+    }
     location
     completed
   }
@@ -241,7 +285,29 @@ export const updateInventoryCarts = `mutation UpdateInventoryCarts($input: Updat
 `;
 export const deleteInventoryCarts = `mutation DeleteInventoryCarts($input: DeleteInventoryCartsInput!) {
   deleteInventoryCarts(input: $input) {
-    id
+    id {
+      id
+      inventoryCartID {
+        location
+        completed
+      }
+      productID {
+        id
+        location
+        price
+        parValue
+        packSize
+        storageType
+        supplier
+        brand
+        unit
+        itemNumber
+        description
+        commonField
+      }
+      quantityLeft
+      version
+    }
     location
     completed
   }
@@ -250,8 +316,29 @@ export const deleteInventoryCarts = `mutation DeleteInventoryCarts($input: Delet
 export const createInventoryCountItems = `mutation CreateInventoryCountItems($input: CreateInventoryCountItemsInput!) {
   createInventoryCountItems(input: $input) {
     id
-    inventoryCartID
-    productID
+    inventoryCartID {
+      id {
+        id
+        quantityLeft
+        version
+      }
+      location
+      completed
+    }
+    productID {
+      id
+      location
+      price
+      parValue
+      packSize
+      storageType
+      supplier
+      brand
+      unit
+      itemNumber
+      description
+      commonField
+    }
     quantityLeft
     version
   }
@@ -260,8 +347,29 @@ export const createInventoryCountItems = `mutation CreateInventoryCountItems($in
 export const updateInventoryCountItems = `mutation UpdateInventoryCountItems($input: UpdateInventoryCountItemsInput!) {
   updateInventoryCountItems(input: $input) {
     id
-    inventoryCartID
-    productID
+    inventoryCartID {
+      id {
+        id
+        quantityLeft
+        version
+      }
+      location
+      completed
+    }
+    productID {
+      id
+      location
+      price
+      parValue
+      packSize
+      storageType
+      supplier
+      brand
+      unit
+      itemNumber
+      description
+      commonField
+    }
     quantityLeft
     version
   }
@@ -270,8 +378,29 @@ export const updateInventoryCountItems = `mutation UpdateInventoryCountItems($in
 export const deleteInventoryCountItems = `mutation DeleteInventoryCountItems($input: DeleteInventoryCountItemsInput!) {
   deleteInventoryCountItems(input: $input) {
     id
-    inventoryCartID
-    productID
+    inventoryCartID {
+      id {
+        id
+        quantityLeft
+        version
+      }
+      location
+      completed
+    }
+    productID {
+      id
+      location
+      price
+      parValue
+      packSize
+      storageType
+      supplier
+      brand
+      unit
+      itemNumber
+      description
+      commonField
+    }
     quantityLeft
     version
   }

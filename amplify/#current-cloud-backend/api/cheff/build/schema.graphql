@@ -59,15 +59,15 @@ type OrderCarts {
 }
 
 type InventoryCarts {
-  id: ID
+  id: InventoryCountItems
   location: String!
   completed: Boolean!
 }
 
 type InventoryCountItems {
   id: ID
-  inventoryCartID: ID!
-  productID: ID!
+  inventoryCartID: InventoryCarts
+  productID: Products
   quantityLeft: [Float!]
   version: Int!
 }
@@ -437,7 +437,6 @@ type ModelInventoryCartsConnection {
 }
 
 input ModelInventoryCartsFilterInput {
-  id: ModelIDFilterInput
   location: ModelStringFilterInput
   completed: ModelBooleanFilterInput
   and: [ModelInventoryCartsFilterInput]
@@ -446,15 +445,15 @@ input ModelInventoryCartsFilterInput {
 }
 
 input CreateInventoryCartsInput {
-  id: ID
   location: String!
   completed: Boolean!
+  inventoryCartsIdId: ID
 }
 
 input UpdateInventoryCartsInput {
-  id: ID!
   location: String
   completed: Boolean
+  inventoryCartsIdId: ID
 }
 
 input DeleteInventoryCartsInput {
@@ -468,8 +467,6 @@ type ModelInventoryCountItemsConnection {
 
 input ModelInventoryCountItemsFilterInput {
   id: ModelIDFilterInput
-  inventoryCartID: ModelIDFilterInput
-  productID: ModelIDFilterInput
   quantityLeft: ModelFloatFilterInput
   version: ModelIntFilterInput
   and: [ModelInventoryCountItemsFilterInput]
@@ -479,17 +476,17 @@ input ModelInventoryCountItemsFilterInput {
 
 input CreateInventoryCountItemsInput {
   id: ID
-  inventoryCartID: ID!
-  productID: ID!
   quantityLeft: [Float!]
+  inventoryCountItemsInventoryCartIDId: ID
+  inventoryCountItemsProductIDId: ID
 }
 
 input UpdateInventoryCountItemsInput {
   id: ID!
-  inventoryCartID: ID
-  productID: ID
   quantityLeft: [Float!]
   version: Int
+  inventoryCountItemsInventoryCartIDId: ID
+  inventoryCountItemsProductIDId: ID
   expectedVersion: Int!
 }
 
