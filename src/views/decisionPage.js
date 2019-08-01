@@ -19,18 +19,6 @@ import receiveInventory from '../assets/img/options/receiveInventory.png';
 const DecisionPage = props => {
   const [globalStore, dispatch] = useStateValue();
 
-  useEffect(() => {
-    // when component mounts
-    dispatch({
-      type: 'currentFranchise',
-      state: props.linkProps.location.state.franchise
-    });
-    dispatch({
-      type: 'currentLocation',
-      state: props.linkProps.location.state.location
-    });
-  }, []);
-
   return (
     <MDBContainer fluid>
       <MDBRow>
@@ -38,7 +26,11 @@ const DecisionPage = props => {
           <div className="d-flex justify-content-center">
             <Link
               to={{
-                pathname: `${props.linkProps.location.pathname}/countInventory`
+                pathname: `${props.linkProps.location.pathname}/countInventory`,
+                state: {
+                  location: props.linkProps.location.state.location,
+                  franchise: props.linkProps.location.state.franchise
+                }
               }}
             >
               <MDBBtn

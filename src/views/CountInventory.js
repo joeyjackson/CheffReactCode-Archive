@@ -13,7 +13,7 @@ import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';
 import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
 
-const CountInventory = () => {
+const CountInventory = props => {
   const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data
   const [globalStore, dispatch] = useStateValue();
 
@@ -28,44 +28,43 @@ const CountInventory = () => {
       state: true
     });
     // query inventory table for specific location using the storageType filter choosen by the user
-    listProducts();
+    initInventoryCart();
   }, []); // keep empty array so component doesn't rerender indefinetely
 
-  // Updates the inventory table; used when data is edited, deleted, or created
-  const refreshInventoryItems = () => {
-    dispatch({
-      type: 'inventoryTableLoading',
-      state: true
-    });
-    setTimeout(listProducts(), 100);
-  };
-
-  // used to retrieve more data that is past the query limit
-  // nextToken represents the next data item to be queried from
-  const addNextTokenData = (currentData, nextToken) => {
+  const createInventoryCart = () => {
     API.graphql(
-      graphqlOperation(queries.listProductss, {
-        nextToken: nextToken,
+      graphqlOperation(mutations.createInventoryCarts, {
+        input: {
+          location: props.linkProps.location.state.location,
+          completed: false
+        }
+      })
+    )
+      .then(result => {
+        console.log('Create Success');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  // , and: { completed: { eq: false } }
+  const initInventoryCart = () => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: globalStore.currentLocation
+            eq: props.linkProps.location.state.location
           }
         }
       })
     )
       .then(result => {
-        currentData.push(result.data.listProductss.items);
-        if (result.data.listProductss.nextToken !== null) {
-          addNextTokenData(currentData, result.data.listProductss.nextToken);
+        // if there are no active inventory carts for our location, create one
+        console.log(result);
+        if (result.data.listInventoryCartss.items.length === 0) {
+          createInventoryCart();
         } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: currentData
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
+          getInventoryCountItems(result.data.listInventoryCartss.items[0].id);
         }
       })
       .catch(error => {
@@ -73,12 +72,64 @@ const CountInventory = () => {
       });
   };
 
-  const listProducts = () => {
+  const initInventoryCountItems = () => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryCartss, {
+        filter: {
+          location: {
+            eq: props.linkProps.location.state.location
+          }
+        }
+      })
+    )
+      .then(result => {
+        // if there are no active inventory carts for our location, create one
+        console.log(result);
+        if (result.data.listInventoryCartss.items.length === 0) {
+          createInventoryCart();
+        } else {
+          getInventoryCountItems();
+        }
+        getAllProducts();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+  // Updates the inventory table; used when data is edited, deleted, or created
+  const refreshInventoryItems = () => {
+    dispatch({
+      type: 'inventoryTableLoading',
+      state: true
+    });
+    setTimeout(getAllProducts(), 100);
+  };
+
+  const getAllProducts = () => {
     API.graphql(
       graphqlOperation(queries.listProductss, {
         filter: {
           location: {
-            eq: globalStore.currentLocation
+            eq: props.linkProps.location.state.location
+          }
+        },
+        limit: 2147483647
+      })
+    )
+      .then(result => {
+        initInventoryCountItems(result.data.listProductss.items);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const getInventoryCountItems = inventoryCartID => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryCountItemss, {
+        filter: {
+          inventoryCartID: {
+            id: { eq: inventoryCartID }
           }
         },
         limit: 2147483647
@@ -86,22 +137,6 @@ const CountInventory = () => {
     )
       .then(result => {
         console.log(result);
-        console.log(globalStore.currentLocation);
-        if (result.data.listProductss.nextToken !== null) {
-          addNextTokenData(
-            result.data.listProductss.items,
-            result.data.listProductss.nextToken
-          );
-        } else {
-          dispatch({
-            type: 'inventoryTableItems',
-            state: result.data.listProductss.items
-          });
-          dispatch({
-            type: 'inventoryTableLoading',
-            state: false
-          });
-        }
       })
       .catch(error => {
         console.log(error);

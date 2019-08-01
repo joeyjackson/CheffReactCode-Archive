@@ -22,7 +22,6 @@ import {
 import './App.css';
 import * as queries from './api/graphql/queries';
 import { useStateValue } from './state/StateManagement';
-import StorageFilterStepperView from './views/StorageFilterStepper';
 import DecisionPage from './views/DecisionPage';
 import NavBar from './components/navigation/NavBar';
 import SettingsView from './views/Settings';
@@ -35,59 +34,6 @@ import CircularIndeterminate from './components/CircularIndeterminate';
 
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
-
-  const setSuppliers = franchiseLocations => {
-    let suppliers = [];
-    franchiseLocations.map(eachLocation => {
-      suppliers.push(JSON.parse(eachLocation.suppliers));
-    });
-
-    dispatch({
-      type: 'supplierOptions',
-      state: suppliers.flat()
-    });
-  };
-
-  const setBrands = franchiseLocations => {
-    let brands = [];
-    franchiseLocations.map(eachLocation => {
-      brands.push(JSON.parse(eachLocation.brands));
-    });
-
-    dispatch({
-      type: 'brandOptions',
-      state: brands.flat()
-    });
-  };
-
-  const setUnits = franchiseLocations => {
-    let units = [];
-    franchiseLocations.map(eachLocation => {
-      JSON.parse(eachLocation.units).map(eachUnit => {
-        units.push({
-          name: eachUnit,
-          label: eachUnit
-        });
-      });
-    });
-
-    dispatch({
-      type: 'unitOptions',
-      state: units.flat()
-    });
-  };
-
-  const setStorageTypes = franchiseLocations => {
-    let storageTypes = [];
-    franchiseLocations.map(eachLocation => {
-      storageTypes.push(JSON.parse(eachLocation.storageTypes));
-    });
-
-    dispatch({
-      type: 'storageOptions',
-      state: storageTypes.flat()
-    });
-  };
 
   // Get user info (email, franchse/locations, suppliers, brands, etc.)
   const getUserInfo = () => {
@@ -116,11 +62,6 @@ const App = () => {
             type: 'userID',
             state: userID
           });
-          // set initial suppliers, brands, units, storage types (for settings page and when creating a new inventory item)
-          // setSuppliers(franchiseLocations);
-          // setBrands(franchiseLocations);
-          // setUnits(franchiseLocations);
-          // setStorageTypes(franchiseLocations);
         })
         .catch(error => {
           console.log(error);
