@@ -93,11 +93,12 @@ const CountInventory = props => {
   };
 
   const checkInventoryCarts = () => {
+    console.log(currentLocation);
     API.graphql(
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: globalStore.location
+            eq: currentLocation
           },
           and: { completed: { eq: false } }
         }
@@ -189,6 +190,9 @@ const CountInventory = props => {
           );
           createInventoryCountItems(inventoryCartID);
         } else {
+          console.log(
+            'This inventory cart DOES have the inventory count items setup'
+          );
           let initialData = [];
           let counter = 0; // used to keep track of how many products we have retreived so far
 
@@ -212,6 +216,7 @@ const CountInventory = props => {
                     type: 'invCountTableLoading',
                     state: false
                   });
+                  console.log(globalStore.invCountTableItems);
                 }
               })
               .catch(error => {
@@ -226,7 +231,7 @@ const CountInventory = props => {
   };
 
   const renderEditable = cellInfo => {
-    const newData = [...globalStore.invCountItems];
+    const newData = [...globalStore.invCountTableItems];
     switch (cellInfo.column.Header) {
       case 'Item Description':
         return (
@@ -306,12 +311,12 @@ const CountInventory = props => {
           onChange={searchString => {
             if (searchString === '') {
               dispatch({
-                type: 'invCountItems',
+                type: 'invCountTableItems',
                 state: originalData
               });
             } else {
               let results = matchSorter(
-                globalStore.invCountItems,
+                globalStore.invCountTableItems,
                 searchString,
                 {
                   keys: [
@@ -326,18 +331,18 @@ const CountInventory = props => {
                 }
               );
               dispatch({
-                type: 'invCountItems',
+                type: 'invCountTableItems',
                 state: results
               });
             }
           }}
           onBlur={event => {
             dispatch({
-              type: 'invCountItems',
+              type: 'invCountTableItems',
               state: originalData
             });
           }}
-          onFocus={event => setOriginalData(globalStore.invCountItems)}
+          onFocus={event => setOriginalData(globalStore.invCountTableItems)}
           style={{
             margin: '0 auto',
             maxWidth: 800
@@ -349,7 +354,7 @@ const CountInventory = props => {
         className="-striped -highlight"
         noDataText={'Inventory has not been setup'}
         columns={columns}
-        data={globalStore.invCountItems}
+        data={globalStore.invCountTableItems}
         getTdProps={() => {
           return {
             style: {
@@ -408,11 +413,7 @@ const CountInventory = props => {
       <div className="d-flex justify-content-around">
         <Link
           to={{
-            pathname: `/location/options/${globalStore.currentLocation}`,
-            state: {
-              location: globalStore.currentLocation,
-              franchise: globalStore.franchise
-            }
+            pathname: `/actions`
           }}
         >
           <MDBBtn color="primary" rounded>
