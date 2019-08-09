@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MDBRow, MDBCol } from 'mdbreact';
+import { withRouter } from 'react-router-dom';
+import { MDBRow, MDBCol, MDBBtn } from 'mdbreact';
 import MapCard from '../components/maps/MapCard';
 import { useStateValue } from '../state/StateManagement';
 
-const LocationMapList = () => {
-  const globalStore = useStateValue()[0];
+const LocationMapList = (props) => {
+  const [globalStore, dispatch] = useStateValue();
 
   const cardList = globalStore.franchiseLocations.map(eachLocation => (
     <MDBCol
@@ -14,28 +14,30 @@ const LocationMapList = () => {
       md="6"
       style={{ paddingTop: '50px', paddingBottom: '50px' }}
     >
-      <Link
-        to={{
-          pathname: `/location/actions/${eachLocation.location}`,
-          state: {
-            location: eachLocation.location,
-            franchise: eachLocation.franchise
-          }
-        }}
+      <MDBBtn class="btn btn-link"
+        onClick={() => {
+            dispatch({
+              type: 'currentLocation',
+              state: eachLocation.location
+            });
+            dispatch({
+              type: 'currentFranchise',
+              state: eachLocation.franchise
+            });
+            props.history.push('/actions');
+          }}
       >
-        <div className="d-flex justify-content-center">
-          <MapCard
-            location={eachLocation.location}
-            name={eachLocation.franchise}
-            latitude={eachLocation.latitude}
-            longitude={eachLocation.longitude}
-          />
-        </div>
-      </Link>
+        <MapCard
+          location={eachLocation.location}
+          name={eachLocation.franchise}
+          latitude={eachLocation.latitude}
+          longitude={eachLocation.longitude}
+        />
+      </MDBBtn>
     </MDBCol>
   ));
 
   return <MDBRow>{cardList}</MDBRow>;
 };
 
-export default LocationMapList;
+export default withRouter(LocationMapList);

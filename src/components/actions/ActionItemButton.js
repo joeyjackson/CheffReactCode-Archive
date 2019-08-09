@@ -9,15 +9,7 @@ import {
 const ActionItemButton = props => {
   return (
     <div className="d-flex justify-content-center">
-      <Link
-        to={{
-          pathname: props.route,
-          state: {
-            location: props.location.state.location,
-            franchise: props.location.state.franchise
-          }
-        }}
-      >
+      <Link to={{pathname: props.route}}>
         <MDBCard style={{ width: '12rem' }}>
           <MDBCardImage className="img-fluid" src={props.image} />
           <MDBCardBody>

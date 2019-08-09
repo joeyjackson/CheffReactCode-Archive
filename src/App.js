@@ -23,7 +23,9 @@ import CountInventoryView from './views/actions/CountInventory';
 import ReviewInventoryView from './views/actions/ReviewInventory';
 import MakeOrderView from './views/actions/MakeOrder';
 import ReceiveOrderView from './views/actions/ReceiveOrder';
-import { userLocationsPromise, userIDPromise } from './api/api'
+import { userIDPromise } from './api/api'
+import { API, graphqlOperation } from 'aws-amplify';
+import * as queries from './api/graphql/queries';
 
 /*
   Made code for application. Handles routes for each page. 
@@ -41,8 +43,15 @@ const App = () => {
         type: 'userID',
         state: userID
       });
-      userLocationsPromise(userID)
-        .then(result => {
+      API.graphql(
+        graphqlOperation(queries.listFranchiseAndLocationss, {
+          filter: {
+            userID: {
+              eq: userID
+            }
+          }
+        })
+      ).then(result => {
           const franchiseLocations = result.data.listFranchiseAndLocationss.items;
           dispatch({
             type: 'franchiseLocations',
@@ -72,44 +81,22 @@ const App = () => {
   return (
     <Router>
       <NavBar />
-      <Switch>
         {/* If user logged in and has locations, then render the locations. Otherwise, render the Add Locations Page */}
         {globalStore.userID ? (
-          <Route
-            path="/" exact
-            render={() => globalStore.franchiseLocations.length === 0 ? (<AddLocationsView />) : (<LocationMapListView />)}
-          />
+          <Switch>
+            <Route path="/" exact
+             render={() => globalStore.franchiseLocations.length === 0 ? (<AddLocationsView />) : (<LocationMapListView />)}
+            />
+            <Route path="/actions" exact component={ActionsListView} />
+            <Route path="/actions/countInventory" exact component={CountInventoryView} />
+            <Route path="/actions/reviewInventory" exact component={ReviewInventoryView} />
+            <Route path="/actions/makeOrder" exact component={MakeOrderView} />
+            <Route path="/actions/receiveOrder" exact component={ReceiveOrderView} />
+            <Route path="/settings" component={SettingsView} />
+          </Switch>
         ) : (
           <CircularIndeterminateLoading />
         )}
-        {/* List of actions user can take at a chosen location */}
-        <Route
-          path="/location/actions/:location" exact
-          render={props => <ActionsListView {...props} />}
-        />
-        {/* Count Inventory Action */}
-        <Route
-          path="/location/actions/:location/countInventory" exact
-          render={props => <CountInventoryView {...props} />}
-        />
-        {/* Review Inventory Action */}
-        <Route
-          path="/location/actions/:location/reviewInventory" exact
-          render={props => <ReviewInventoryView {...props} />}
-        />
-        {/* Make Order Action */}
-        <Route
-          path="/location/actions/:location/makeOrder" exact
-          render={props => <MakeOrderView {...props} />}
-        />
-        {/* Receive Order Action */}
-        <Route
-          path="/location/actions/:location/receiveOrder" exact
-          render={props => <ReceiveOrderView {...props} />}
-        />
-        {/* Settings */}
-        <Route path="/settings" component={SettingsView} />
-      </Switch>
     </Router>
   );
 };

@@ -12,11 +12,13 @@ import * as queries from '../../api/graphql/queries';
 import * as mutations from '../../api/graphql/mutations';
 import { useStateValue } from '../../state/StateManagement';
 import CircularIndeterminateLoading from '../../components/inventory/CircularIndeterminateRT';
-import { createInventoryCart } from '../../api/api';
 
 const CountInventory = props => {
   const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data
   const [globalStore, dispatch] = useStateValue();
+
+  const currentLocation = globalStore.currentLocation;
+  if (!currentLocation) props.history.push('/');
 
   // used to force update the react table when performing pagination of react table (workaround)
   const [, updateState] = React.useState();
@@ -36,7 +38,7 @@ const CountInventory = props => {
     API.graphql(
       graphqlOperation(mutations.createInventoryCarts, {
         input: {
-          location: props.location.state.location,
+          location: currentLocation,
           completed: false
         }
       })
@@ -73,7 +75,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listProductss, {
         filter: {
           location: {
-            eq: props.location.state.location
+            eq: currentLocation
           }
         },
         limit: 2147483647
@@ -95,7 +97,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: props.location.state.location
+            eq: globalStore.location
           },
           and: { completed: { eq: false } }
         }

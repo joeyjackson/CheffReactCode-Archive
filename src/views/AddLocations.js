@@ -12,9 +12,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from 'react-select';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import * as mutations from '../api/graphql/mutations';
+import { API, graphqlOperation } from 'aws-amplify';
 import LocationSearchBar from '../components/location/LocationSearchBar';
 import { useStateValue } from '../state/StateManagement';
-import { createUserFranchiseLocation } from '../api/api';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -30,6 +31,14 @@ const AddLocations = () => {
   const [globalStore, dispatch] = useStateValue();
 
   const classes = useStyles();
+
+  const createUserFranchiseLocation = Item => {
+    return API.graphql(
+      graphqlOperation(mutations.createFranchiseAndLocations, {
+        input: Item
+      })
+    );
+  };
 
   const pushChanges = () => {
     new Promise(resolve => {

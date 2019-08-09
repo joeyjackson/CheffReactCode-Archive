@@ -1,15 +1,24 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import {
     MDBContainer
 } from 'mdbreact';
+import { useStateValue } from '../../state/StateManagement';
 
 const MakeOrder = props => {
+  const [globalStore, dispatch] = useStateValue();
 
-    return (
-        <MDBContainer>
+  const currentLocation = globalStore.currentLocation;
+  const currentFranchise = globalStore.currentFranchise;
+  if (!currentLocation) props.history.push('/');
 
-        </MDBContainer>
-    );
+  return (
+    <MDBContainer>
+      <div>Make Order</div>
+      <div>{currentLocation}</div>
+      <div>{currentFranchise}</div>
+    </MDBContainer>
+  );
 };
 
-export default MakeOrder;
+export default withRouter(MakeOrder);
