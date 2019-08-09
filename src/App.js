@@ -1,13 +1,5 @@
-/*
-Made code for application. Handles routes for each page. 
-1) Gets user info (email, franchise locations - that includes all info we will use)
-2) Determines if this is the first time the user logins, if so, render the User Completition page
-3) Otherwise, render the locations as cards for the Home Page
-*/
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Auth, API, graphqlOperation, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
   AmplifyTheme,
@@ -20,26 +12,37 @@ import {
   VerifyContact
 } from 'aws-amplify-react';
 import './App.css';
-import * as queries from './api/graphql/queries';
 import { useStateValue } from './state/StateManagement';
-import DecisionPage from './views/DecisionPage';
+import CircularIndeterminateLoading from './components/CircularIndeterminate';
 import NavBar from './components/navigation/NavBar';
+import ActionsListView from './views/ActionsList';
 import SettingsView from './views/Settings';
 import LocationMapListView from './views/LocationMapList';
-import CountInventory from './views/CountInventory';
-import UserCompletionView from './views/UserCompletion';
-import CircularIndeterminate from './components/CircularIndeterminate';
+import AddLocationsView from './views/AddLocations';
+import CountInventoryView from './views/actions/CountInventory';
+import ReviewInventoryView from './views/actions/ReviewInventory';
+import MakeOrderView from './views/actions/MakeOrder';
+import ReceiveOrderView from './views/actions/ReceiveOrder';
+import { userIDPromise } from './api/api'
+import { API, graphqlOperation } from 'aws-amplify';
+import * as queries from './api/graphql/queries';
 
-// var scrollIntoView = require('scroll-into-view');
-
+/*
+  Made code for application. Handles routes for each page. 
+    1) Gets user info (email, franchise locations - that includes all info we will use)
+    2) Determines if this is the first time the user logins, if so, render the User Completition page
+    3) Otherwise, render the locations as cards for the Home Page
+*/
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
 
   // Get user info (email, franchse/locations, suppliers, brands, etc.)
-  const getUserInfo = () => {
-    Auth.currentUserInfo().then(data => {
-      console.log(data);
-      const userID = data.attributes.sub;
+  const setUserState = () => {
+    userIDPromise().then(userID => {
+      dispatch({
+        type: 'userID',
+        state: userID
+      });
       API.graphql(
         graphqlOperation(queries.listFranchiseAndLocationss, {
           filter: {
@@ -48,19 +51,11 @@ const App = () => {
             }
           }
         })
-      )
-        .then(result => {
-          let franchiseLocations = result.data.listFranchiseAndLocationss.items;
-          console.log(franchiseLocations);
-          // Set the franchiseLocation for the whole app
+      ).then(result => {
+          const franchiseLocations = result.data.listFranchiseAndLocationss.items;
           dispatch({
             type: 'franchiseLocations',
             state: franchiseLocations
-          });
-          // Set the userID for the whole app
-          dispatch({
-            type: 'userID',
-            state: userID
           });
         })
         .catch(error => {
@@ -80,47 +75,28 @@ const App = () => {
       state: null
     });
 
-    getUserInfo();
+    setUserState();
   }, []);
 
   return (
-    // Use Router from BrowserRouter to handle linking from/to different pages in application
     <Router>
       <NavBar />
-      <Switch>
-        {/* If user logged in and has locations, then render the locations. Otherwise, render the User Completion Page */}
+        {/* If user logged in and has locations, then render the locations. Otherwise, render the Add Locations Page */}
         {globalStore.userID ? (
-          <Route
-            exact
-            path="/"
-            render={() =>
-              globalStore.franchiseLocations.length === 0 ? (
-                <UserCompletionView />
-              ) : (
-                <LocationMapListView />
-              )
-            }
-          />
+          <Switch>
+            <Route path="/" exact
+             render={() => globalStore.franchiseLocations.length === 0 ? (<AddLocationsView />) : (<LocationMapListView />)}
+            />
+            <Route path="/actions" exact component={ActionsListView} />
+            <Route path="/actions/countInventory" exact component={CountInventoryView} />
+            <Route path="/actions/reviewInventory" exact component={ReviewInventoryView} />
+            <Route path="/actions/makeOrder" exact component={MakeOrderView} />
+            <Route path="/actions/receiveOrder" exact component={ReceiveOrderView} />
+            <Route path="/settings" component={SettingsView} />
+          </Switch>
         ) : (
-          // Display loading icon when waiting for User Info API call
-          <CircularIndeterminate />
+          <CircularIndeterminateLoading />
         )}
-
-        {/* This route is executed when a user clicks on a location card, it opens the storage filter page */}
-        <Route
-          path="/location/options/:location"
-          exact
-          render={linkProps => <DecisionPage linkProps={linkProps} />}
-        />
-        {/* When the user is done choosing storage types for the filter, the inventory page is displayed */}
-        <Route
-          path="/location/options/:location/countInventory"
-          exact
-          render={linkProps => <CountInventory linkProps={linkProps} />}
-        />
-        {/* This routes the Settings page that is accessed via the NavBar */}
-        <Route path="/settings" component={SettingsView} />
-      </Switch>
     </Router>
   );
 };

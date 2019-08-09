@@ -21,7 +21,7 @@ import * as mutations from '../api/graphql/mutations';
 import { useStateValue } from '../state/StateManagement';
 import CreateInventoryItemForm from '../components/inventory/CreateInventoryItemForm';
 import EditInventoryItemForm from '../components/inventory/EditInventoryItemForm';
-import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
+import CircularIndeterminateLoading from './CircularIndeterminateRT';
 
 // used to generate PDF supply order
 var jsPDF = require('jspdf');

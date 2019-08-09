@@ -5,17 +5,20 @@ import ReactTable from 'react-table';
 import { MDBBtn, MDBContainer, MDBInput } from 'mdbreact';
 import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
-import '../styles.css';
-import * as queries from '../api/graphql/queries';
-import * as mutations from '../api/graphql/mutations';
-import { useStateValue } from '../state/StateManagement';
-import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
+import '../../styles.css';
+import * as queries from '../../api/graphql/queries';
+import * as mutations from '../../api/graphql/mutations';
+import { useStateValue } from '../../state/StateManagement';
+import CircularIndeterminateLoading from '../../components/CircularIndeterminateRT';
 
 const CountInventory = props => {
   const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data
   const [globalStore, dispatch] = useStateValue();
+
+  const currentLocation = globalStore.currentLocation;
+  if (!currentLocation) props.history.push('/');
 
   // used to force update the react table when performing pagination of react table (workaround)
   const [, updateState] = React.useState();
@@ -35,7 +38,7 @@ const CountInventory = props => {
     API.graphql(
       graphqlOperation(mutations.createInventoryCarts, {
         input: {
-          location: props.linkProps.location.state.location,
+          location: currentLocation,
           completed: false
         }
       })
@@ -72,7 +75,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listProductss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: currentLocation
           }
         },
         limit: 2147483647
@@ -94,7 +97,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: globalStore.location
           },
           and: { completed: { eq: false } }
         }
