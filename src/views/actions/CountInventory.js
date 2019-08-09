@@ -5,13 +5,14 @@ import ReactTable from 'react-table';
 import { MDBBtn, MDBContainer, MDBInput } from 'mdbreact';
 import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
-import { API, graphqlOperation, Storage } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
-import '../styles.css';
-import * as queries from '../api/graphql/queries';
-import * as mutations from '../api/graphql/mutations';
-import { useStateValue } from '../state/StateManagement';
-import CircularIndeterminateLoading from '../components/inventory/CircularIndeterminateRT';
+import '../../styles.css';
+import * as queries from '../../api/graphql/queries';
+import * as mutations from '../../api/graphql/mutations';
+import { useStateValue } from '../../state/StateManagement';
+import CircularIndeterminateLoading from '../../components/inventory/CircularIndeterminateRT';
+import { createInventoryCart } from '../../api/api';
 
 const CountInventory = props => {
   const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data
@@ -31,29 +32,13 @@ const CountInventory = props => {
     initInventoryCart();
   }, []); // keep empty array so component doesn't rerender indefinetely
 
-  const createInventoryCart = () => {
-    API.graphql(
-      graphqlOperation(mutations.createInventoryCarts, {
-        input: {
-          location: props.linkProps.location.state.location,
-          completed: false
-        }
-      })
-    )
-      .then(result => {
-        console.log('Create Success');
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
   // , and: { completed: { eq: false } }
   const initInventoryCart = () => {
     API.graphql(
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: props.location.state.location
           }
         }
       })
@@ -62,7 +47,7 @@ const CountInventory = props => {
         // if there are no active inventory carts for our location, create one
         console.log(result);
         if (result.data.listInventoryCartss.items.length === 0) {
-          createInventoryCart();
+          createInventoryCart(props.location.state.location);;
         } else {
           getInventoryCountItems(result.data.listInventoryCartss.items[0].id);
         }
@@ -77,7 +62,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: props.location.state.location
           }
         }
       })
@@ -110,7 +95,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listProductss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: props.location.state.location
           }
         },
         limit: 2147483647

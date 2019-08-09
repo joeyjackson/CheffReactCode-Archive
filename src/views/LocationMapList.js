@@ -16,7 +16,7 @@ const LocationMapList = () => {
     >
       <Link
         to={{
-          pathname: `/location/options/${eachLocation.location}`,
+          pathname: `/location/actions/${eachLocation.location}`,
           state: {
             location: eachLocation.location,
             franchise: eachLocation.franchise

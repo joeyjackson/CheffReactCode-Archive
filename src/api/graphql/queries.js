@@ -217,25 +217,8 @@ export const listInventoryCartss = `query ListInventoryCartss(
 export const getInventoryCountItems = `query GetInventoryCountItems($id: ID!) {
   getInventoryCountItems(id: $id) {
     id
-    inventoryCartID {
-      id
-      location
-      completed
-    }
-    productID {
-      id
-      location
-      price
-      parValue
-      packSize
-      storageType
-      supplier
-      brand
-      unit
-      itemNumber
-      description
-      commonField
-    }
+    inventoryCartID
+    productID
     quantityLeft
     version
   }
@@ -253,25 +236,8 @@ export const listInventoryCountItemss = `query ListInventoryCountItemss(
   ) {
     items {
       id
-      inventoryCartID {
-        id
-        location
-        completed
-      }
-      productID {
-        id
-        location
-        price
-        parValue
-        packSize
-        storageType
-        supplier
-        brand
-        unit
-        itemNumber
-        description
-        commonField
-      }
+      inventoryCartID
+      productID
       quantityLeft
       version
     }

@@ -11,11 +11,10 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Select from 'react-select';
 import ReactTable from 'react-table';
-import { API, graphqlOperation } from 'aws-amplify';
 import 'react-table/react-table.css';
-import * as mutations from '../api/graphql/mutations';
 import LocationSearchBar from '../components/location/LocationSearchBar';
 import { useStateValue } from '../state/StateManagement';
+import { createUserFranchiseLocation } from '../api/api';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -26,30 +25,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserCompletion = () => {
+const AddLocations = () => {
   const [localFranchiseLocations, setLocalFranchiseLocations] = useState([]);
   const [globalStore, dispatch] = useStateValue();
 
   const classes = useStyles();
 
-  const createUserFranchiseLocations = Item => {
-    API.graphql(
-      graphqlOperation(mutations.createFranchiseAndLocations, {
-        input: Item
-      })
-    )
-      .then(result => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
   const pushChanges = () => {
     new Promise(resolve => {
       localFranchiseLocations.map(eachItem => {
-        createUserFranchiseLocations(eachItem);
+        createUserFranchiseLocation(eachItem);
       });
       dispatch({
         type: 'franchiseLocations',
@@ -256,4 +241,4 @@ const UserCompletion = () => {
   );
 };
 
-export default UserCompletion;
+export default AddLocations;

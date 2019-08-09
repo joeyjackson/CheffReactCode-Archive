@@ -17,13 +17,11 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem
 } from 'mdbreact';
-import matchSorter from 'match-sorter';
 import SearchBar from 'material-ui-search-bar';
 
 class CustomNavBar extends Greetings {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {};
     Hub.listen('auth', this.onHubCapsule);
     this._validAuthStates = ['signedIn'];
