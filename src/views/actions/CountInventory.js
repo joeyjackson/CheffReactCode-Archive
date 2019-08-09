@@ -32,10 +32,6 @@ const CountInventory = props => {
     checkInventoryCarts();
   }, []); // keep empty array so component doesn't rerender indefinetely
 
-<<<<<<< HEAD:src/views/actions/CountInventory.js
-  // , and: { completed: { eq: false } }
-  const initInventoryCart = () => {
-=======
   const createInventoryCart = () => {
     API.graphql(
       graphqlOperation(mutations.createInventoryCarts, {
@@ -54,7 +50,6 @@ const CountInventory = props => {
   };
 
   const createInventoryCountItem = (inventoryCartID, product) => {
->>>>>>> experimental:src/views/CountInventory.js
     API.graphql(
       graphqlOperation(mutations.createInventoryCountItems, {
         input: {
@@ -85,20 +80,10 @@ const CountInventory = props => {
       })
     )
       .then(result => {
-<<<<<<< HEAD:src/views/actions/CountInventory.js
-        // if there are no active inventory carts for our location, create one
-        console.log(result);
-        if (result.data.listInventoryCartss.items.length === 0) {
-          createInventoryCart(props.location.state.location);;
-        } else {
-          getInventoryCountItems(result.data.listInventoryCartss.items[0].id);
-        }
-=======
         let allProducts = result.data.listProductss.items;
         allProducts.map(eachProduct => {
           createInventoryCountItem(inventoryCartID, eachProduct);
         });
->>>>>>> experimental:src/views/CountInventory.js
       })
       .catch(error => {
         console.log(error);
@@ -110,14 +95,9 @@ const CountInventory = props => {
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-<<<<<<< HEAD:src/views/actions/CountInventory.js
-            eq: props.location.state.location
-          }
-=======
             eq: props.linkProps.location.state.location
           },
           and: { completed: { eq: false } }
->>>>>>> experimental:src/views/CountInventory.js
         }
       })
     )
@@ -173,18 +153,8 @@ const CountInventory = props => {
       delete item.__typename;
     }
     API.graphql(
-<<<<<<< HEAD:src/views/actions/CountInventory.js
-      graphqlOperation(queries.listProductss, {
-        filter: {
-          location: {
-            eq: props.location.state.location
-          }
-        },
-        limit: 2147483647
-=======
       graphqlOperation(mutations.updateProducts, {
         input: item
->>>>>>> experimental:src/views/CountInventory.js
       })
     )
       .then(result => {
