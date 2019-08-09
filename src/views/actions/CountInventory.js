@@ -36,7 +36,7 @@ const CountInventory = props => {
     API.graphql(
       graphqlOperation(mutations.createInventoryCarts, {
         input: {
-          location: props.linkProps.location.state.location,
+          location: props.location.state.location,
           completed: false
         }
       })
@@ -95,7 +95,7 @@ const CountInventory = props => {
       graphqlOperation(queries.listInventoryCartss, {
         filter: {
           location: {
-            eq: props.linkProps.location.state.location
+            eq: props.location.state.location
           },
           and: { completed: { eq: false } }
         }

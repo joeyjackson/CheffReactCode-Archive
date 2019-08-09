@@ -1,10 +1,3 @@
-/*
-Made code for application. Handles routes for each page. 
-1) Gets user info (email, franchise locations - that includes all info we will use)
-2) Determines if this is the first time the user logins, if so, render the User Completition page
-3) Otherwise, render the locations as cards for the Home Page
-*/
-
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
@@ -32,6 +25,12 @@ import MakeOrderView from './views/actions/MakeOrder';
 import ReceiveOrderView from './views/actions/ReceiveOrder';
 import { userLocationsPromise, userIDPromise } from './api/api'
 
+/*
+  Made code for application. Handles routes for each page. 
+    1) Gets user info (email, franchise locations - that includes all info we will use)
+    2) Determines if this is the first time the user logins, if so, render the User Completition page
+    3) Otherwise, render the locations as cards for the Home Page
+*/
 const App = () => {
   const [globalStore, dispatch] = useStateValue();
 
@@ -77,7 +76,7 @@ const App = () => {
         {/* If user logged in and has locations, then render the locations. Otherwise, render the Add Locations Page */}
         {globalStore.userID ? (
           <Route
-            path="/"exact
+            path="/" exact
             render={() => globalStore.franchiseLocations.length === 0 ? (<AddLocationsView />) : (<LocationMapListView />)}
           />
         ) : (
