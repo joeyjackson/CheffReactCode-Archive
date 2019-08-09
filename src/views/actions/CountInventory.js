@@ -11,7 +11,7 @@ import '../../styles.css';
 import * as queries from '../../api/graphql/queries';
 import * as mutations from '../../api/graphql/mutations';
 import { useStateValue } from '../../state/StateManagement';
-import CircularIndeterminateLoading from '../../components/inventory/CircularIndeterminateRT';
+import CircularIndeterminateLoading from '../../components/CircularIndeterminateRT';
 
 const CountInventory = props => {
   const [originalData, setOriginalData] = useState([]); // used by the Search Bar to copy the original data

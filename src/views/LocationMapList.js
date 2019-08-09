@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { MDBRow, MDBCol, MDBBtn } from 'mdbreact';
-import MapCard from '../components/maps/MapCard';
+import MapCard from '../components/location/maps/MapCard';
 import { useStateValue } from '../state/StateManagement';
 
 const LocationMapList = (props) => {
