@@ -24,11 +24,11 @@ const CountInventory = props => {
   // when component first mounts
   useEffect(() => {
     dispatch({
-      type: 'inventoryTableLoading',
+      type: 'invCountTableLoading',
       state: true
     });
     // query inventory table for specific location using the storageType filter choosen by the user
-    initInventoryCart();
+    checkInventoryCarts();
   }, []); // keep empty array so component doesn't rerender indefinetely
 
   const createInventoryCart = () => {
@@ -47,65 +47,27 @@ const CountInventory = props => {
         console.log(error);
       });
   };
-  // , and: { completed: { eq: false } }
-  const initInventoryCart = () => {
+
+  const createInventoryCountItem = (inventoryCartID, product) => {
     API.graphql(
-      graphqlOperation(queries.listInventoryCartss, {
-        filter: {
-          location: {
-            eq: props.linkProps.location.state.location
-          }
+      graphqlOperation(mutations.createInventoryCountItems, {
+        input: {
+          inventoryCartID: inventoryCartID,
+          productID: product.id,
+          quantityLeft: [0]
         }
       })
     )
       .then(result => {
-        // if there are no active inventory carts for our location, create one
-        console.log(result);
-        if (result.data.listInventoryCartss.items.length === 0) {
-          createInventoryCart();
-        } else {
-          getInventoryCountItems(result.data.listInventoryCartss.items[0].id);
-        }
+        console.log('Create Inventory Item Success');
       })
       .catch(error => {
-        console.log(error);
+        console.log('Create Inventory Item Failed', error);
       });
   };
 
-  const initInventoryCountItems = () => {
-    API.graphql(
-      graphqlOperation(queries.listInventoryCartss, {
-        filter: {
-          location: {
-            eq: props.linkProps.location.state.location
-          }
-        }
-      })
-    )
-      .then(result => {
-        // if there are no active inventory carts for our location, create one
-        console.log(result);
-        if (result.data.listInventoryCartss.items.length === 0) {
-          createInventoryCart();
-        } else {
-          getInventoryCountItems();
-        }
-        getAllProducts();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-  // Updates the inventory table; used when data is edited, deleted, or created
-  const refreshInventoryItems = () => {
-    dispatch({
-      type: 'inventoryTableLoading',
-      state: true
-    });
-    setTimeout(getAllProducts(), 100);
-  };
-
-  const getAllProducts = () => {
+  const createInventoryCountItems = inventoryCartID => {
+    // list all products we will use to create inventory count items
     API.graphql(
       graphqlOperation(queries.listProductss, {
         filter: {
@@ -117,30 +79,71 @@ const CountInventory = props => {
       })
     )
       .then(result => {
-        initInventoryCountItems(result.data.listProductss.items);
+        let allProducts = result.data.listProductss.items;
+        allProducts.map(eachProduct => {
+          createInventoryCountItem(inventoryCartID, eachProduct);
+        });
       })
       .catch(error => {
         console.log(error);
       });
   };
 
-  const getInventoryCountItems = inventoryCartID => {
+  const checkInventoryCarts = () => {
     API.graphql(
-      graphqlOperation(queries.listInventoryCountItemss, {
+      graphqlOperation(queries.listInventoryCartss, {
         filter: {
-          inventoryCartID: {
-            id: { eq: inventoryCartID }
-          }
-        },
-        limit: 2147483647
+          location: {
+            eq: props.linkProps.location.state.location
+          },
+          and: { completed: { eq: false } }
+        }
       })
     )
       .then(result => {
+        // if there are no active inventory carts for our location, create one
         console.log(result);
+        if (result.data.listInventoryCartss.items.length === 0) {
+          console.log(
+            'This location does NOT have an Inventory Cart, setting one up now...'
+          );
+          createInventoryCart();
+        } else {
+          // there should only be ONE active inventoryCartID active (completed = false) at a time
+          console.log(
+            'This location HAS an active inventory cart, setting up table now...'
+          );
+          let inventoryCartID = result.data.listInventoryCartss.items[0].id;
+          checkInventoryCountItems(inventoryCartID);
+        }
       })
       .catch(error => {
         console.log(error);
       });
+  };
+
+  const getInventoryProduct = inventoryCountItem => {
+    API.graphql(
+      graphqlOperation(queries.getProducts, {
+        id: inventoryCountItem.productID
+      })
+    )
+      .then(result => {
+        return result.data.getProducts;
+        // If inventoryCountItems has not been setup yet
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  // Updates the inventory table; used when data is edited, deleted, or created
+  const refreshInventoryItems = () => {
+    dispatch({
+      type: 'invCountTableLoading',
+      state: true
+    });
+    // setTimeout(getAllProducts(), 100);
   };
 
   const updateProducts = item => {
@@ -162,8 +165,65 @@ const CountInventory = props => {
       });
   };
 
+  const checkInventoryCountItems = inventoryCartID => {
+    API.graphql(
+      graphqlOperation(queries.listInventoryCountItemss, {
+        filter: {
+          inventoryCartID: {
+            eq: inventoryCartID
+          }
+        },
+        limit: 2147483647
+      })
+    )
+      .then(result => {
+        let inventoryCountItems = result.data.listInventoryCountItemss.items;
+        let numberOfItems = inventoryCountItems.length;
+        // If inventoryCountItems has not been setup yet
+        if (numberOfItems === 0) {
+          console.log(
+            'This inventory cart does NOT have the inventory count items setup'
+          );
+          createInventoryCountItems(inventoryCartID);
+        } else {
+          let initialData = [];
+          let counter = 0; // used to keep track of how many products we have retreived so far
+
+          inventoryCountItems.map(eachInventoryItem => {
+            // for each inventory item in the inventory count table, we need to get the product associated with that inventory count
+            API.graphql(
+              graphqlOperation(queries.getProducts, {
+                id: eachInventoryItem.productID
+              })
+            )
+              .then(result => {
+                let product = result.data.getProducts;
+                initialData.push(product);
+                counter += 1;
+                if (counter === numberOfItems) {
+                  dispatch({
+                    type: 'invCountTableItems',
+                    state: initialData
+                  });
+                  dispatch({
+                    type: 'invCountTableLoading',
+                    state: false
+                  });
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   const renderEditable = cellInfo => {
-    const newData = [...globalStore.inventoryTableItems];
+    const newData = [...globalStore.invCountItems];
     switch (cellInfo.column.Header) {
       case 'Item Description':
         return (
@@ -243,12 +303,12 @@ const CountInventory = props => {
           onChange={searchString => {
             if (searchString === '') {
               dispatch({
-                type: 'inventoryTableItems',
+                type: 'invCountItems',
                 state: originalData
               });
             } else {
               let results = matchSorter(
-                globalStore.inventoryTableItems,
+                globalStore.invCountItems,
                 searchString,
                 {
                   keys: [
@@ -263,18 +323,18 @@ const CountInventory = props => {
                 }
               );
               dispatch({
-                type: 'inventoryTableItems',
+                type: 'invCountItems',
                 state: results
               });
             }
           }}
           onBlur={event => {
             dispatch({
-              type: 'inventoryTableItems',
+              type: 'invCountItems',
               state: originalData
             });
           }}
-          onFocus={event => setOriginalData(globalStore.inventoryTableItems)}
+          onFocus={event => setOriginalData(globalStore.invCountItems)}
           style={{
             margin: '0 auto',
             maxWidth: 800
@@ -286,7 +346,7 @@ const CountInventory = props => {
         className="-striped -highlight"
         noDataText={'Inventory has not been setup'}
         columns={columns}
-        data={globalStore.inventoryTableItems}
+        data={globalStore.invCountItems}
         getTdProps={() => {
           return {
             style: {
@@ -296,7 +356,7 @@ const CountInventory = props => {
             }
           };
         }}
-        loading={globalStore.inventoryTableLoading}
+        loading={globalStore.invCountTableLoading}
         LoadingComponent={CircularIndeterminateLoading}
         defaultPageSize={10}
         pageSizeOptions={[5, 10, 20, 50, 100]}

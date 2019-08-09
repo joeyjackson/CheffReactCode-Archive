@@ -51,10 +51,10 @@ const reducer = (state, action) => {
         ...state,
         currentFranchise: action.state
       };
-    case 'inventoryTableItems':
+    case 'invCountItems':
       return {
         ...state,
-        inventoryTableItems: action.state
+        invCountItems: action.state
       };
     case 'inventoryItemToUpdate':
       return {
@@ -62,10 +62,10 @@ const reducer = (state, action) => {
         inventoryItemToUpdate: action.state
       };
 
-    case 'inventoryTableLoading':
+    case 'invCountTableLoading':
       return {
         ...state,
-        inventoryTableLoading: action.state
+        invCountTableLoading: action.state
       };
     case 'selectedFranchise':
       return {
